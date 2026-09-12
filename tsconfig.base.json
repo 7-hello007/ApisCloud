@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "types": ["node", "jest"],
+    "ignoreDeprecations": "5.0",
+    "paths": {
+      "@apiscloud/libs": ["./core/libs/src"],
+      "@apiscloud/libs/*": ["./core/libs/src/*"],
+      "@apiscloud/message-bus": ["./shared/message-bus"],
+      "@apiscloud/message-bus/*": ["./shared/message-bus/*"],
+      "@apiscloud/contracts": ["./shared/contracts"],
+      "@apiscloud/contracts/*": ["./shared/contracts/*"],
+      "@apiscloud/types": ["./shared/types"],
+      "@apiscloud/types/*": ["./shared/types/*"],
+      "@apiscloud/layer-config": ["./shared/layer-config"],
+      "@apiscloud/layer-config/*": ["./shared/layer-config/*"],
+      "@apiscloud/plugin-host": ["./core/plugin-host/src"],
+      "@apiscloud/plugin-host/*": ["./core/plugin-host/src/*"],
+      "@apiscloud/observability": ["./core/services/observability/src"],
+      "@apiscloud/observability/*": ["./core/services/observability/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

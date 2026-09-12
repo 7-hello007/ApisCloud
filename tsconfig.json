@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./core/libs" },
+    { "path": "./shared/types" },
+    { "path": "./shared/contracts" },
+    { "path": "./shared/message-bus" },
+    { "path": "./shared/layer-config" },
+    { "path": "./core/plugin-host" },
+    { "path": "./core/services/observability" }
+  ]
+}

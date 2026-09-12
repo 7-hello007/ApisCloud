@@ -1,0 +1,50 @@
+# =============================================================
+# 层配置：声明每一层启用哪些服务
+# 服务是逻辑单元，层是部署单元。加层只改本文件，服务代码零改动。
+# =============================================================
+
+version: "1"
+
+# 当前阶段：单层，所有服务集中运行
+# 未来扩展：解开下方注释，改成多层
+layers:
+  - name: single
+    description: 单层部署，所有服务集中运行（当前阶段）
+    services:
+      - infra
+      - gateway
+      - plugin-host
+      - libs
+      - ingest
+      - data-writer
+      - simulator
+      - dispatch-core
+      - observability
+      - registry
+
+# =============================================================
+# 未来扩展（先注释，按需启用）
+# =============================================================
+#
+# 三层结构：
+# layers:
+#   - name: access
+#     description: 接入层，负责外部系统对接
+#     services: [ingest, data-writer, observability, registry]
+#   - name: processing
+#     description: 处理层，负责数据加工与业务处理
+#     services: [ingest, data-writer, dispatch-core, observability, registry]
+#   - name: decision
+#     description: 决策层，负责全局调度决策
+#     services: [dispatch-core, observability, registry]
+#
+# 四层结构（三层基础上加区域层）：
+# layers:
+#   - name: access
+#     services: [...]
+#   - name: region
+#     services: [...]
+#   - name: processing
+#     services: [...]
+#   - name: decision
+#     services: [...]

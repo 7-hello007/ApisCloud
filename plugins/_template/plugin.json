@@ -1,0 +1,14 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": [],
+    "publish": []
+  },
+  "routes": [],
+  "frontend": null
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@apiscloud/message-bus",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "kafkajs": "^2.2.4",
+    "uuid": "^14.0.2",
+    "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^11.0.0"
+  }
+}

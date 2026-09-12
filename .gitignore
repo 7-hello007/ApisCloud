@@ -1,0 +1,29 @@
+node_modules/
+.pnpm-store/
+
+dist/
+build/
+*.tsbuildinfo
+
+.env
+
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+coverage/
+.nyc_output/
+
+core/registry/registry.json
+
+# 基础设施数据
+.data/
+deploy/postgres/data/
+deploy/redis/data/
+deploy/emqx/data/
+
+# 监控数据
+monitor/prometheus/data/
+monitor/loki/data/
+monitor/grafana/data/

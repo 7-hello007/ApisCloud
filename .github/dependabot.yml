@@ -1,0 +1,65 @@
+version: 2
+
+updates:
+  # ============ npm 依赖 ============
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '08:00'
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    commit-message:
+      prefix: 'chore(deps)'
+      include: scope
+    groups:
+      # 把同类依赖合并成一个 PR，减少噪音
+      typescript:
+        patterns:
+          - 'typescript'
+          - '@typescript-eslint/*'
+          - 'ts-*'
+      testing:
+        patterns:
+          - 'jest'
+          - 'ts-jest'
+          - '@types/jest'
+      linting:
+        patterns:
+          - 'eslint'
+          - 'eslint-*'
+          - 'prettier'
+      apiscloud:
+        patterns:
+          - '@apiscloud/*'
+
+  # ============ GitHub Actions ============
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '08:00'
+      timezone: Asia/Shanghai
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: 'chore(ci)'
+
+  # ============ Docker ============
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '08:00'
+      timezone: Asia/Shanghai
+    labels:
+      - dependencies
+      - docker
+    commit-message:
+      prefix: 'chore(docker)'

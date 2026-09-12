@@ -1,0 +1,8 @@
+packages:
+  - "core/libs"
+  - "core/plugin-host"
+  - "core/gateway"
+  - "core/services/*"
+  - "shared/*"
+  - "plugins/*"
+  - "web"

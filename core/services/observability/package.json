@@ -1,0 +1,15 @@
+{
+  "name": "@apiscloud/observability",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist/server-entry.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "pino": "^10.3.1"
+  }
+}
