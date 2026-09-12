@@ -1,4 +1,5 @@
 import { createLogger, withContext, type Logger, type LogContext } from '@apiscloud/libs';
+
 import type { TracingContext } from './types';
 
 export interface ObservabilityLoggerOptions {

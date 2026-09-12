@@ -7,6 +7,9 @@
     { "path": "./shared/message-bus" },
     { "path": "./shared/layer-config" },
     { "path": "./core/plugin-host" },
-    { "path": "./core/services/observability" }
+    { "path": "./core/services/observability" },
+    { "path": "./core/services/simulator" },
+    { "path": "./core/services/ingest" },
+    { "path": "./core/services/data-writer" }
   ]
 }

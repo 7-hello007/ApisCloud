@@ -1,0 +1,18 @@
+{
+  "name": "@apiscloud/ingest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MQTT 出入口：订阅外部遥测转发消息总线，订阅总线命令下发 MQTT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist/server-entry.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "@apiscloud/message-bus": "workspace:*",
+    "@apiscloud/observability": "workspace:*",
+    "zod": "^4.6.2"
+  }
+}

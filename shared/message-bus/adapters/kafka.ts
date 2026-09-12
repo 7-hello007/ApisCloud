@@ -1,6 +1,5 @@
 import type { HealthCheckResult } from '@apiscloud/libs';
 import { Kafka, type Consumer, type Producer } from 'kafkajs';
-
 import type { AppConfig } from '@apiscloud/libs';
 
 import { parseEnvelope, serializeEnvelope, type Envelope } from '../envelope';

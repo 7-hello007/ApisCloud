@@ -1,0 +1,16 @@
+{
+  "name": "@apiscloud/simulator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "模拟数据源：500 辆模拟车辆，通过 MQTT 上报",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist/server-entry.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "@apiscloud/observability": "workspace:*"
+  }
+}

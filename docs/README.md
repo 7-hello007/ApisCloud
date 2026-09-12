@@ -65,18 +65,24 @@
 | `security.V1.md` | 安全基础：认证、输入验证、密钥管理 |
 | `cicd.V1.md` | CI/CD：GitHub Actions、安全扫描、Dependabot |
 
+
+### 阶段二（核心数据流服务）
+
+| 文档 | 覆盖内容 |
+|---|---|
+| `architecture.V2.md` | 系统架构 V2：加入 simulator、ingest、data-writer |
+| `simulator.V1.md` | 模拟器：状态机、GPS 生成器、MQTT 上报、500 辆模拟 |
+| `ingest.V1.md` | MQTT 出入口：上行遥测转总线、下行命令转 MQTT、输入校验 |
+| `dataWriter.V1.md` | 统一写库：消费总线写 PG 和 Redis、UPSERT、Redis 热路径 |
+| `messageBus.V2.md` | 消息总线 V2：主题分区保留策略、消费组规范、partitionKey |
+
 ### 后续阶段（待补）
 
-- `simulator.V1.md`
-- `ingest.V1.md`
-- `dataWriter.V1.md`
 - `dispatchCore.V1.md`
 - `gateway.V1.md`
 - `webShell.V1.md`
 - `dashboard.V1.md`
 - `deployment.V1.md`
-
----
 
 ## 写作原则
 

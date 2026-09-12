@@ -36,3 +36,7 @@ scrape_configs:
           - 'host.docker.internal:9106'
         labels:
           service: 'observability'
+      - targets:
+          - 'host.docker.internal:9107'
+        labels:
+          service: 'simulator'

@@ -32,6 +32,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.43)(supports-color@8.1.1)(ts-node@10.9.2(@types/node@20.19.43)(typescript@5.9.3))
+      kafkajs:
+        specifier: ^2.2.4
+        version: 2.2.4
       prettier:
         specifier: ^3.3.2
         version: 3.9.6
@@ -94,6 +97,33 @@ importers:
         specifier: ^4.6.2
         version: 4.6.2
 
+  core/services/data-writer:
+    dependencies:
+      '@apiscloud/libs':
+        specifier: workspace:*
+        version: link:../../libs
+      '@apiscloud/message-bus':
+        specifier: workspace:*
+        version: link:../../../shared/message-bus
+      '@apiscloud/observability':
+        specifier: workspace:*
+        version: link:../observability
+
+  core/services/ingest:
+    dependencies:
+      '@apiscloud/libs':
+        specifier: workspace:*
+        version: link:../../libs
+      '@apiscloud/message-bus':
+        specifier: workspace:*
+        version: link:../../../shared/message-bus
+      '@apiscloud/observability':
+        specifier: workspace:*
+        version: link:../observability
+      zod:
+        specifier: ^4.6.2
+        version: 4.6.2
+
   core/services/observability:
     dependencies:
       '@apiscloud/libs':
@@ -102,6 +132,15 @@ importers:
       pino:
         specifier: ^10.3.1
         version: 10.3.1
+
+  core/services/simulator:
+    dependencies:
+      '@apiscloud/libs':
+        specifier: workspace:*
+        version: link:../../libs
+      '@apiscloud/observability':
+        specifier: workspace:*
+        version: link:../observability
 
   shared/contracts: {}
 

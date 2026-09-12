@@ -1,6 +1,6 @@
 .PHONY: help install lint format typecheck test test-unit test-integration test-e2e test-coverage test-watch test-file build clean \
         infra-up infra-down infra-logs infra-ps infra-reset \
-		build-registry registry-check
+		build-registry registry-check init-topics
 
 help:
 	@echo "可用命令："
@@ -102,11 +102,9 @@ build-registry:
 	node scripts/build-registry.js
 
 registry-check: build-registry
-	@node -e "
-	  const r = require('./core/registry/registry.json');
-	  if (!r.version) throw new Error('registry 缺少 version');
-	  if (!Array.isArray(r.plugins)) throw new Error('registry.plugins 不是数组');
-	  if (!Array.isArray(r.services)) throw new Error('registry.services 不是数组');
-	  if (!Array.isArray(r.topologicalOrder)) throw new Error('registry.topologicalOrder 不是数组');
-	  console.log('[registry] 校验通过：', r.plugins.length, '个插件，', r.services.length, '个服务');
-	"
+	node scripts/check-registry.js
+
+# ==================== Kafka 主题 ====================
+
+init-topics:
+	node scripts/init-kafka-topics.js

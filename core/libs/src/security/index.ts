@@ -1,6 +1,9 @@
+import { z } from 'zod';
+
+import type { AppConfig } from '../config';
+
 import { createJwt } from './jwt';
 import { createValidation } from './validation';
-import type { AppConfig } from '../config';
 
 // ============================================================
 // 常量
@@ -81,7 +84,7 @@ export type { ReplayGuard, ReplayGuardOptions } from './replay-guard';
 // ============================================================
 // 向后兼容：旧 API
 // ============================================================
-import { z } from 'zod';
+
 export { z };
 
 export interface LegacySecurityContext {

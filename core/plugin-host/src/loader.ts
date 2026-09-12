@@ -59,7 +59,7 @@ export function resolveEntry(pluginDir: string): string {
  * 默认导出优先，否则用 module 本身。
  */
 export function loadPluginInstance(entryPath: string): Plugin {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const mod = require(entryPath);
   const instance = mod && mod.default ? mod.default : mod;
 
