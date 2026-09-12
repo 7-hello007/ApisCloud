@@ -1,0 +1,15 @@
+{
+  "name": "data-writer",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.raw", "telemetry.aggregated", "events.alerts"],
+    "publish": []
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "统一写库"
+}

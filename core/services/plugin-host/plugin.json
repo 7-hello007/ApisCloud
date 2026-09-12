@@ -1,0 +1,12 @@
+{
+  "name": "plugin-host",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": { "subscribe": [], "publish": [] },
+  "routes": [],
+  "frontend": null,
+  "description": "插件宿主（进程内扩展）"
+}

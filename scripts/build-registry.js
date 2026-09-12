@@ -1,21 +1,115 @@
 #!/usr/bin/env node
-
-/**
- * 扫描 core/services 和 plugins 目录，生成 registry.json。
- * 阶段 1.1 只做骨架，阶段 1.9 完善。
- */
+'use strict';
 
 const fs = require('fs');
 const path = require('path');
+
+const { buildProfileIndex } = require('./lib/profiles');
+const { scanDir } = require('./lib/scanner');
+const { topologicalSort } = require('./lib/topo');
+const { validateManifest } = require('./lib/validator');
 
 const ROOT = path.resolve(__dirname, '..');
 const REGISTRY_DIR = path.join(ROOT, 'core', 'registry');
 const REGISTRY_FILE = path.join(REGISTRY_DIR, 'registry.json');
 
-const SCAN_DIRS = [
-  path.join(ROOT, 'core', 'services'),
-  path.join(ROOT, 'plugins'),
-];
+const SCAN_DIRS = {
+  services: path.join(ROOT, 'core', 'services'),
+  plugins: path.join(ROOT, 'plugins'),
+};
+
+const CORE_VERSION = '0.1.0';
+
+/**
+ * 构建注册表。
+ * 导出为函数便于单测。
+ *
+ * @param {object} [options]
+ * @param {boolean} [options.write=true] 是否写文件
+ * @param {string}  [options.root]       仓库根目录
+ * @returns {object} registry 对象
+ */
+function buildRegistry(options = {}) {
+  const write = options.write !== false;
+  const root = options.root ?? ROOT;
+
+  const serviceDirs = options.serviceDirs ?? path.join(root, 'core', 'services');
+  const pluginDirs = options.pluginDirs ?? path.join(root, 'plugins');
+
+  const services = collectFrom(serviceDirs, true);
+  const plugins = collectFrom(pluginDirs, false);
+
+  const allItems = [...services, ...plugins];
+
+  // 重名检查必须在拓扑排序之前
+  const names = new Set();
+  for (const item of allItems) {
+    if (names.has(item.name)) {
+      throw new Error(`插件名重复：${item.name}`);
+    }
+    names.add(item.name);
+  }
+
+  const byProfile = buildProfileIndex(allItems);
+  const topologicalOrder = topologicalSort(allItems);
+
+  // 拓扑序和 profile 索引也用插件名去重后的结果
+  const registry = {
+    version: '1',
+    generatedAt: new Date().toISOString(),
+    generator: `apiscloud-registry/${CORE_VERSION}`,
+    coreVersion: CORE_VERSION,
+    services,
+    plugins,
+    byProfile,
+    topologicalOrder,
+    stats: {
+      totalServices: services.length,
+      totalPlugins: plugins.length,
+      totalByProfile: Object.fromEntries(
+        Object.entries(byProfile).map(([k, v]) => [k, v.length]),
+      ),
+    },
+  };
+
+  if (write) {
+    ensureDir(path.dirname(REGISTRY_FILE));
+    fs.writeFileSync(REGISTRY_FILE, JSON.stringify(registry, null, 2), 'utf-8');
+    // eslint-disable-next-line no-console
+    console.log(
+      `[registry] 已生成 ${path.relative(root, REGISTRY_FILE)}：` +
+        `${services.length} 个服务，${plugins.length} 个插件`,
+    );
+  }
+
+  return registry;
+}
+
+/**
+ * 从指定目录扫描并校验所有 plugin.json。
+ *
+ * @param {string} baseDir
+ * @param {boolean} isCore 是否强制 core=true
+ */
+function collectFrom(baseDir, isCore) {
+  const entries = scanDir(baseDir);
+  const result = [];
+
+  for (const { dir, manifestPath, raw } of entries) {
+    const manifest = validateManifest(raw, manifestPath);
+
+    if (isCore && !manifest.core) {
+      throw new Error(`${manifestPath}: core/services 下的插件必须 core=true`);
+    }
+
+    result.push({
+      ...manifest,
+      path: path.relative(ROOT, dir).split(path.sep).join('/'),
+    });
+  }
+
+  return result.sort((a, b) => a.name.localeCompare(b.name));
+}
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {
@@ -23,64 +117,15 @@ function ensureDir(dir) {
   }
 }
 
-function readPluginManifest(dir) {
-  const manifestPath = path.join(dir, 'plugin.json');
-  if (!fs.existsSync(manifestPath)) {
-    return null;
-  }
+// CLI 入口
+if (require.main === module) {
   try {
-    const raw = fs.readFileSync(manifestPath, 'utf-8');
-    return JSON.parse(raw);
+    buildRegistry();
   } catch (err) {
-    console.warn(`[registry] 无法解析 ${manifestPath}: ${err.message}`);
-    return null;
+    // eslint-disable-next-line no-console
+    console.error(`[registry] 生成失败：${err.message}`);
+    process.exit(1);
   }
 }
 
-function scanDir(baseDir) {
-  if (!fs.existsSync(baseDir)) {
-    return [];
-  }
-  const entries = fs.readdirSync(baseDir, { withFileTypes: true });
-  const result = [];
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    if (entry.name.startsWith('_') || entry.name.startsWith('.')) continue;
-    const dir = path.join(baseDir, entry.name);
-    const manifest = readPluginManifest(dir);
-    if (manifest) {
-      result.push({
-        name: manifest.name || entry.name,
-        version: manifest.version || '0.0.0',
-        core: !!manifest.core,
-        profile: manifest.profile || [],
-        lazy: manifest.lazy !== false,
-        dependsOn: manifest.dependsOn || [],
-        path: path.relative(ROOT, dir),
-      });
-    }
-  }
-  return result;
-}
-
-function main() {
-  ensureDir(REGISTRY_DIR);
-
-  const services = scanDir(SCAN_DIRS[0]);
-  const plugins = scanDir(SCAN_DIRS[1]);
-
-  const registry = {
-    version: '1',
-    generatedAt: new Date().toISOString(),
-    services,
-    plugins,
-  };
-
-  fs.writeFileSync(REGISTRY_FILE, JSON.stringify(registry, null, 2), 'utf-8');
-  console.log(
-    `[registry] 已生成 ${path.relative(ROOT, REGISTRY_FILE)}：` +
-      `${services.length} 个服务，${plugins.length} 个插件`,
-  );
-}
-
-main();
+module.exports = { buildRegistry };

@@ -1,0 +1,12 @@
+{
+  "name": "gateway",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": { "subscribe": [], "publish": [] },
+  "routes": ["/api"],
+  "frontend": null,
+  "description": "HTTP 统一入口"
+}

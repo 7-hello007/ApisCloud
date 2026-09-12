@@ -1,0 +1,19 @@
+title = "ApisCloud gitleaks 配置"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "全局白名单"
+paths = [
+  '''.env.example''',
+  '''\.env\.example$''',
+  '''docs/.*\.md$''',
+  '''tests/.*\.test\.ts$''',
+]
+
+regexes = [
+  '''change-me-in-production''',
+  '''apiscloud''',
+  '''password.*=.*apiscloud''',
+]

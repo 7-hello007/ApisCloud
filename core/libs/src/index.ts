@@ -34,5 +34,4 @@ export { createMetrics } from './metrics';
 export type { MetricsRegistry } from './metrics';
 
 // security
-export { createSecurity, z } from './security';
-export type { JwtPayload, SecurityContext } from './security';
+export * from './security';

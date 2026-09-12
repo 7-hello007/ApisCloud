@@ -1,0 +1,12 @@
+{
+  "name": "infra",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": { "subscribe": [], "publish": [] },
+  "routes": [],
+  "frontend": null,
+  "description": "基础设施编排（PG/Redis/EMQX/Kafka/Prometheus/Grafana/Loki）"
+}

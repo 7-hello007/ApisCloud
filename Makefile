@@ -1,5 +1,6 @@
-.PHONY: help install lint format typecheck test test-unit test-integration test-e2e test-coverage build clean \
-        infra-up infra-down infra-logs infra-ps infra-reset build-registry
+.PHONY: help install lint format typecheck test test-unit test-integration test-e2e test-coverage test-watch test-file build clean \
+        infra-up infra-down infra-logs infra-ps infra-reset \
+		build-registry registry-check
 
 help:
 	@echo "可用命令："
@@ -7,11 +8,13 @@ help:
 	@echo "  make lint               代码检查"
 	@echo "  make format             格式化"
 	@echo "  make typecheck          类型检查"
-	@echo "  make test               全部测试"
+	@echo "  make test               全部测试（可用 FILTER=xxx 过滤）"
 	@echo "  make test-unit          单元测试"
 	@echo "  make test-integration   集成测试"
 	@echo "  make test-e2e           端到端测试"
 	@echo "  make test-coverage      带覆盖率"
+	@echo "  make test-watch         监听模式"
+	@echo "  make test-file          跑单个文件(FILE=path)"
 	@echo "  make build              构建"
 	@echo "  make clean              清理"
 	@echo "  make infra-up           启动基础设施"
@@ -20,6 +23,7 @@ help:
 	@echo "  make infra-ps           查看基础设施状态"
 	@echo "  make infra-reset        重置基础设施（删除数据）"
 	@echo "  make build-registry     生成插件注册表"
+	@echo "  make registry-check     生成并校验注册表"
 
 install:
 	pnpm install
@@ -33,26 +37,43 @@ format:
 typecheck:
 	pnpm typecheck
 
-test:
-	pnpm test
-
-test-unit:
-	pnpm test:unit
-
-test-integration:
-	pnpm test:integration
-
-test-e2e:
-	pnpm test:e2e
-
-test-coverage:
-	pnpm test:coverage
-
 build:
 	pnpm build
 
 clean:
 	pnpm clean
+
+
+# ==================== 测试 ====================
+
+test:
+	@if [ -z "$(FILTER)" ]; then \
+		pnpm test; \
+	else \
+		pnpm exec jest --testPathPattern='$(FILTER)' --passWithNoTests; \
+	fi
+
+test-unit:
+	pnpm exec jest --testPathIgnorePatterns='integration|e2e'
+
+test-integration:
+	pnpm exec jest --testPathPattern='integration' --passWithNoTests
+
+test-e2e:
+	pnpm exec jest --testPathPattern='e2e' --passWithNoTests
+
+test-coverage:
+	pnpm exec jest --coverage
+
+test-watch:
+	pnpm exec jest --watch
+
+test-file:
+	@if [ -z "$(FILE)" ]; then \
+		echo "用法：make test-file FILE=tests/xxx.test.ts"; \
+		exit 1; \
+	fi
+	pnpm exec jest $(FILE)
 
 # ==================== 基础设施 ====================
 
@@ -79,3 +100,13 @@ infra-reset:
 
 build-registry:
 	node scripts/build-registry.js
+
+registry-check: build-registry
+	@node -e "
+	  const r = require('./core/registry/registry.json');
+	  if (!r.version) throw new Error('registry 缺少 version');
+	  if (!Array.isArray(r.plugins)) throw new Error('registry.plugins 不是数组');
+	  if (!Array.isArray(r.services)) throw new Error('registry.services 不是数组');
+	  if (!Array.isArray(r.topologicalOrder)) throw new Error('registry.topologicalOrder 不是数组');
+	  console.log('[registry] 校验通过：', r.plugins.length, '个插件，', r.services.length, '个服务');
+	"

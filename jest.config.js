@@ -2,8 +2,10 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+
   roots: ['<rootDir>/tests'],
   testMatch: ['**/*.test.ts'],
+
   moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
 
   transform: {
@@ -38,11 +40,41 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
 
   collectCoverageFrom: [
-    'core/**/*.{ts,js}',
-    'shared/**/*.{ts,js}',
+    'core/libs/src/**/*.ts',
+    'core/plugin-host/src/**/*.ts',
+    'core/services/observability/src/**/*.ts',
+    'shared/message-bus/**/*.ts',
+    'shared/layer-config/**/*.ts',
+    '!**/*.d.ts',
+    '!**/index.ts',
+    '!**/types.ts',
     '!**/node_modules/**',
     '!**/dist/**',
   ],
+
   coverageDirectory: 'coverage',
+  coverageReporters: ['text', 'text-summary', 'lcov', 'html'],
+
+  coverageThreshold: {
+    global: {
+      lines: 60,
+      functions: 60,
+      branches: 50,
+      statements: 60,
+    },
+  },
+
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
+    '/coverage/',
+    '\\.d\\.ts$',
+  ],
+
   clearMocks: true,
+  restoreMocks: true,
+  verbose: false,
+
+  // 忽略集成和端到端测试，默认只跑单元
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };

@@ -1,0 +1,15 @@
+{
+  "name": "ingest",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.raw"],
+    "publish": ["telemetry.aggregated", "events.commands", "events.alerts"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "MQTT 出入口"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "observability",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": { "subscribe": [], "publish": [] },
+  "routes": ["/metrics", "/health"],
+  "frontend": null,
+  "description": "监控 + 日志 + 追踪"
+}

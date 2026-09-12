@@ -1,0 +1,15 @@
+{
+  "name": "dispatch-core",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.aggregated"],
+    "publish": ["events.commands"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "调度核心（算法可插拔）"
+}

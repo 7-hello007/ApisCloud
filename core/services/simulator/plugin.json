@@ -1,0 +1,15 @@
+{
+  "name": "simulator",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": [],
+    "publish": ["telemetry.raw"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "模拟数据源（500 辆模拟）"
+}

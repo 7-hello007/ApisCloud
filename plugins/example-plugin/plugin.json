@@ -1,0 +1,12 @@
+{
+  "name": "example-plugin",
+  "version": "0.1.0",
+  "core": false,
+  "profile": ["core"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": { "subscribe": [], "publish": [] },
+  "routes": [],
+  "frontend": null,
+  "description": "示例插件，用于验证 registry 扫描"
+}
