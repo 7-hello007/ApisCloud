@@ -1,0 +1,17 @@
+{
+  "name": "@apiscloud/aggregator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "聚合器：消费 telemetry.raw，按时间窗聚合，发 telemetry.aggregated",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist/server-entry.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "@apiscloud/message-bus": "workspace:*",
+    "@apiscloud/observability": "workspace:*"
+  }
+}

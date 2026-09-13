@@ -4,11 +4,18 @@ const { detectAnomalies, DEFAULT_CONFIG } = require('./detectors');
 
 /**
  * anomaly 插件。
- * 所有消息总线依赖通过 ctx 注入。
+ * 订阅 telemetry.raw，检测速度异常和电量骤降，发 events.alerts。
+ *
+ * 所有消息总线依赖通过 ctx 注入，不 require workspace 包。
  */
 
+/** 车辆上一状态：Map<vehicle_id, { battery:number, ts:number }> */
 const vehiclePrevState = new Map();
+
+/** 检测配置 */
 let config = { ...DEFAULT_CONFIG };
+
+/** 总线（onLoad 时从 ctx.bus 注入） */
 let bus = null;
 let createEnvelope = null;
 let TOPICS = null;
@@ -76,6 +83,7 @@ module.exports = {
       config,
     });
 
+    // 更新上一状态
     vehiclePrevState.set(telemetry.vehicle_id, {
       battery: telemetry.battery,
       ts: telemetry.ts,

@@ -9,15 +9,22 @@ import {
 import { createEnvelope, TOPICS, type Envelope, type MessageBus } from '@apiscloud/message-bus';
 
 import { withTimeout } from './guard';
+import { createHttpClient, type HttpClient } from './http-client';
 import { LifecycleManager } from './lifecycle';
 import { PluginRegistry } from './registry';
-import type { LoadedPlugin, PluginContext, Route } from './types';
+import type {
+  LoadedPlugin,
+  PluginContext,
+  Route,
+  ServiceUrls,
+  TopicFilter,
+} from './types';
 
 export interface PluginHostOptions {
   config: AppConfig;
   logger?: Logger;
-  /** 插件可用的消息总线（阶段四新增，可选） */
   bus?: MessageBus;
+  services?: ServiceUrls;
   loadTimeoutMs?: number;
   unloadTimeoutMs?: number;
   messageTimeoutMs?: number;
@@ -30,23 +37,25 @@ export interface LoadAllResult {
   total: number;
 }
 
-/**
- * 插件宿主。
- * 负责插件注册、生命周期、消息分发、定时调用、路由聚合、健康检查。
- */
 export class PluginHost {
   private readonly config: AppConfig;
   private readonly logger: Logger;
   private readonly bus?: MessageBus;
+  private readonly services?: ServiceUrls;
+  private readonly http: HttpClient;
   private readonly registry: PluginRegistry;
   private readonly lifecycle: LifecycleManager;
   private readonly messageTimeoutMs: number;
   private readonly timerTimeoutMs: number;
   private readonly startedAt: number;
+  /** 已激活的插件名（阶段五新增，用于懒订阅） */
+  private readonly activated = new Set<string>();
 
   constructor(options: PluginHostOptions) {
     this.config = options.config;
     this.bus = options.bus;
+    this.services = options.services ?? buildDefaultServices();
+    this.http = createHttpClient();
     this.logger =
       options.logger ??
       createLogger({
@@ -83,8 +92,25 @@ export class PluginHost {
       else failed++;
     }
 
+    // 阶段五：懒订阅决策
+    // - lazy: false 的插件始终激活
+    // - lazy: true 且有订阅主题的插件激活（它必须订阅才能工作）
+    // - lazy: true 且无订阅主题的插件不激活（如 dashboard，不占消费者名额）
+    for (const plugin of targets) {
+      const topics = plugin.manifest.topics?.subscribe ?? [];
+      if (!plugin.manifest.lazy || topics.length > 0) {
+        this.activated.add(plugin.manifest.name);
+      }
+    }
+
     this.logger.info(
-      { loaded, failed, total: targets.length, profile: profile ?? 'all' },
+      {
+        loaded,
+        failed,
+        total: targets.length,
+        profile: profile ?? 'all',
+        activated: this.activated.size,
+      },
       '插件加载完成',
     );
 
@@ -96,15 +122,47 @@ export class PluginHost {
     for (const plugin of plugins) {
       await this.lifecycle.unload(plugin);
     }
+    this.activated.clear();
     this.logger.info({ count: plugins.length }, '插件卸载完成');
+  }
+
+  /** 阶段五：手动激活插件 */
+  activatePlugin(name: string): boolean {
+    const plugin = this.registry.get(name);
+    if (!plugin) return false;
+    this.activated.add(name);
+    this.logger.info({ plugin: name }, '插件已激活');
+    return true;
+  }
+
+  /** 阶段五：查询插件是否已激活 */
+  isActivated(name: string): boolean {
+    return this.activated.has(name);
+  }
+
+  /** 阶段五：返回所有已激活插件订阅的主题集合 */
+  getSubscribedTopics(): string[] {
+    const topics = new Set<string>();
+    for (const { manifest } of this.registry.list()) {
+      if (!this.activated.has(manifest.name)) continue;
+      for (const t of manifest.topics?.subscribe ?? []) {
+        topics.add(t);
+      }
+    }
+    return Array.from(topics).sort();
   }
 
   async dispatchMessage(topic: string, envelope: Envelope): Promise<void> {
     for (const { instance, manifest } of this.registry.list()) {
       if (!instance.onMessage) continue;
+      // 阶段五：未激活的插件不接收消息
+      if (!this.activated.has(manifest.name)) continue;
 
       const subscribed = manifest.topics?.subscribe ?? [];
       if (!subscribed.includes(topic)) continue;
+
+      const filter = manifest.topics?.filter;
+      if (filter && !matchesFilter(envelope, filter)) continue;
 
       const label = `plugin:${manifest.name}:onMessage`;
       try {
@@ -126,6 +184,7 @@ export class PluginHost {
   async dispatchTimer(): Promise<void> {
     for (const { instance, manifest } of this.registry.list()) {
       if (!instance.onTimer) continue;
+      if (!this.activated.has(manifest.name)) continue;
 
       const label = `plugin:${manifest.name}:onTimer`;
       try {
@@ -209,6 +268,41 @@ export class PluginHost {
         EVENTS_COMMANDS: TOPICS.EVENTS_COMMANDS,
         EVENTS_ALERTS: TOPICS.EVENTS_ALERTS,
       },
+      http: this.http,
+      services: this.services,
     };
   }
+}
+
+function buildDefaultServices(): ServiceUrls {
+  const dwPort = process.env.DATA_WRITER_PORT ?? '9104';
+  const gwPort = process.env.GATEWAY_PORT ?? '9101';
+  return {
+    dataWriter: process.env.DATA_WRITER_URL ?? `http://localhost:${dwPort}`,
+    gateway: process.env.GATEWAY_URL ?? `http://localhost:${gwPort}`,
+  };
+}
+
+function matchesFilter(envelope: Envelope, filter: TopicFilter): boolean {
+  const value = getField(envelope.payload, filter.field);
+
+  if (filter.equals !== undefined) {
+    return value === filter.equals;
+  }
+  if (filter.in !== undefined) {
+    return filter.in.includes(value);
+  }
+  return true;
+}
+
+function getField(obj: unknown, path: string): unknown {
+  const parts = path.split('.');
+  let current: unknown = obj;
+  for (const part of parts) {
+    if (current === null || current === undefined || typeof current !== 'object') {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[part];
+  }
+  return current;
 }

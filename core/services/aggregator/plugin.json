@@ -1,0 +1,15 @@
+{
+  "name": "aggregator",
+  "version": "0.1.0",
+  "core": true,
+  "profile": ["core", "full"],
+  "lazy": false,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.raw"],
+    "publish": ["telemetry.aggregated"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "聚合器：原始遥测按时间窗聚合"
+}

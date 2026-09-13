@@ -12,31 +12,15 @@ scrape_configs:
   - job_name: 'apiscloud-services'
     metrics_path: '/metrics'
     static_configs:
-      - targets:
-          - 'host.docker.internal:9101'
-        labels:
-          service: 'gateway'
-      - targets:
-          - 'host.docker.internal:9102'
-        labels:
-          service: 'plugin-host'
-      - targets:
-          - 'host.docker.internal:9103'
-        labels:
-          service: 'ingest'
-      - targets:
-          - 'host.docker.internal:9104'
-        labels:
-          service: 'data-writer'
-      - targets:
-          - 'host.docker.internal:9105'
-        labels:
-          service: 'dispatch-core'
-      - targets:
-          - 'host.docker.internal:9106'
-        labels:
-          service: 'observability'
-      - targets:
-          - 'host.docker.internal:9107'
-        labels:
-          service: 'simulator'
+      - targets: ['host.docker.internal:9101']
+        labels: { service: 'gateway' }
+      - targets: ['host.docker.internal:9103']
+        labels: { service: 'ingest' }
+      - targets: ['host.docker.internal:9104']
+        labels: { service: 'data-writer' }
+      - targets: ['host.docker.internal:9105']
+        labels: { service: 'dispatch-core' }
+      - targets: ['host.docker.internal:9107']
+        labels: { service: 'simulator' }
+      - targets: ['host.docker.internal:9108']
+        labels: { service: 'aggregator' }

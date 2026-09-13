@@ -33,3 +33,7 @@ web/dist/
 web/node_modules/
 web/.vite/
 web/.turbo/
+
+# 开发脚本产物
+logs/
+.pids/

@@ -1,0 +1,15 @@
+{
+  "name": "charging-scheduler",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.aggregated"],
+    "publish": ["events.commands"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "充电调度：消费聚合遥测，检测低电量，下发充电指令"
+}

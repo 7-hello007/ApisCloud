@@ -1,0 +1,19 @@
+{
+  "name": "route-optimizer",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.raw"],
+    "publish": ["events.commands"],
+    "filter": {
+      "field": "status",
+      "equals": "running"
+    }
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "路线优化：消费遥测，检测低速车，发优化指令"
+}

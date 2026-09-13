@@ -8,6 +8,8 @@ export type {
   LoadedPlugin,
   Route,
   PluginHealth,
+  TopicFilter,
+  ServiceUrls,
 } from './types';
 
 // schema
@@ -17,6 +19,10 @@ export type { PluginManifestInput } from './schema';
 // guard
 export { withTimeout, safeCall } from './guard';
 export type { SafeResult } from './guard';
+
+// http-client
+export { createHttpClient } from './http-client';
+export type { HttpClient, HttpClientOptions } from './http-client';
 
 // loader
 export {

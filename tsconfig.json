@@ -12,6 +12,7 @@
     { "path": "./core/services/ingest" },
     { "path": "./core/services/data-writer" },
     { "path": "./core/services/dispatch-core" },
-    { "path": "./core/services/gateway" }
+    { "path": "./core/services/gateway" },
+    { "path": "./core/services/aggregator" }
   ]
 }

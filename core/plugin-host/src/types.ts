@@ -6,7 +6,8 @@ import type {
   TopicName,
 } from '@apiscloud/message-bus';
 
-/** 插件接口：所有插件必须实现的方法（全部可选） */
+import type { HttpClient } from './http-client';
+
 export interface Plugin {
   onLoad?(ctx: PluginContext): Promise<void> | void;
   onUnload?(): Promise<void> | void;
@@ -16,22 +17,27 @@ export interface Plugin {
   getHealth?(): PluginHealth | Promise<PluginHealth>;
 }
 
-/** 插件上下文，onLoad 时注入 */
+/** 服务 URL 清单（阶段五新增） */
+export interface ServiceUrls {
+  dataWriter?: string;
+  gateway?: string;
+}
+
 export interface PluginContext {
   pluginId: string;
   logger: Logger;
-  /** 插件可通过此总线发布消息（阶段四新增，可选） */
   bus?: MessageBus;
-  /** 创建标准信封（阶段四新增，可选） */
   createEnvelope?: <T>(options: CreateEnvelopeOptions<T>) => Envelope<T>;
-  /** 消息总线主题常量（阶段四新增，可选） */
   topics?: {
     TELEMETRY_RAW: TopicName;
     TELEMETRY_AGGREGATED: TopicName;
     EVENTS_COMMANDS: TopicName;
     EVENTS_ALERTS: TopicName;
   };
-  /** 插件可选的运行时依赖由外部注入 */
+  /** HTTP 客户端（阶段五新增） */
+  http?: HttpClient;
+  /** 服务 URL 清单（阶段五新增） */
+  services?: ServiceUrls;
   [key: string]: unknown;
 }
 
@@ -46,6 +52,12 @@ export interface PluginHealth {
   message?: string;
 }
 
+export interface TopicFilter {
+  field: string;
+  equals?: unknown;
+  in?: unknown[];
+}
+
 export interface PluginManifest {
   name: string;
   version: string;
@@ -56,6 +68,7 @@ export interface PluginManifest {
   topics?: {
     subscribe?: string[];
     publish?: string[];
+    filter?: TopicFilter;
   };
   routes?: string[];
   frontend?: string | null;

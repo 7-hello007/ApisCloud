@@ -78,6 +78,9 @@ test-file:
 # ==================== 基础设施 ====================
 
 infra-up:
+	@if [ -n "$$HOST_IP" ]; then \
+		echo "使用 HOST_IP=$$HOST_IP"; \
+	fi
 	docker compose -f docker-compose.infra.yml --env-file .env up -d
 	@echo "等待服务健康检查..."
 	@sleep 3

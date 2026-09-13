@@ -2,14 +2,12 @@ import type { AppConfig } from '@apiscloud/libs';
 
 import type { DataWriterConfig } from './types';
 
-/**
- * 从环境变量加载 data-writer 配置。
- */
 export function loadDataWriterConfig(_appConfig: AppConfig): DataWriterConfig {
   return {
     vehicleLatestTtlSec: readInt('DATA_WRITER_LATEST_TTL_SEC', 60),
     recentAlertsMax: readInt('DATA_WRITER_RECENT_ALERTS_MAX', 100),
     consumerGroup: process.env.DATA_WRITER_CONSUMER_GROUP ?? 'apiscloud-data-writer',
+    queryLimit: readInt('DATA_WRITER_QUERY_LIMIT', 100),
   };
 }
 

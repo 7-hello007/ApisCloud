@@ -97,6 +97,18 @@ importers:
         specifier: ^4.6.2
         version: 4.6.2
 
+  core/services/aggregator:
+    dependencies:
+      '@apiscloud/libs':
+        specifier: workspace:*
+        version: link:../../libs
+      '@apiscloud/message-bus':
+        specifier: workspace:*
+        version: link:../../../shared/message-bus
+      '@apiscloud/observability':
+        specifier: workspace:*
+        version: link:../observability
+
   core/services/data-writer:
     dependencies:
       '@apiscloud/libs':

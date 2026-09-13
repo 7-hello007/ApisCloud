@@ -19,9 +19,7 @@ import type { AdminHandler, GatewayConfig, PluginRouteEntry } from './types';
 export interface GatewayServiceOptions {
   config: AppConfig;
   port: number;
-  /** 可注入的 MessageBus（测试用） */
   bus?: MessageBus;
-  /** 可注入的插件列表（测试用；不传则从 pluginDirs 扫描） */
   plugins?: LoadedPlugin[];
 }
 
@@ -29,9 +27,7 @@ export interface GatewayService {
   readonly observability: ObservabilityService;
   readonly gatewayConfig: GatewayConfig;
   readonly pluginHost: PluginHost;
-  /** gateway HTTP 服务器的实际端口（端口为 0 时返回系统分配的端口） */
   port(): number;
-  /** 手动覆盖插件路由（一般不用） */
   setPluginRoutes(routes: PluginRouteEntry[]): void;
   start(): Promise<void>;
   stop(): Promise<void>;
@@ -40,9 +36,6 @@ export interface GatewayService {
 /**
  * 创建 gateway 服务。
  * 组合：配置 + 总线 + 可观测性 + PluginHost + HTTP 服务器。
- *
- * 注意：gateway 不启动 observability 自带的 HTTP 服务器，
- * 只复用其 logger / metrics / health registry，HTTP 服务器由 gateway 自己的 server 承担。
  */
 export function createGatewayService(options: GatewayServiceOptions): GatewayService {
   const gwConfig = loadGatewayConfig(options.config);
@@ -56,10 +49,6 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
   });
 
   const bus = options.bus ?? createMessageBus(options.config);
-
-  // ============================================================
-  // PluginHost
-  // ============================================================
 
   const pluginHost = new PluginHost({
     config: options.config,
@@ -86,10 +75,6 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
   }
 
   let pluginRoutes: PluginRouteEntry[] = [];
-
-  // ============================================================
-  // 管理端点
-  // ============================================================
 
   const adminHandlers: Record<string, AdminHandler> = {};
 
@@ -174,15 +159,13 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
           lazy: manifest.lazy,
           topics: manifest.topics ?? { subscribe: [], publish: [] },
           frontend: manifest.frontend ?? null,
+          activated: pluginHost.isActivated(manifest.name),
         })),
         byProfile,
+        subscribedTopics: pluginHost.getSubscribedTopics(),
       }),
     );
   };
-
-  // ============================================================
-  // HTTP 服务器
-  // ============================================================
 
   const server: GatewayServer = createGatewayServer({
     port: options.port,
@@ -194,19 +177,11 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
     getPluginRoutes: () => pluginRoutes,
   });
 
-  // ============================================================
-  // 消息桥：订阅插件主题，转发给 PluginHost
-  // ============================================================
-
   const subscriptions: Subscription[] = [];
 
   async function subscribeToPluginTopics(): Promise<void> {
-    const topics = new Set<string>();
-    for (const { manifest } of pluginHost.getRegistry().list()) {
-      for (const t of manifest.topics?.subscribe ?? []) {
-        topics.add(t);
-      }
-    }
+    // 阶段五：用 getSubscribedTopics() 只拿已激活插件关心的主题
+    const topics = pluginHost.getSubscribedTopics();
 
     for (const topic of topics) {
       const sub = await bus.subscribe(
@@ -220,14 +195,13 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
       observability.logger.debug({ topic }, 'gateway 订阅插件主题');
     }
 
-    if (topics.size > 0) {
-      observability.logger.info({ topics: Array.from(topics) }, 'gateway 消息桥就绪');
+    if (topics.length > 0) {
+      observability.logger.info(
+        { topics, consumerGroup: 'apiscloud-gateway' },
+        'gateway 消息桥就绪（共享消费者组）',
+      );
     }
   }
-
-  // ============================================================
-  // 生命周期
-  // ============================================================
 
   return {
     observability,
@@ -245,23 +219,17 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
 
     async start() {
       await bus.connect();
-      // 不启动 observability 的 HTTP 服务器；只复用其 logger/metrics/health
-      // await observability.start();  ← 移除
 
-      // 1. 加载插件
       const result = await pluginHost.loadAll(gwConfig.pluginProfile);
       observability.logger.info(
         { loaded: result.loaded, failed: result.failed, profile: gwConfig.pluginProfile },
         '插件加载完成',
       );
 
-      // 2. 聚合插件路由
       pluginRoutes = pluginHost.getRoutes();
 
-      // 3. 订阅插件主题
       await subscribeToPluginTopics();
 
-      // 4. 启动 gateway 自己的 HTTP 服务器
       await server.start();
 
       observability.logger.info(
@@ -271,28 +239,22 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
           proxiedServices: gwConfig.proxiedServices.map((s) => s.name),
           pluginsLoaded: result.loaded,
           pluginRoutes: pluginRoutes.length,
+          subscribedTopics: pluginHost.getSubscribedTopics(),
         },
         'gateway 服务已启动',
       );
     },
 
     async stop() {
-      // 1. 取消总线订阅
       for (const sub of subscriptions) {
         await sub.unsubscribe();
       }
       subscriptions.length = 0;
 
-      // 2. 卸载插件
       await pluginHost.unloadAll();
-
-      // 3. 停止 HTTP 服务器
       await server.stop();
-
-      // 4. 关闭总线
       await bus.close();
 
-      // 不调用 observability.stop()（未启动其 server）
       observability.logger.info('gateway 服务已停止');
     },
   };

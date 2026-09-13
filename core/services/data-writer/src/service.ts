@@ -24,30 +24,25 @@ import { handleTelemetryAggregated } from './handlers/telemetry-aggregated';
 import { handleTelemetryRaw } from './handlers/telemetry-raw';
 import { createPgWriter, type PgWriter } from './pg-writer';
 import { createRedisWriter, type RedisWriter } from './redis-writer';
+import { createDataWriterServer, type DataWriterServer } from './server';
 import type { DataWriterConfig } from './types';
 
 export interface DataWriterServiceOptions {
   config: AppConfig;
   port: number;
-  /** 可注入的 PG 客户端（测试用） */
   pg?: PgClient;
-  /** 可注入的 Redis 客户端（测试用） */
   redis?: RedisWrapper;
-  /** 可注入的 MessageBus（测试用） */
   bus?: MessageBus;
 }
 
 export interface DataWriterService {
   readonly observability: ObservabilityService;
   readonly dataWriterConfig: DataWriterConfig;
+  port(): number;
   start(): Promise<void>;
   stop(): Promise<void>;
 }
 
-/**
- * 创建 data-writer 服务。
- * 组合：配置 + PG + Redis + 总线订阅 + 可观测性。
- */
 export function createDataWriterService(
   options: DataWriterServiceOptions,
 ): DataWriterService {
@@ -127,13 +122,28 @@ export function createDataWriterService(
     }
   }
 
+  const server: DataWriterServer = createDataWriterServer({
+    port: options.port,
+    service: 'data-writer',
+    logger: observability.logger,
+    metrics: observability.metrics,
+    redis,
+    pg,
+    config: dwConfig,
+  });
+
   return {
     observability,
     dataWriterConfig: dwConfig,
 
+    port() {
+      return server.port();
+    },
+
     async start() {
       await bus.connect();
-      await observability.start();
+      // 不启动 observability 的 HTTP 服务器，用 data-writer 自己的
+      await server.start();
 
       const sub1 = await bus.subscribe(TOPICS.TELEMETRY_RAW, onTelemetryRaw, {
         groupId: dwConfig.consumerGroup,
@@ -155,24 +165,10 @@ export function createDataWriterService(
       });
       subscriptions.push(sub4);
 
-      observability.addHealthTarget({
-        name: 'bus',
-        check: async () => bus.health(),
-      });
-
-      observability.addHealthTarget({
-        name: 'pg',
-        check: async () => pg.health(),
-      });
-
-      observability.addHealthTarget({
-        name: 'redis',
-        check: async () => redis.health(),
-      });
-
       observability.logger.info(
         {
           consumerGroup: dwConfig.consumerGroup,
+          port: server.port(),
           topics: [
             TOPICS.TELEMETRY_RAW,
             TOPICS.TELEMETRY_AGGREGATED,
@@ -193,10 +189,10 @@ export function createDataWriterService(
       }
       subscriptions.length = 0;
 
+      await server.stop();
       await bus.close();
       await pg.close();
       await redis.close();
-      await observability.stop();
 
       observability.logger.info('data-writer 服务已停止');
     },

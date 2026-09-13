@@ -44,7 +44,9 @@
       "@apiscloud/dispatch-core": ["./core/services/dispatch-core/src"],
       "@apiscloud/dispatch-core/*": ["./core/services/dispatch-core/src/*"],
       "@apiscloud/gateway": ["./core/services/gateway/src"],
-      "@apiscloud/gateway/*": ["./core/services/gateway/src/*"]
+      "@apiscloud/gateway/*": ["./core/services/gateway/src/*"],
+      "@apiscloud/aggregator": ["./core/services/aggregator/src"],
+      "@apiscloud/aggregator/*": ["./core/services/aggregator/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

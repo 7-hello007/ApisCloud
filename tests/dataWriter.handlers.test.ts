@@ -87,6 +87,7 @@ describe('dataWriter.handlers', () => {
     vehicleLatestTtlSec: 60,
     recentAlertsMax: 100,
     consumerGroup: 'test',
+    queryLimit: 100,
   };
 
   describe('handleTelemetryRaw', () => {

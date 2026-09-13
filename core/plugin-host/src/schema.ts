@@ -1,6 +1,21 @@
 import { z } from 'zod';
 
 /**
+ * 主题过滤器。
+ * 只处理 payload 里 field 匹配 equals 或 in 的消息。
+ * field 支持点分路径，如 'status' 或 'position.lat'。
+ */
+const TopicFilterSchema = z
+  .object({
+    field: z.string().min(1),
+    equals: z.unknown().optional(),
+    in: z.array(z.unknown()).optional(),
+  })
+  .refine((v) => v.equals !== undefined || v.in !== undefined, {
+    message: 'filter 必须声明 equals 或 in',
+  });
+
+/**
  * plugin.json 校验 schema。
  * 一旦定下，属于核心契约，破坏性改动需版本化。
  */
@@ -18,6 +33,7 @@ export const PluginManifestSchema = z.object({
     .object({
       subscribe: z.array(z.string()).default([]),
       publish: z.array(z.string()).default([]),
+      filter: TopicFilterSchema.optional(),
     })
     .optional(),
   routes: z.array(z.string()).default([]),
@@ -25,3 +41,4 @@ export const PluginManifestSchema = z.object({
 });
 
 export type PluginManifestInput = z.input<typeof PluginManifestSchema>;
+export type TopicFilter = z.infer<typeof TopicFilterSchema>;

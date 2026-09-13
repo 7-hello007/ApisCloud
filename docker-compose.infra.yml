@@ -119,6 +119,10 @@ services:
       start_period: 40s
 
   # ==================== Prometheus ====================
+  # - --config.expand-env: 让 prometheus.yml 支持 ${VAR}
+  # - environment: 把各服务端口传给容器，供 expand-env 使用
+  # - extra_hosts: host.docker.internal 默认用 Docker 的 host-gateway
+  #   如果宿主环境需要覆盖，在 shell 里 export HOST_IP=<ip> 即可
   prometheus:
     image: prom/prometheus:v2.54.0
     container_name: apiscloud-prometheus
@@ -130,6 +134,8 @@ services:
       - "--web.enable-lifecycle"
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
+    extra_hosts:
+      - "host.docker.internal:${HOST_IP:-host-gateway}"
     volumes:
       - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -175,6 +181,8 @@ services:
       TZ: Asia/Shanghai
     ports:
       - "${GRAFANA_PORT:-13000}:3000"
+    extra_hosts:
+      - "host.docker.internal:${HOST_IP:-host-gateway}"
     volumes:
       - grafana_data:/var/lib/grafana
       - ./monitor/grafana/provisioning:/etc/grafana/provisioning:ro

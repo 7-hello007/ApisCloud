@@ -13,6 +13,19 @@ export type { PgWriter } from './pg-writer';
 export { createRedisWriter } from './redis-writer';
 export type { RedisWriter } from './redis-writer';
 
+// 查询
+export {
+  queryActiveVehicles,
+  queryVehicleById,
+  queryRecentAlerts,
+  queryRecentCommands,
+} from './query';
+export type { QueryContext } from './query';
+
+// 服务器
+export { createDataWriterServer } from './server';
+export type { DataWriterServer, DataWriterServerOptions } from './server';
+
 // 映射
 export {
   extractTelemetryRaw,
@@ -42,4 +55,7 @@ export type {
   AlertPayload,
   DispatchCommandPayload,
   DataWriterConfig,
+  VehicleQueryRow,
+  AlertQueryRow,
+  CommandQueryRow,
 } from './types';

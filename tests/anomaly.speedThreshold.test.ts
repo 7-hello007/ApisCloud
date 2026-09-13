@@ -88,4 +88,14 @@ describe('anomaly.speedThreshold', () => {
       ]);
     });
   });
+
+  describe('默认值', () => {
+    it('DEFAULT_CONFIG 包含 3 个字段', () => {
+      expect(Object.keys(DEFAULT_CONFIG).sort()).toEqual([
+        'batteryDropPercent',
+        'batteryDropWindowMs',
+        'speedThresholdKmh',
+      ]);
+    });
+  });
 });

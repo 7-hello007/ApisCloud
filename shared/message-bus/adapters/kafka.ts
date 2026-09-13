@@ -14,6 +14,15 @@ import type {
 /**
  * Kafka 适配器。
  * 支持消费者组、分区键、消费位点提交。
+ *
+ * 关键设计：每个 topic 用独立的 Kafka 消费组。
+ * Kafka 里同一 groupId 的所有 member 必须订阅相同的 topic 集合，
+ * 否则会无限 rebalance。为了让一个服务能订阅多个 topic，
+ * 这里把 baseGroupId 和 topic 名拼成复合 groupId：
+ *   <baseGroupId>--<topic 去点>
+ * 例如 baseGroupId = 'apiscloud-data-writer'，topic = 'telemetry.raw'
+ * 实际 groupId = 'apiscloud-data-writer--telemetry-raw'
+ * 多实例部署时，同 topic 仍共享同一 groupId，保留负载均衡能力。
  */
 export class KafkaAdapter implements MessageBus {
   readonly type = 'kafka' as const;
@@ -61,8 +70,8 @@ export class KafkaAdapter implements MessageBus {
     this.ensureConnected();
 
     const consumers = this.consumers;
-    const groupId = options?.groupId ?? `apiscloud-${topic.replace(/\./g, '-')}`;
-    const consumer = this.kafka.consumer({ groupId });
+    const kafkaGroupId = buildGroupId(options?.groupId, topic);
+    const consumer = this.kafka.consumer({ groupId: kafkaGroupId });
 
     await consumer.connect();
     await consumer.subscribe({ topic, fromBeginning: false });
@@ -84,7 +93,7 @@ export class KafkaAdapter implements MessageBus {
       },
     });
 
-    const consumerKey = `${groupId}:${topic}`;
+    const consumerKey = `${kafkaGroupId}:${topic}`;
     consumers.set(consumerKey, consumer);
 
     return {
@@ -97,8 +106,7 @@ export class KafkaAdapter implements MessageBus {
   }
 
   async commit(_topic: string, _offset: string): Promise<void> {
-    // kafkajs 的 eachMessage 自动提交位点，无需手动提交
-    // 如需手动提交，改为 eachBatch + autoCommit: false
+    // kafkajs 的 eachMessage 自动提交位点
   }
 
   async health(): Promise<HealthCheckResult> {
@@ -134,4 +142,17 @@ export class KafkaAdapter implements MessageBus {
       throw new Error('Kafka MessageBus 未连接，请先调用 connect()');
     }
   }
+}
+
+/**
+ * 构造 Kafka 消费组 ID。
+ * 有 baseGroupId：<base>--<topic 去点>
+ * 无 baseGroupId：apiscloud-<topic 去点>
+ */
+function buildGroupId(baseGroupId: string | undefined, topic: string): string {
+  const suffix = topic.replace(/\./g, '-');
+  if (baseGroupId) {
+    return `${baseGroupId}--${suffix}`;
+  }
+  return `apiscloud-${suffix}`;
 }
