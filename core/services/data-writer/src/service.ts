@@ -19,6 +19,7 @@ import {
 
 import { loadDataWriterConfig } from './config';
 import { handleEventsAlerts } from './handlers/events-alerts';
+import { handleEventsCommands } from './handlers/events-commands';
 import { handleTelemetryAggregated } from './handlers/telemetry-aggregated';
 import { handleTelemetryRaw } from './handlers/telemetry-raw';
 import { createPgWriter, type PgWriter } from './pg-writer';
@@ -113,6 +114,19 @@ export function createDataWriterService(
     }
   }
 
+  async function onEventsCommands(env: Envelope): Promise<void> {
+    try {
+      await handleEventsCommands(env, {
+        pgWriter,
+        logger: observability.logger,
+        metrics: observability.metrics,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      observability.logger.error({ err: message }, 'events.commands 处理失败');
+    }
+  }
+
   return {
     observability,
     dataWriterConfig: dwConfig,
@@ -136,6 +150,11 @@ export function createDataWriterService(
       });
       subscriptions.push(sub3);
 
+      const sub4 = await bus.subscribe(TOPICS.EVENTS_COMMANDS, onEventsCommands, {
+        groupId: dwConfig.consumerGroup,
+      });
+      subscriptions.push(sub4);
+
       observability.addHealthTarget({
         name: 'bus',
         check: async () => bus.health(),
@@ -154,7 +173,12 @@ export function createDataWriterService(
       observability.logger.info(
         {
           consumerGroup: dwConfig.consumerGroup,
-          topics: [TOPICS.TELEMETRY_RAW, TOPICS.TELEMETRY_AGGREGATED, TOPICS.EVENTS_ALERTS],
+          topics: [
+            TOPICS.TELEMETRY_RAW,
+            TOPICS.TELEMETRY_AGGREGATED,
+            TOPICS.EVENTS_ALERTS,
+            TOPICS.EVENTS_COMMANDS,
+          ],
         },
         'data-writer 服务已启动',
       );

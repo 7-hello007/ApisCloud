@@ -32,6 +32,9 @@ function createMockPgWriter(): MockPgWriter {
     async insertAlert(a) {
       alertCalls.push([a]);
     },
+    async insertDispatchCommand() {
+      // 该测试不涉及 dispatch_commands
+    },
   };
 }
 

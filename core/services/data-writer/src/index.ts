@@ -18,9 +18,11 @@ export {
   extractTelemetryRaw,
   extractTelemetryAggregated,
   extractAlert,
+  extractDispatchCommand,
   telemetryToPgParams,
   telemetryToLatestParams,
   alertToPgParams,
+  commandToPgParams,
 } from './mapper';
 
 // handlers
@@ -30,11 +32,14 @@ export { handleTelemetryAggregated } from './handlers/telemetry-aggregated';
 export type { TelemetryAggregatedDeps } from './handlers/telemetry-aggregated';
 export { handleEventsAlerts } from './handlers/events-alerts';
 export type { EventsAlertsDeps } from './handlers/events-alerts';
+export { handleEventsCommands } from './handlers/events-commands';
+export type { EventsCommandsDeps } from './handlers/events-commands';
 
 // 类型
 export type {
   TelemetryRawPayload,
   TelemetryAggregatedPayload,
   AlertPayload,
+  DispatchCommandPayload,
   DataWriterConfig,
 } from './types';

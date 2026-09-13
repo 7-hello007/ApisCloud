@@ -1,0 +1,15 @@
+{
+  "name": "geofence",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.raw"],
+    "publish": ["events.alerts"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "地理围栏检测：圆形区域进出告警"
+}

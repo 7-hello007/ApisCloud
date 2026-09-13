@@ -1,0 +1,15 @@
+{
+  "name": "nearest",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": [],
+    "publish": []
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "最近邻调度算法：Haversine 距离排序"
+}

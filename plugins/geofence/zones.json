@@ -1,0 +1,13 @@
+{
+  "zones": [
+    {
+      "id": "zone-shanghai",
+      "name": "上海运营区域",
+      "type": "circle",
+      "center": { "lat": 31.2304, "lng": 121.4737 },
+      "radiusKm": 30,
+      "alertOnExit": true,
+      "alertOnEnter": false
+    }
+  ]
+}

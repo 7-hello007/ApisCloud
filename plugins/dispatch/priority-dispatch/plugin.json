@@ -1,0 +1,15 @@
+{
+  "name": "priority-dispatch",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": [],
+    "publish": []
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "优先级调度算法：优先级动态调整距离/电量权重"
+}

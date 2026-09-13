@@ -48,3 +48,18 @@ export interface DataWriterConfig {
   /** 总线消费组，默认 apiscloud-data-writer */
   consumerGroup: string;
 }
+
+/**
+ * 调度命令 payload。
+ * 来自 dispatch-core 的 events.commands，与 ingest 的 DownlinkCommand 一致。
+ * 额外约束：payload.task_id 用于写审计表。
+ */
+export interface DispatchCommandPayload {
+  vehicle_id: string;
+  command_id: string;
+  command_type: string;
+  payload?: {
+    task_id?: string;
+    [key: string]: unknown;
+  };
+}

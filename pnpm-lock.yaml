@@ -109,6 +109,21 @@ importers:
         specifier: workspace:*
         version: link:../observability
 
+  core/services/dispatch-core:
+    dependencies:
+      '@apiscloud/libs':
+        specifier: workspace:*
+        version: link:../../libs
+      '@apiscloud/message-bus':
+        specifier: workspace:*
+        version: link:../../../shared/message-bus
+      '@apiscloud/observability':
+        specifier: workspace:*
+        version: link:../observability
+      zod:
+        specifier: ^4.6.2
+        version: 4.6.2
+
   core/services/ingest:
     dependencies:
       '@apiscloud/libs':

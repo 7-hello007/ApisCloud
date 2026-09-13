@@ -1,0 +1,15 @@
+{
+  "name": "batch-match",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": [],
+    "publish": []
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "批量匹配算法：多因素成本最小化（距离+电量+能力）"
+}

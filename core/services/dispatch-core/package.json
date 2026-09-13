@@ -1,0 +1,18 @@
+{
+  "name": "@apiscloud/dispatch-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "调度核心：任务分发框架，算法插件接口",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist/server-entry.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "@apiscloud/message-bus": "workspace:*",
+    "@apiscloud/observability": "workspace:*",
+    "zod": "^4.6.2"
+  }
+}

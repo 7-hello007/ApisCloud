@@ -1,0 +1,15 @@
+{
+  "name": "anomaly",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": {
+    "subscribe": ["telemetry.raw"],
+    "publish": ["events.alerts"]
+  },
+  "routes": [],
+  "frontend": null,
+  "description": "异常检测：速度超阈值 + 电量骤降"
+}

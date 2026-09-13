@@ -1,6 +1,7 @@
 import type { Envelope } from '@apiscloud/message-bus';
 
-import type {
+import type { 
+  DispatchCommandPayload,
   AlertPayload,
   TelemetryAggregatedPayload,
   TelemetryRawPayload,
@@ -69,5 +70,28 @@ export function alertToPgParams(a: AlertPayload): unknown[] {
     a.level,
     a.message,
     a.payload ? JSON.stringify(a.payload) : null,
+  ];
+}
+
+/**
+ * 从 Envelope 提取调度命令 payload。
+ */
+export function extractDispatchCommand(env: Envelope): DispatchCommandPayload {
+  return env.payload as DispatchCommandPayload;
+}
+
+/**
+ * 把调度命令 payload 转为 PG dispatch_commands 表参数。
+ * 表字段：command_id, vehicle_id, task_id, command_type, payload, status
+ * status 在 SQL 里写死 'pending'。
+ */
+export function commandToPgParams(c: DispatchCommandPayload): unknown[] {
+  const taskId = c.payload?.task_id ?? null;
+  return [
+    c.command_id,
+    c.vehicle_id,
+    taskId,
+    c.command_type,
+    JSON.stringify(c.payload ?? {}),
   ];
 }

@@ -6,7 +6,7 @@
   "lazy": false,
   "dependsOn": [],
   "topics": {
-    "subscribe": ["telemetry.raw", "telemetry.aggregated", "events.alerts"],
+    "subscribe": ["telemetry.raw", "telemetry.aggregated", "events.alerts", "events.commands"],
     "publish": []
   },
   "routes": [],

@@ -10,6 +10,7 @@
     { "path": "./core/services/observability" },
     { "path": "./core/services/simulator" },
     { "path": "./core/services/ingest" },
-    { "path": "./core/services/data-writer" }
+    { "path": "./core/services/data-writer" },
+    { "path": "./core/services/dispatch-core" }
   ]
 }

@@ -13,11 +13,6 @@ const ROOT = path.resolve(__dirname, '..');
 const REGISTRY_DIR = path.join(ROOT, 'core', 'registry');
 const REGISTRY_FILE = path.join(REGISTRY_DIR, 'registry.json');
 
-const SCAN_DIRS = {
-  services: path.join(ROOT, 'core', 'services'),
-  plugins: path.join(ROOT, 'plugins'),
-};
-
 const CORE_VERSION = '0.1.0';
 
 /**
@@ -34,7 +29,10 @@ function buildRegistry(options = {}) {
   const root = options.root ?? ROOT;
 
   const serviceDirs = options.serviceDirs ?? path.join(root, 'core', 'services');
-  const pluginDirs = options.pluginDirs ?? path.join(root, 'plugins');
+  const pluginDirs = options.pluginDirs ?? [
+    path.join(root, 'plugins'),
+    path.join(root, 'plugins', 'dispatch'),
+  ];
 
   const services = collectFrom(serviceDirs, true);
   const plugins = collectFrom(pluginDirs, false);
@@ -53,7 +51,6 @@ function buildRegistry(options = {}) {
   const byProfile = buildProfileIndex(allItems);
   const topologicalOrder = topologicalSort(allItems);
 
-  // 拓扑序和 profile 索引也用插件名去重后的结果
   const registry = {
     version: '1',
     generatedAt: new Date().toISOString(),
@@ -86,26 +83,38 @@ function buildRegistry(options = {}) {
 }
 
 /**
- * 从指定目录扫描并校验所有 plugin.json。
+ * 从指定目录（或目录数组）扫描并校验所有 plugin.json。
  *
- * @param {string} baseDir
+ * @param {string|string[]} baseDirs 单个目录或目录数组
  * @param {boolean} isCore 是否强制 core=true
  */
-function collectFrom(baseDir, isCore) {
-  const entries = scanDir(baseDir);
+function collectFrom(baseDirs, isCore) {
+  const dirs = Array.isArray(baseDirs) ? baseDirs : [baseDirs];
   const result = [];
 
-  for (const { dir, manifestPath, raw } of entries) {
-    const manifest = validateManifest(raw, manifestPath);
+  for (const baseDir of dirs) {
+    const entries = scanDir(baseDir);
+    for (const { dir, manifestPath, raw } of entries) {
+      const manifest = validateManifest(raw, manifestPath);
 
-    if (isCore && !manifest.core) {
-      throw new Error(`${manifestPath}: core/services 下的插件必须 core=true`);
+      if (isCore && !manifest.core) {
+        throw new Error(`${manifestPath}: core/services 下的插件必须 core=true`);
+      }
+
+      result.push({
+        ...manifest,
+        path: path.relative(ROOT, dir).split(path.sep).join('/'),
+      });
     }
+  }
 
-    result.push({
-      ...manifest,
-      path: path.relative(ROOT, dir).split(path.sep).join('/'),
-    });
+  // 同一插件不能同时被两个目录扫描到
+  const names = new Set();
+  for (const item of result) {
+    if (names.has(item.name)) {
+      throw new Error(`插件被重复扫描：${item.name}`);
+    }
+    names.add(item.name);
   }
 
   return result.sort((a, b) => a.name.localeCompare(b.name));

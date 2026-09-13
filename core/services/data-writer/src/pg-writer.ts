@@ -2,10 +2,15 @@ import type { PgClient } from '@apiscloud/libs';
 
 import {
   alertToPgParams,
+  commandToPgParams,
   telemetryToLatestParams,
   telemetryToPgParams,
 } from './mapper';
-import type { AlertPayload, TelemetryRawPayload } from './types';
+import type {
+  AlertPayload,
+  DispatchCommandPayload,
+  TelemetryRawPayload,
+} from './types';
 
 export interface PgWriter {
   /** UPSERT 车辆最新状态 */
@@ -14,6 +19,8 @@ export interface PgWriter {
   insertTelemetry(t: TelemetryRawPayload): Promise<void>;
   /** INSERT 告警 */
   insertAlert(a: AlertPayload): Promise<void>;
+  /** INSERT 调度命令审计 */
+  insertDispatchCommand(c: DispatchCommandPayload): Promise<void>;
 }
 
 const UPSERT_LATEST_SQL = `
@@ -42,6 +49,13 @@ const INSERT_ALERT_SQL = `
   VALUES ($1, $2, $3, $4, $5::jsonb)
 `;
 
+const INSERT_DISPATCH_COMMAND_SQL = `
+  INSERT INTO dispatch_commands
+    (command_id, vehicle_id, task_id, command_type, payload, status)
+  VALUES ($1, $2, $3, $4, $5::jsonb, 'pending')
+  ON CONFLICT (command_id) DO NOTHING
+`;
+
 /**
  * PG 写入器。
  * 只负责 SQL 执行，不含业务逻辑。
@@ -58,6 +72,10 @@ export function createPgWriter(pg: PgClient): PgWriter {
 
     async insertAlert(a) {
       await pg.query(INSERT_ALERT_SQL, alertToPgParams(a));
+    },
+
+    async insertDispatchCommand(c) {
+      await pg.query(INSERT_DISPATCH_COMMAND_SQL, commandToPgParams(c));
     },
   };
 }
