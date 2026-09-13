@@ -1,6 +1,7 @@
-# ApisCloud - 蜂云 · 项目进度文档
+# ApisCloud - 蜂云 项目进度文档 SP3
 
-> 本文档记录项目总目标、阶段规划、已完成部分、踩坑记录、文件清单。重开对话时，读此文档即可继续干活。
+> 本文档记录项目总目标、阶段规划、已完成部分、踩坑记录、文件清单。
+> 重开对话时，读此文档即可继续干活。
 
 ---
 
@@ -81,6 +82,17 @@
 
 **阶段验收：** 基础设施可一键启动，共享库可被引用，消息总线可切换，层配置可加载，插件宿主可加载插件，可观测性可用，CI 可运行。
 
+**阶段文档：**
+
+- `docs/architecture.V1.md`
+- `docs/infra.V1.md`
+- `docs/messageBus.V1.md`
+- `docs/layerConfig.V1.md`
+- `docs/pluginHost.V1.md`
+- `docs/observability.V1.md`
+- `docs/security.V1.md`
+- `docs/cicd.V1.md`
+
 ---
 
 ### 阶段二：核心数据流服务
@@ -113,6 +125,13 @@
 
 **阶段验收：** 模拟器产生的数据能通过 MQTT → 消息总线 → PG 完整落库，消息总线可切换，集成测试通过。
 
+**阶段文档：**
+
+- `docs/simulator.V1.md`
+- `docs/ingest.V1.md`
+- `docs/dataWriter.V1.md`
+- `docs/messageBus.V2.md`
+
 ---
 
 ### 阶段三：核心业务服务与调度算法
@@ -132,19 +151,25 @@
 
 | 序号 | 任务 | 怎么完成 | 产出 |
 |---|---|---|---|
-| 3.1 | 开发 dispatch-core | 任务分发框架，算法插件接口 | `core/services/dispatch-core/` |
-| 3.2 | 开发 nearest-dispatch | 最近邻算法 | `plugins/dispatch/nearest/` |
-| 3.3 | 开发 batch-match | 批量匹配算法 | `plugins/dispatch/batch-match/` |
-| 3.4 | 开发 priority-dispatch | 优先级调度算法 | `plugins/dispatch/priority-dispatch/` |
-| 3.5 | 开发 geofence | zones.json 配置 + 圆形区域检测 | `plugins/geofence/` |
-| 3.6 | 开发 anomaly | 速度阈值 + 电量骤降检测 | `plugins/anomaly/` |
-| 3.7 | 编写调度算法测试 | 每个算法的单元测试 | `dispatch.*.test.ts` |
-| 3.8 | 编写 geofence 测试 | 单元测试：围栏检测、边界 | `geofence.zoneDetection.test.ts` |
-| 3.9 | 编写 anomaly 测试 | 单元测试：速度、电量阈值 | `anomaly.speedThreshold.test.ts` |
-| 3.10 | 编写集成测试 | 调度流、告警流 | `integration.dispatchFlow.test.ts` |
-| 3.11 | 编写功能文档 | 每个功能一个文档 | `dispatchCore.V1.md` 等 |
+| 3.1 | 开发 dispatch-core | 任务分发框架，算法插件接口 | core/services/dispatch-core/ |
+| 3.2 | 开发 nearest-dispatch | 最近邻算法 | plugins/dispatch/nearest/ |
+| 3.3 | 开发 batch-match | 批量匹配算法 | plugins/dispatch/batch-match/ |
+| 3.4 | 开发 priority-dispatch | 优先级调度算法 | plugins/dispatch/priority-dispatch/ |
+| 3.5 | 开发 geofence | zones.json 配置 + 圆形区域检测 | plugins/geofence/ |
+| 3.6 | 开发 anomaly | 速度阈值 + 电量骤降检测 | plugins/anomaly/ |
+| 3.7 | 编写调度算法测试 | 每个算法的单元测试 | dispatch.*.test.ts |
+| 3.8 | 编写 geofence 测试 | 单元测试：围栏检测、边界 | geofence.zoneDetection.test.ts |
+| 3.9 | 编写 anomaly 测试 | 单元测试：速度、电量阈值 | anomaly.speedThreshold.test.ts |
+| 3.10 | 编写集成测试 | 调度流、告警流 | integration.dispatchFlow.test.ts |
+| 3.11 | 编写功能文档 | 每个功能一个文档 | dispatchCore.V1.md 等 |
 
 **阶段验收：** 车辆能收到派单指令，告警能正确产生并存储，调度算法可用，集成测试通过。
+
+**阶段文档：**
+
+- `docs/dispatchCore.V1.md`
+- `docs/geofence.V1.md`
+- `docs/anomaly.V1.md`
 
 ---
 
@@ -177,6 +202,14 @@
 | 4.10 | 编写功能文档 | 每个功能一个文档 | gateway.V1.md 等 |
 
 **阶段验收：** 前端可访问，基础仪表板可展示，插件可进程内加载，层配置可扩展。
+
+**阶段文档：**
+
+- `docs/gateway.V1.md`
+- `docs/pluginHost.V1.md`
+- `docs/webShell.V1.md`
+- `docs/dashboard.V1.md`
+- `docs/layerConfig.V2.md`
 
 ---
 
@@ -215,6 +248,15 @@
 
 **阶段验收：** 20+ 插件同时运行，消息总线不成为瓶颈，系统响应稳定，总线可切换，层可扩展。
 
+**阶段文档：**
+
+- `docs/chargingScheduler.V1.md`
+- `docs/routeOptimizer.V1.md`
+- `docs/reporting.V1.md`
+- `docs/messageBus.V3.md`
+- `docs/layerConfig.V3.md`
+- `docs/busPerformance.V1.md`
+
 ---
 
 ### 阶段六：测试完善、部署与交付
@@ -250,9 +292,17 @@
 
 **阶段验收：** 测试覆盖率达标，可观测性完整，安全性达标，文档完整，多规模部署可复现。
 
+**阶段文档：**
+
+- `docs/deployment.V1.md`
+- `docs/testing.V1.md`
+- `docs/observability.V2.md`
+- `docs/security.V2.md`
+- `docs/api.V1.md`
+
 ---
 
-## 四、项目里程碑
+### 项目里程碑
 
 | 里程碑 | 阶段 | 产出 | 验收标准 |
 |---|---|---|---|
@@ -265,155 +315,199 @@
 
 ---
 
-# 第二部分：已完成部分
+# 第二部分：已完成部分（阶段一、二、三）
 
 ## 阶段一：基础设施与共享库 ✅ 已完成
 
-### 完成了什么
+阶段一全部 13 项任务已完成。实际执行时，在原计划前额外做了一步**工程初始化**（monorepo 骨架），然后依次完成 1.1 到 1.13。
 
-| 子任务 | 状态 | 主要产出 |
-|---|---|---|
-| 工程初始化 | ✅ | monorepo 骨架、TS/ESLint/Prettier/Jest 配置、Makefile |
-| 1.1 基础设施编排 | ✅ | `docker-compose.infra.yml`，7 个服务 |
-| 1.2 数据库初始化 | ✅ | `deploy/postgres/init.sql`，4 表 + 1 视图 |
-| 1.3 共享库 | ✅ | `core/libs/`，8 个模块 |
-| 1.4 消息总线 | ✅ | `shared/message-bus/`，3 个适配器 |
-| 1.5 层配置 | ✅ | `shared/layer-config/`，5 个查询函数 |
-| 1.6 插件宿主 | ✅ | `core/plugin-host/`，8 个模块 |
-| 1.7 可观测性 | ✅ | `core/services/observability/`，9 个指标 + 2 个端点 |
-| 1.8 CI 配置 | ✅ | `.github/` 完整 |
-| 1.9 registry | ✅ | `scripts/lib/` 4 个模块 + `buildRegistry` |
-| 1.10 docs | ✅ | 9 个文档 |
-| 1.11 tests | ✅ | 23 个 suite、142 个测试全绿 |
-| 1.12 安全基础 | ✅ | `core/libs/src/security/`，9 个模块 |
-| 1.13 文档 | ✅ | 阶段一 8 个文档全部就位 |
+### 1.0 工程初始化（原计划外的前置步骤）
 
-### 怎么完成的
+**怎么完成：**
 
-**1. 工程初始化（原计划外的前置步骤）**
-
-- 建 monorepo：`pnpm-workspace.yaml` 声明包路径。
-- 统一 TS：`tsconfig.base.json` + 子包 `tsconfig.json`，project references 建 DAG。
-- 统一规范：ESLint 8、@typescript-eslint 8、Prettier 3。
+- 建 monorepo：`pnpm-workspace.yaml` 声明 7 个包路径。
+- 统一 TS：`tsconfig.base.json` + 6 个子包 `tsconfig.json`（用 project references 建立 DAG）。
+- 统一代码规范：ESLint 8 + @typescript-eslint 8 + Prettier 3。
 - 统一测试：Jest 29 + ts-jest。
-- 统一命令：Makefile。
-- 关键设计：子包输出 CommonJS；`tsBuildInfoFile: "dist/.tsbuildinfo"`；references 严格单向。
+- 统一命令入口：Makefile。
+- 环境变量：`.env.example` + `.env`。
 
-**2. 基础设施与数据库**
+**关键设计：**
 
-- `docker-compose.infra.yml` 编排 PostgreSQL 16、Redis 7、EMQX 5.8、Kafka 3.7（KRaft）、Prometheus 2.54、Loki 3.1、Grafana 11.2。
-- `deploy/postgres/init.sql` 建 4 张表：`vehicle_latest`、`vehicle_telemetry`、`alerts`、`dispatch_commands` + `health_check` 视图。
-- 端口调整：EMQX 1883 → 11883，Grafana 3000 → 13000。
+- 6 个子包全部输出 CommonJS，Jest 可直接 require。
+- `tsBuildInfoFile: "dist/.tsbuildinfo"` 避免 VS Code 和 CLI 抢同一个文件。
+- project references 严格单向，杜绝循环。
 
-**3. 共享库 `core/libs`**
+### 1.1 + 1.2 基础设施编排 + 数据库初始化
+
+**怎么完成：**
+
+- `docker-compose.infra.yml` 编排 7 个服务：PostgreSQL 16、Redis 7、EMQX 5.8、Kafka 3.7（KRaft）、Prometheus 2.54、Loki 3.1、Grafana 11.2。
+- `deploy/postgres/init.sql` 建 4 张表 + 1 视图：`vehicle_latest`、`vehicle_telemetry`、`alerts`、`dispatch_commands`、`health_check`。
+- 端口调整：EMQX `1883 → 11883`，Grafana `3000 → 13000`。
+- 7 个 named volume，`infra-down` 保数据，`infra-reset` 删数据。
+- Makefile 加 5 个命令：`infra-up`、`infra-down`、`infra-logs`、`infra-ps`、`infra-reset`。
+
+### 1.3 共享库 `core/libs`
+
+**怎么完成：**
 
 8 个模块：
 
-- `config`：dotenv + zod，缺关键字段启动失败。
-- `logger`：pino JSON，字段含 `trace_id`、`span_id`、`service`、`plugin`、`layer`。
-- `health`：注册式，聚合 `ok/degraded/down`。
-- `pg`：Pool + query + transaction + health。
-- `redis`：ioredis，subscribe 用 duplicate 连接。
-- `mqtt`：mqtt.js，测试环境 `manualConnect`。
-- `metrics`：prom-client，默认标签 `service`。
-- `security`：JWT、zod 校验、指令签名、限流、防重放。
+| 模块 | 能力 |
+|---|---|
+| config | dotenv + zod 校验，缺关键字段启动失败，带缓存和 reset |
+| logger | pino JSON，字段含 `trace_id`、`span_id`、`service`、`plugin`、`layer` |
+| health | 注册式健康检查，聚合 `ok/degraded/down` |
+| pg | `pg.Pool`，query、transaction、health、close、raw |
+| redis | ioredis 封装，get/set/hset/hgetall/publish/subscribe/health |
+| mqtt | mqtt.js 封装，publish/subscribe/health/close，自动重连 |
+| metrics | prom-client，counter/gauge/histogram，默认标签 `service` |
+| security | JWT、zod 输入校验、密钥管理、指令签名、限流、防重放 |
 
-**4. 消息总线 `shared/message-bus`**
+### 1.4 消息总线抽象层 `shared/message-bus`
+
+**怎么完成：**
 
 - `topics.ts`：4 个主题常量。
-- `envelope.ts`：统一消息信封，自动生成 `trace_id`、`span_id`。
-- `interface.ts`：`MessageBus` 统一接口。
-- 3 个适配器：Memory、MQTT、Kafka。
-- `factory.ts`：按 `MESSAGE_BUS` 创建实例。
+- `envelope.ts`：统一消息信封，zod 校验，自动生成 `trace_id`、`span_id`。
+- `interface.ts`：`MessageBus` 统一接口，含 connect/publish/subscribe/commit/health/close。
+- 3 个适配器：MemoryAdapter、MqttAdapter、KafkaAdapter。
+- `factory.ts`：按 `MESSAGE_BUS` 创建实例，用 `never` 做 exhaustive 检查。
 
-**5. 层配置 `shared/layer-config`**
+### 1.5 层配置 `shared/layer-config`
 
-- `layers.yml` 声明单层 `single`，10 个核心服务。
-- `schema.ts` zod 校验，`KNOWN_SERVICES` 白名单。
-- `loader.ts` 5 个查询函数。
+**怎么完成：**
 
-**6. 插件宿主 `core/plugin-host`**
+- `layers.yml`：单层 `single`，10 个核心服务。
+- `schema.ts`：zod 校验，`KNOWN_SERVICES` 白名单，层名正则。
+- `loader.ts`：`loadLayers`、`getLayer`、`getServices`、`getLayerNames`、`isServiceEnabled`。
+- build 脚本把 `layers.yml` 复制到 dist。
+
+### 1.6 插件宿主 `core/plugin-host`
+
+**怎么完成：**
 
 - 8 个模块：types、schema、guard、loader、registry、lifecycle、host、index。
-- `Plugin` 接口 6 个钩子，`PluginHost` 8 个公开方法。
-- 基础保护：异常隔离、超时控制（onLoad 5s、onMessage 1s）。
+- `Plugin` 接口 6 个可选钩子：onLoad/onUnload/onMessage/onTimer/getRoutes/getHealth。
+- `PluginHost` 8 个公开方法：register/loadAll/unloadAll/dispatchMessage/dispatchTimer/getRoutes/health/getRegistry。
+- 保护：异常隔离（每个回调 try/catch）、超时控制（onLoad 5s、onMessage 1s）。
 - 模板插件 `plugins/_template/`。
 
-**7. 可观测性 `core/services/observability`**
+### 1.7 可观测性服务 `core/services/observability`
 
-- 9 个指标：服务层、数据流层、插件层、总线层。
+**怎么完成：**
+
+- 9 个指标：服务层（httpRequests/httpDuration）、数据流层（dataFlowMessages/dataFlowLatency）、插件层（pluginActions/pluginDuration）、总线层（busPublished/busConsumed/busLag）。
 - 两个端点：`/metrics`、`/health`。
+- 日志统一 pino JSON，含 `trace_id`、`span_id`。
 - `Tracer` 类为 OpenTelemetry 预留。
 - 支持独立启动和内嵌使用。
 
-**8. CI/CD `.github`**
+### 1.8 CI 配置 `.github/workflows/`
 
-- `ci.yml`：5 个并行 job + 1 个汇总。
+**怎么完成：**
+
+- `ci.yml`：5 个并行 job（lint、typecheck、test-unit、build、registry-check）+ 1 个汇总。
 - `security.yml`：gitleaks + pnpm audit，每周一自动跑。
-- `dependabot.yml`：3 个生态。
-- `.gitleaks.toml` 白名单。
+- `dependabot.yml`：npm、GitHub Actions、Docker 三生态。
+- PR 模板、Issue 模板、`.gitleaks.toml`。
 
-**9. registry `scripts/`**
+### 1.9 registry `scripts/`
 
-- `scanner.js`：扫描 `plugin.json`，跳过 `_`、`.` 开头目录。
-- `validator.js`：校验 manifest，补默认值。
-- `topo.js`：Kahn 算法拓扑排序。
-- `profiles.js`：profile → 插件名列表，加 `all`。
-- `build-registry.js`：主入口，导出 `buildRegistry`。
+**怎么完成：**
+
+- `scripts/lib/scanner.js`：扫描 `plugin.json`，跳过 `_`、`.` 开头目录。
+- `scripts/lib/validator.js`：校验 manifest，补默认值。
+- `scripts/lib/topo.js`：Kahn 算法拓扑排序，稳定输出，检测循环依赖。
+- `scripts/lib/profiles.js`：profile → 插件名列表，加 `all` 伪 profile。
+- `scripts/build-registry.js`：导出 `buildRegistry`，CLI 和单测共用。
 - 10 个核心服务 `plugin.json` + 示例插件。
+- registry.json 结构：version、generatedAt、generator、coreVersion、services、plugins、byProfile、topologicalOrder、stats。
+
+### 1.10 docs、1.11 tests、1.12 安全基础、1.13 文档
+
+**docs：**
+
+- `docs/README.md` + 8 个阶段一功能文档。
+- 命名：`功能名.V几.md`。
+- 模板：功能目标 / 基础实现 / V1 修改 / 后续版本。
+
+**tests：**
+
+- 扁平结构，命名 `功能名.（附加说明）.test.ts`。
+- 前缀区分层级：无前缀=单元，`integration.`=集成，`e2e.`=端到端。
+- helpers：makeEnvelope、makePlugin、waitFor。
+- 阶段一 23 个 suite、142 个测试全绿。
+
+**安全基础：**
+
+- 9 个子模块：constants、jwt、auth、validation、secrets、command-signature、rate-limiter、replay-guard、index。
+- JWT HS256，访问 token 1h，refresh 7d。
+- 认证中间件兼容原生 http 和 Express 风格。
+- 10 个常用 schema。
+- 指令签名：HMAC-SHA256 + canonicalize + timingSafeEqual + 时间窗。
+- 限流器和防重放当前内存版，多实例需 Redis 版。
 
 ---
 
 ## 阶段二：核心数据流服务 ✅ 已完成
 
-### 完成了什么
+### 2.0 根配置改动
 
-| 子任务 | 状态 | 主要产出 |
-|---|---|---|
-| 2.0 根配置改动 | ✅ | tsconfig、jest、.env、prometheus.yml |
-| 2.1 simulator | ✅ | 500 辆模拟，状态机 + GPS |
-| 2.2 ingest | ✅ | MQTT ↔ 总线双向 |
-| 2.3 data-writer | ✅ | 订阅 3 个主题，写 PG + Redis |
-| 2.4 主题定义 | ✅ | 4 个主题 + Kafka 初始化脚本 |
-| 2.5-2.7 单元测试 | ✅ | simulator、ingest、data-writer |
-| 2.8 集成测试 | ✅ | `integration.mqttToPg.test.ts`，13 个测试 |
-| 2.9 文档 | ✅ | simulator.V1、ingest.V1、dataWriter.V1、messageBus.V2 |
+**怎么完成：**
 
-### 怎么完成的
+- `tsconfig.base.json` 加 3 组 paths：`@apiscloud/simulator`、`@apiscloud/ingest`、`@apiscloud/data-writer`。
+- 根 `tsconfig.json` 加 3 个 references。
+- `jest.config.js` 加 6 条 `moduleNameMapper` + 3 条 `collectCoverageFrom`。
+- `.env` 加 `SIMULATOR_PORT=9107`。
+- `.env.example` 同步 MQTT 端口 11883、Grafana 端口 13000。
+- `prometheus.yml` 加 simulator target。
+- `.eslintrc.json` 忽略 `_` 前缀未使用变量。
+- Makefile 加 `init-topics`。
+- 根 `package.json` 加 `kafkajs`。
 
-**1. simulator `core/services/simulator/`**
+### 2.1 simulator `core/services/simulator/`
 
-- 模拟外部自动驾驶系统，500 辆车状态通过 MQTT 上报。
-- `types.ts`：`VehicleState` 字段与 `init.sql` 对齐。
-- `config.ts`：8 个环境变量。
-- `gps-generator.ts`：`randomPointInRadius`、`distanceKm`、`moveTowards`、`bearing` 纯函数。
-- `state-machine.ts`：`nextState`、`nextBattery` 纯函数。
-- `vehicle.ts`：单车模型，tick 逻辑。
-- `fleet.ts`：车队管理。
-- `mqtt-publisher.ts`：MQTT 上报 QoS 1。
-- `service.ts`：组合车队 + 发布器 + 可观测性。
+**怎么完成：**
 
-**2. ingest `core/services/ingest/`**
+- 模拟外部自动驾驶系统，产生 500 辆车状态，通过 MQTT 上报。
+- 不碰消息总线，不写库。
+- 状态机 + GPS 生成器 + 车队管理。
+- 暴露 `/metrics`、`/health`，端口 9107。
+- 8 个环境变量可配。
+- 状态机覆盖 idle / running / charging / maintenance / offline。
+- 电量：running 每秒耗 0.1%，charging 每秒充 2%。
+- 实机验证：500 辆车，1 秒间隔，25 秒 12500 条。
+
+### 2.2 ingest `core/services/ingest/`
+
+**怎么完成：**
 
 - 唯一外部出入口。
 - 上行：MQTT `telemetry/raw` → 校验 → Envelope → 总线 `telemetry.raw`。
 - 下行：总线 `events.commands` → 校验 → MQTT `commands/{vehicle_id}`。
-- `validation.ts` 用 zod，复用 libs 的 schema。
+- 暴露 `/metrics`、`/health`，端口 9103。
+- 输入校验用 zod，复用 libs 的 `VehicleId`、`Latitude`、`Longitude`、`Battery`。
 - 可注入 `mqttSubscriber`、`mqttPublisher`、`bus`。
-- `partitionKey = vehicle_id`。
+- 总线发布 `partitionKey = vehicle_id`。
+- 消费者组 `apiscloud-ingest`。
 
-**3. data-writer `core/services/data-writer/`**
+### 2.3 data-writer `core/services/data-writer/`
 
-- 唯一写库者。
-- 订阅 `telemetry.raw`、`telemetry.aggregated`、`events.alerts`。
-- 写 PG：`vehicle_latest`（UPSERT）、`vehicle_telemetry`（INSERT）、`alerts`（INSERT）。
-- 写 Redis：`vehicle:{id}:latest`、`vehicles:active`、`alerts:recent`、`region:{region}:stats`。
-- `pg-writer.ts` 和 `redis-writer.ts` 只做 I/O，业务逻辑在 handler 和 service。
+**怎么完成：**
+
+- 唯一写库者，只订阅总线，不连 MQTT。
+- 订阅 3 个主题：`telemetry.raw`、`telemetry.aggregated`、`events.alerts`（阶段三加 `events.commands`）。
+- 写 PG：`vehicle_latest` UPSERT、`vehicle_telemetry` INSERT、`alerts` INSERT、`dispatch_commands` INSERT（阶段三加）。
+- 写 Redis 热路径：`vehicle:{id}:latest` TTL 60s、`vehicle:{id}` hash、`vehicles:active` set、`alerts:recent` list、`region:{region}:stats` hash。
+- 暴露 `/metrics`、`/health`，端口 9104。
 - 可注入 `pg`、`redis`、`bus`。
+- 消费者组 `apiscloud-data-writer`。
 
-**4. 主题定义**
+### 2.4 主题确认 + Kafka 初始化
 
-- 4 个主题分区数和保留策略：
+**怎么完成：**
 
 | 主题 | 分区数 | 保留 |
 |---|---|---|
@@ -422,179 +516,126 @@
 | events.commands | 3 | 7d |
 | events.alerts | 3 | 7d |
 
-- `scripts/init-kafka-topics.js` 幂等创建。
-- 消费者组命名 `apiscloud-{service}`。
+- `tests/messageBus.topics.test.ts` 锁定主题常量。
+- `scripts/init-kafka-topics.js` 幂等创建主题。
+- Makefile `make init-topics`。
 
-**5. 测试**
+### 2.5-2.7 单元测试
 
 - simulator：5 个 suite，63 个测试。
 - ingest：5 个 suite，约 30 个测试。
 - data-writer：5 个 suite，约 30 个测试。
-- 集成测试：13 个测试，共享 MemoryAdapter + Mock MQTT/PG/Redis。
+- messageBus topics：9 个测试。
+
+### 2.8 集成测试
+
+`tests/integration.mqttToPg.test.ts`，13 个测试。
+
+- 用共享 `MemoryAdapter`。
+- Mock MQTT、Mock PG、Mock Redis。
+- 覆盖上行、下行、边界、规模。
+
+### 2.9-2.10 文档
+
+- `docs/simulator.V1.md`、`docs/ingest.V1.md`、`docs/dataWriter.V1.md`。
+- `docs/messageBus.V2.md`（替代 V1）。
+- `docs/architecture.V2.md`（替代 V1）。
 
 ---
 
 ## 阶段三：核心业务服务与调度算法 ✅ 已完成
 
-### 完成了什么
+### 3.0 根配置改动
 
-| 子任务 | 状态 | 主要产出 |
-|---|---|---|
-| 3.1 dispatch-core | ✅ | `core/services/dispatch-core/` |
-| 3.2 nearest-dispatch | ✅ | `plugins/dispatch/nearest/` |
-| 3.3 batch-match | ✅ | `plugins/dispatch/batch-match/` |
-| 3.4 priority-dispatch | ✅ | `plugins/dispatch/priority-dispatch/` |
-| 3.5 geofence | ✅ | `plugins/geofence/` |
-| 3.6 anomaly | ✅ | `plugins/anomaly/` |
-| 3.7 调度算法测试 | ✅ | `dispatch.*.test.ts` 3 个 |
-| 3.8 geofence 测试 | ✅ | `geofence.zoneDetection.test.ts` |
-| 3.9 anomaly 测试 | ✅ | `anomaly.speedThreshold.test.ts` |
-| 3.10 集成测试 | ✅ | `integration.dispatchFlow.test.ts` |
-| 3.11 文档 | ✅ | dispatchCore.V1 等 6 个 |
-| data-writer 扩展 | ✅ | 订阅 events.commands，写 dispatch_commands 审计 |
-
-**核心成果：**
-
-- **端到端链路打通**：`telemetry.raw → dispatch-core → events.commands → ingest → MQTT commands/{vehicle_id}`，同时 `events.commands → data-writer → PG dispatch_commands` 审计落库。
-- **算法插件化**：3 个算法通过 `plugins/dispatch/*` 目录热插拔。
-- **算法回退**：算法超时/失败回退到 nearest。
-- **指令签名**：HMAC-SHA256，测试验证 verify 通过。
-- **硬约束过滤**：状态、电量、能力、地理、pickup 距离、时间窗。
-- **目标函数加权**：距离、ETA、电量、优先级。
-- **告警链路就位**：geofence、anomaly 发布 `events.alerts`，data-writer 自动落 PG alerts 和 Redis alerts:recent。
-
-**测试结果：**
-
-- 单元测试：45 个 suite、313 个测试全绿。
-- 集成测试：2 个 suite（mqttToPg + dispatchFlow）全绿。
-
-### 怎么完成的
-
-按 **7 个批次** 推进：
-
-**第一批：根配置 + dispatch-core 骨架（12 个文件）**
+**怎么完成：**
 
 - `tsconfig.base.json` 加 2 条 `@apiscloud/dispatch-core` paths。
 - 根 `tsconfig.json` 加 dispatch-core reference。
-- `.env.example` 和 `.env` 加 dispatch 配置。
+- `.env.example` 和 `.env` 加 dispatch 配置（端口、算法、超时、权重、签名密钥、运营区域）。
 - `jest.config.js` 加 moduleNameMapper 和 collectCoverageFrom。
 - `scripts/build-registry.js` 改 `pluginDirs` 为数组，支持 `[plugins/, plugins/dispatch/]`。
-- `core/services/dispatch-core/` 骨架：package.json、tsconfig.json、types、config、validation、algorithm-interface。
 
-**第二批：dispatch-core 核心逻辑（10 个文件）**
+### 3.1 dispatch-core `core/services/dispatch-core/`
 
-- `geo.ts`：Haversine、ETA、半径。
-- `constraints.ts`：硬约束过滤。
-- `objective.ts`：目标函数加权。
-- `algorithm-registry.ts`：内存注册表。
-- `algorithm-loader.ts`：从 `plugins/dispatch/*` 加载。
-- `command-builder.ts`：构建 DownlinkCommand + 签名。
-- `mapper.ts`：Envelope ↔ 车辆/命令。
-- `service.ts`：组合，订阅 telemetry.raw，处理任务，发 events.commands。
-- `index.ts`、`server-entry.ts`。
+**怎么完成：**
 
-**第三批：3 个算法插件 + 测试（9 个文件）**
+- 14 个文件：index、server-entry、types、config、validation、geo、constraints、objective、algorithm-interface、algorithm-registry、algorithm-loader、command-builder、mapper、service。
+- 订阅 `telemetry.raw`，累积车辆注册表。
+- 任务提交走完整调度流程：硬约束过滤 → 算法排序 → 构建命令 → 签名 → 发 `events.commands`。
+- 算法插件从 `plugins/dispatch/*/` 加载，失败/超时回退到 nearest。
+- 暴露 `/metrics`、`/health`，端口 9105。
+- 消费者组 `apiscloud-dispatch-core`。
 
-- `nearest`：Haversine 距离排序，score = -distance。
-- `batch-match`：多因素成本最小化。
-- `priority-dispatch`：动态权重，distanceWeight = 0.2 + priorityNorm×0.8。
-- 算法插件契约：`module.exports = { algorithm: { name, version, rank } }`。
+### 3.2-3.4 3 个算法插件
 
-**第四批：geofence、anomaly 插件 + 测试（9 个文件）**
+**怎么完成：**
 
-- `geofence.js`、`detectors.js` 是纯函数，无 I/O。
-- `index.js` 薄封装，`onMessage` 判断 bus 是否存在，阶段四由 plugin-host 注入。
-- **阶段三不接入 plugin-host**，只写插件代码 + 测试。
-
-**第五批：data-writer 扩展（8 个文件）**
-
-- `types.ts` 加 `DispatchCommandPayload`。
-- `mapper.ts` 加 `extractDispatchCommand`、`commandToPgParams`。
-- `pg-writer.ts` 加 `insertDispatchCommand`。
-- `handlers/events-commands.ts` 新建。
-- `service.ts` 加订阅 `events.commands`。
-- `index.ts` 加导出。
-- `plugin.json` 加 `events.commands`。
-- `dataWriter.eventsCommands.test.ts`。
-
-**第六批：集成测试（1 个文件）**
-
-- `integration.dispatchFlow.test.ts`，10 个测试。
-- 三个服务共享同一个 MemoryAdapter。
-- Mock MQTT / PG / Redis。
-
-**第七批：文档（7 个文件）**
-
-- 6 个 V1 文档 + README 更新。
-
-### 阶段三关键设计
-
-**1. dispatch-core 与算法插件的关系**
-
-- dispatch-core 自己管理算法插件，**不走 plugin-host**。
-- 理由：算法高频调用，走 plugin-host 的 dispatchMessage 反而绕。
-- 算法插件放 `plugins/dispatch/nearest/`、`batch-match/`、`priority-dispatch/`。
-- geofence、anomaly 走 plugin-host（阶段四接入）。
-
-**2. 算法插件接口**
-
-```ts
-interface DispatchAlgorithm {
-  name: string;
-  version: string;
-  rank(input): Promise<DispatchAlgorithmResult> | DispatchAlgorithmResult;
-}
-```
-
-**3. `events.commands` payload 契约**
-
-```ts
-{
-  vehicle_id: string;
-  command_id: string;
-  command_type: 'dispatch';
-  payload: {
-    task_id: string;
-    task_type: string;
-    origin: GeoPoint;
-    destination?: GeoPoint;
-    issued_at: number;
-    signed: {
-      command: SignableCommand;
-      signature: string;
-      algorithm: string;
-    };
-  };
-}
-```
-
-**保持 ingest 的 `DownlinkCommand` 结构，签名放 `payload` 里。**
-
-**4. 硬约束**
-
-| 约束 | 判断 |
+| 插件 | 核心逻辑 |
 |---|---|
-| 状态 | `vehicle.status === 'idle'` |
-| 电量 | `vehicle.battery >= 20` |
-| 服务能力 | `vehicle.capabilities.includes(task.task_type)` |
-| 地理 | 在运营区域内 |
-| pickup 距离 | ≤ 50km |
-| 时间窗 | `now + eta <= task.time_window.end` |
+| nearest | Haversine 距离排序，score = -distance |
+| batch-match | 多因素成本最小化，cost = distance/50 - 0.3×battery/100 - 0.2×capability |
+| priority-dispatch | 动态权重，distanceWeight = 0.2 + priorityNorm×0.8 |
 
-**5. 目标函数**
+每个插件在 `src/index.js` 导出 `{ algorithm: { name, version, rank } }`。
 
+### 3.5-3.6 geofence、anomaly 插件
+
+**怎么完成：**
+
+- geofence：zones.json（圆形围栏）+ geofence.js（纯逻辑）+ index.js（插件入口）。
+- anomaly：detectors.js（纯逻辑）+ index.js（插件入口）。
+- 纯逻辑 + 薄插件封装，`onMessage` 里判断 `bus` 是否存在。
+- 首次观测不告警，只记录状态。
+- 阶段三不接入 plugin-host，阶段四再接入。
+
+### 3.7-3.9 单元测试
+
+- `dispatch.nearest.test.ts`、`dispatch.batchMatch.test.ts`、`dispatch.priority.test.ts`。
+- `geofence.zoneDetection.test.ts`。
+- `anomaly.speedThreshold.test.ts`。
+
+### 3.10 集成测试
+
+- `tests/integration.dispatchFlow.test.ts`：10 个测试，调度流端到端。
+- `tests/integration.alertFlow.test.ts`：13 个测试，告警流端到端。
+
+### 3.11 文档
+
+- `docs/dispatchCore.V1.md`、`docs/nearestDispatch.V1.md`、`docs/batchMatch.V1.md`、`docs/priorityDispatch.V1.md`、`docs/geofence.V1.md`、`docs/anomaly.V1.md`。
+- `docs/README.md` 更新索引。
+
+### 阶段三产出汇总
+
+| 批次 | 内容 | 文件数 |
+|---|---|---|
+| 第一批 | 根配置 + dispatch-core 骨架 | 12 |
+| 第二批 | dispatch-core 核心逻辑 | 10 |
+| 第三批 | 3 个算法插件 + 测试 | 9 |
+| 第四批 | geofence、anomaly 插件 + 测试 | 9 |
+| 第五批 | data-writer 扩展 | 8 |
+| 第六批 | 调度流集成测试 | 1 |
+| 第七批 | 6 个文档 + README 更新 | 7 |
+| 收尾 | 告警流集成测试 | 1 |
+| **合计** | | **57** |
+
+### 阶段三最终测试结果
+
+| 类别 | Suite 数 | 状态 |
+|---|---|---|
+| 单元测试 | 45 | ✅ 313 个测试全绿 |
+| 集成测试 | 3 | ✅ 全绿 |
+
+### 阶段三最终命令验证
+
+```bash
+make typecheck        # ✅
+make lint             # ✅
+make test-unit        # ✅
+make test-integration # ✅ 3 个 suite
+make build            # ✅
+make build-registry   # ✅ 6 个插件
+make registry-check   # ✅
 ```
-score = w_distance * (-distance/50)
-      + w_eta * (-eta/refEta)
-      + w_battery * (battery/100)
-      + w_priority * (priority/100)
-```
-
-**6. 算法回退**
-
-- 配置 `DISPATCH_FALLBACK_ALGORITHM=nearest`。
-- 算法超时 `DISPATCH_ALGORITHM_TIMEOUT_MS=500`。
-- 算法失败/超时 → 回退到 nearest。
 
 ---
 
@@ -602,18 +643,23 @@ score = w_distance * (-distance/50)
 
 | 阶段 | 状态 | 未完成内容 |
 |---|---|---|
-| 阶段一 | ✅ 已完成 | 无（可选：补 `testing.V1.md`、`registry.V1.md`） |
+| 阶段一 | ✅ 已完成 | 无 |
 | 阶段二 | ✅ 已完成 | 无 |
-| 阶段三 | ✅ 已完成 | 无 |
+| 阶段三 | ✅ 已完成 | 无（geofence/anomaly 接入 plugin-host 是阶段四任务） |
 | 阶段四 | ⬜ 未开始 | gateway、前端外壳、dashboard、前端插件加载器、geofence/anomaly 接入 plugin-host |
-| 阶段五 | ⬜ 未开始 | 插件生态、消息总线性能优化、主题分层、Redis 热路径、批量消费、性能验证 |
-| 阶段六 | ⬜ 未开始 | 测试完善、可观测性完善、安全完善、部署、交付、多规模验证 |
+| 阶段五 | ⬜ 未开始 | 插件生态、消息总线性能优化 |
+| 阶段六 | ⬜ 未开始 | 测试完善、可观测性完善、安全完善、部署、交付 |
+
+**阶段三遗留的两件事（已确认为阶段四任务）：**
+
+1. **geofence/anomaly 接入 plugin-host**：阶段四在 `PluginHost.buildContext` 加 `bus` 注入，插件自动生效。
+2. **实机端到端验证**：调度流和告警流都已被集成测试覆盖，实机验证可以推迟到阶段六。
 
 ---
 
 # 第三部分：阶段三踩过的坑
 
-## 坑一：`DispatchAlgorithm.rank` 返回类型导致 TS 报错
+## 坑 1：`DispatchAlgorithm.rank` 返回类型导致测试 TS 报错
 
 **问题：**
 
@@ -628,15 +674,11 @@ TS2339: Property 'ranked' does not exist on type
 
 **影响文件：** `tests/dispatch.nearest.test.ts`、`tests/dispatch.batchMatch.test.ts`、`tests/dispatch.priority.test.ts`。
 
-## 坑二：priority-dispatch 低优先级测试失败
+---
 
-**问题：**
+## 坑 2：priority-dispatch 低优先级测试失败
 
-```
-dispatch.priority › 低优先级任务偏好电量高的车
-Expected: "v-far-highbat"
-Received: "v-near-lowbat"
-```
+**问题：** `低优先级任务偏好电量高的车` 期望 `v-far-highbat`，实际 `v-near-lowbat`。
 
 **原因：** 原公式 `distanceWeight = 0.5 + priorityNorm × 0.5`（0.5~1.0）、`batteryWeight = 0.5 - priorityNorm × 0.3`（0.5~0.2），低优先级时两者相当。距离项在 45km 时接近满量程 -1，电量项最大 +1，抵消后距离优势仍胜出。
 
@@ -651,7 +693,9 @@ batteryWeight  = 1.0 - distanceWeight       // 0.8 ~ 0.0
 
 **影响文件：** `plugins/dispatch/priority-dispatch/src/index.js`。
 
-## 坑三：测试里 `const require = createRequire(__filename)` 报 TS2441
+---
+
+## 坑 3：测试里 `const require = createRequire(__filename)` 报 TS2441
 
 **问题：**
 
@@ -664,23 +708,23 @@ Compiler reserves name 'require' in top level scope of a module.
 
 **解决：** 项目输出 CommonJS，`require` 全局可用，直接 `require()` + `/* eslint-disable @typescript-eslint/no-require-imports */`。
 
-**影响文件：** `tests/geofence.zoneDetection.test.ts`、`tests/anomaly.speedThreshold.test.ts`。
+**影响文件：** `tests/geofence.zoneDetection.test.ts`、`tests/anomaly.speedThreshold.test.ts`、`tests/integration.alertFlow.test.ts`。
 
-## 坑四：`// eslint-disable-next-line` 没覆盖多行 `require()`
+---
 
-**问题：**
+## 坑 4：`// eslint-disable-next-line` 没覆盖多行 `require()`
 
-```
-error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
-```
+**问题：** `anomaly.speedThreshold.test.ts` 的 `require()` 在多行解构里，第 2 行的注释只作用于第 3 行。
 
-**原因：** `anomaly.speedThreshold.test.ts` 的 `require()` 在多行解构里，第 2 行的注释只作用于第 3 行，没覆盖到第 7 行。
+**原因：** `eslint-disable-next-line` 只作用于紧邻的下一行。
 
-**解决：** 改成文件级 `/* eslint-disable @typescript-eslint/no-require-imports */`。顺带给 geofence 测试也改成文件级。
+**解决：** 改成文件级 `/* eslint-disable @typescript-eslint/no-require-imports */`。顺带给 geofence 测试也改成文件级，风格一致。
 
-**教训：** `eslint-disable-next-line` 只作用于紧邻的下一行。多行代码用文件级 disable 最稳。
+**影响文件：** `tests/anomaly.speedThreshold.test.ts`、`tests/geofence.zoneDetection.test.ts`。
 
-## 坑五：`dataWriter.handlers.test.ts` MockPgWriter 缺 `insertDispatchCommand`
+---
+
+## 坑 5：`dataWriter.handlers.test.ts` MockPgWriter 缺 `insertDispatchCommand`
 
 **问题：**
 
@@ -691,36 +735,32 @@ TS2741: Property 'insertDispatchCommand' is missing in type
 
 **原因：** `PgWriter` 接口新增了 `insertDispatchCommand`，Mock 没同步。
 
-**解决：** 在 `createMockPgWriter` 里加一个空实现：
-
-```ts
-async insertDispatchCommand() {
-  // 该测试不涉及 dispatch_commands
-},
-```
+**解决：** 在 `createMockPgWriter` 里加一个空实现。
 
 **教训：** 新增 `PgWriter` 方法后，所有 MockPgWriter 都要同步加方法。
 
-## 坑六：`dataWriter.eventsCommands.test.ts` 找不到导出
+**影响文件：** `tests/dataWriter.handlers.test.ts`。
+
+---
+
+## 坑 6：`dataWriter.eventsCommands.test.ts` 找不到导出
 
 **问题：**
 
 ```
 TS2305: Module '"@apiscloud/data-writer"' has no exported member
 'handleEventsCommands'.
-TS2305: Module '"@apiscloud/data-writer"' has no exported member
-'DispatchCommandPayload'.
 ```
 
 **原因：** 第五批的 `index.ts` 没覆盖。
 
 **解决：** 重新写 `index.ts`，加 `handleEventsCommands`、`EventsCommandsDeps`、`DispatchCommandPayload` 等导出。
 
-**教训：** 新增功能后，`index.ts` 要同步更新。
+**影响文件：** `core/services/data-writer/src/index.ts`。
 
 ---
 
-# 第四部分：文件清单
+# 第四部分：项目文件清单（当前状态）
 
 ## 根目录
 
@@ -746,7 +786,7 @@ ApisCloud/
 ├── README.md                     — 项目说明
 ```
 
-## `core/libs/` — 共享库（阶段一）
+## `core/libs/` — 共享库
 
 ```
 core/libs/
@@ -779,37 +819,37 @@ core/libs/
         └── index.ts
 ```
 
-## `core/plugin-host/` — 插件宿主（阶段一）
+## `core/plugin-host/` — 插件宿主
 
 ```
 core/plugin-host/
 ├── package.json
 ├── tsconfig.json
 └── src/
-    ├── types.ts                  — Plugin、PluginContext、PluginManifest、LoadedPlugin
-    ├── schema.ts                 — PluginManifestSchema
-    ├── guard.ts                  — withTimeout、safeCall
-    ├── loader.ts                 — readManifest、resolveEntry、loadPluginInstance
-    ├── registry.ts               — PluginRegistry
-    ├── lifecycle.ts              — LifecycleManager
-    ├── host.ts                   — PluginHost
+    ├── types.ts
+    ├── schema.ts
+    ├── guard.ts
+    ├── loader.ts
+    ├── registry.ts
+    ├── lifecycle.ts
+    ├── host.ts
     └── index.ts
 ```
 
-## `core/services/observability/` — 可观测性（阶段一）
+## `core/services/observability/` — 可观测性
 
 ```
 core/services/observability/
 ├── package.json
 ├── tsconfig.json
 └── src/
-    ├── types.ts                  — ObservabilityOptions、TracingContext
-    ├── metrics.ts                — 9 个指标
-    ├── health.ts                 — createObservabilityHealth
-    ├── logger.ts                 — createObservabilityLogger、newTraceContext
-    ├── tracing.ts                — Tracer
-    ├── server.ts                 — HTTP 服务器
-    ├── service.ts                — createObservabilityService
+    ├── types.ts
+    ├── metrics.ts
+    ├── health.ts
+    ├── logger.ts
+    ├── tracing.ts
+    ├── server.ts
+    ├── service.ts
     ├── index.ts
     └── server-entry.ts
 ```
@@ -823,14 +863,14 @@ core/services/simulator/
 └── src/
     ├── index.ts
     ├── server-entry.ts
-    ├── types.ts                  — VehicleState、SimulatorConfig
-    ├── config.ts                 — loadSimulatorConfig
-    ├── gps-generator.ts          — randomPointInRadius、distanceKm、moveTowards、bearing
-    ├── state-machine.ts          — nextState、nextBattery
-    ├── vehicle.ts                — Vehicle 类
-    ├── fleet.ts                  — Fleet 类
-    ├── mqtt-publisher.ts         — createMqttPublisher
-    └── service.ts                — createSimulatorService
+    ├── types.ts
+    ├── config.ts
+    ├── gps-generator.ts
+    ├── state-machine.ts
+    ├── vehicle.ts
+    ├── fleet.ts
+    ├── mqtt-publisher.ts
+    └── service.ts
 ```
 
 ## `core/services/ingest/` — MQTT 出入口（阶段二）
@@ -842,15 +882,15 @@ core/services/ingest/
 └── src/
     ├── index.ts
     ├── server-entry.ts
-    ├── types.ts                  — UplinkTelemetry、DownlinkCommand、IngestConfig
-    ├── config.ts                 — loadIngestConfig
-    ├── validation.ts             — UplinkTelemetrySchema、DownlinkCommandSchema
-    ├── mapper.ts                 — telemetryToEnvelope、envelopeToCommand
-    ├── mqtt-subscriber.ts        — createMqttSubscriber
-    ├── mqtt-publisher.ts         — createMqttPublisher
-    ├── bus-publisher.ts          — createBusPublisher
-    ├── bus-subscriber.ts         — createBusSubscriber
-    └── service.ts                — createIngestService
+    ├── types.ts
+    ├── config.ts
+    ├── validation.ts
+    ├── mapper.ts
+    ├── mqtt-subscriber.ts
+    ├── mqtt-publisher.ts
+    ├── bus-publisher.ts
+    ├── bus-subscriber.ts
+    └── service.ts
 ```
 
 ## `core/services/data-writer/` — 统一写库（阶段二 + 阶段三扩展）
@@ -859,21 +899,20 @@ core/services/ingest/
 core/services/data-writer/
 ├── package.json
 ├── tsconfig.json
-├── plugin.json                   — topics.subscribe 含 events.commands
 └── src/
-    ├── index.ts                  — 导出含 handleEventsCommands、DispatchCommandPayload
+    ├── index.ts
     ├── server-entry.ts
-    ├── types.ts                  — TelemetryRawPayload、TelemetryAggregatedPayload、AlertPayload、DispatchCommandPayload、DataWriterConfig
-    ├── config.ts                 — loadDataWriterConfig
-    ├── mapper.ts                 — 8 个映射函数，含 extractDispatchCommand、commandToPgParams
-    ├── pg-writer.ts              — 4 个方法，含 insertDispatchCommand
-    ├── redis-writer.ts           — 3 个方法
+    ├── types.ts                  — 含 DispatchCommandPayload（阶段三加）
+    ├── config.ts
+    ├── mapper.ts                 — 含 extractDispatchCommand、commandToPgParams（阶段三加）
+    ├── pg-writer.ts              — 含 insertDispatchCommand（阶段三加）
+    ├── redis-writer.ts
     ├── handlers/
     │   ├── telemetry-raw.ts
     │   ├── telemetry-aggregated.ts
     │   ├── events-alerts.ts
-    │   └── events-commands.ts    — 阶段三新增
-    └── service.ts                — 订阅 4 个主题
+    │   └── events-commands.ts    — 阶段三新建
+    └── service.ts                — 订阅 4 个主题（阶段三加 events.commands）
 ```
 
 ## `core/services/dispatch-core/` — 调度核心（阶段三）
@@ -885,132 +924,113 @@ core/services/dispatch-core/
 └── src/
     ├── index.ts                  — 统一出口
     ├── server-entry.ts           — 独立启动
-    ├── types.ts                  — DispatchTask、DispatchVehicle、DispatchAlgorithm、DispatchCommandPayload、DispatchCoreConfig
-    ├── config.ts                 — loadDispatchCoreConfig，14 个环境变量
+    ├── types.ts                  — Task、DispatchVehicle、DispatchCommand
+    ├── config.ts                 — loadDispatchCoreConfig
     ├── validation.ts             — TaskSchema、VehicleSchema
     ├── geo.ts                    — Haversine、ETA、半径
     ├── constraints.ts            — 硬约束过滤
     ├── objective.ts              — 目标函数加权
-    ├── algorithm-interface.ts    — DispatchAlgorithm 接口、extractAlgorithm
+    ├── algorithm-interface.ts    — DispatchAlgorithm 接口
     ├── algorithm-registry.ts     — 算法注册表
-    ├── algorithm-loader.ts       — 从 plugins/dispatch/* 加载
+    ├── algorithm-loader.ts       — 加载算法插件
     ├── command-builder.ts        — 命令构建 + 签名
-    ├── mapper.ts                 — telemetryToVehicle、commandToEnvelope
-    └── service.ts                — 组合，订阅 telemetry.raw，发 events.commands
+    ├── mapper.ts                 — Envelope ↔ Task/Command
+    └── service.ts                — 服务组合
 ```
 
-## `plugins/dispatch/` — 调度算法插件（阶段三）
+## `core/registry/` — 注册表
 
 ```
-plugins/dispatch/
-├── nearest/
-│   ├── plugin.json
-│   └── src/index.js              — Haversine 距离排序
-├── batch-match/
-│   ├── plugin.json
-│   └── src/index.js              — 多因素成本最小化
-└── priority-dispatch/
-    ├── plugin.json
-    └── src/index.js              — 动态权重
+core/registry/
+├── .gitkeep
+└── registry.json                 — 生成产物（不进 Git）
 ```
 
-## `plugins/geofence/` — 地理围栏插件（阶段三）
+## `core/services/*/plugin.json` — 核心服务 manifest
+
+10 个核心服务的 `plugin.json`。阶段三修改了 `data-writer` 的 subscribe 加 `events.commands`。
+
+## `shared/message-bus/` — 消息总线
 
 ```
-plugins/geofence/
-├── plugin.json
-├── zones.json                    — 圆形围栏配置
-└── src/
-    ├── geofence.js               — 纯逻辑：distanceKm、isInsideZone、detectZoneTransition
-    └── index.js                  — 插件入口
+shared/message-bus/
+├── package.json
+├── tsconfig.json
+├── interface.ts
+├── envelope.ts
+├── topics.ts
+├── factory.ts
+├── index.ts
+└── adapters/
+    ├── memory.ts
+    ├── mqtt.ts
+    └── kafka.ts
 ```
 
-## `plugins/anomaly/` — 异常检测插件（阶段三）
+## `shared/types/` 和 `shared/contracts/`
 
 ```
-plugins/anomaly/
-├── plugin.json
-└── src/
-    ├── detectors.js              — 纯逻辑：checkSpeed、checkBatteryDrop、detectAnomalies
-    └── index.js                  — 插件入口
+shared/types/
+├── package.json
+├── tsconfig.json
+└── index.ts
+
+shared/contracts/
+├── package.json
+├── tsconfig.json
+└── index.ts
 ```
 
-## `plugins/_template/` 和 `plugins/example-plugin/` — 模板和示例（阶段一）
+## `shared/layer-config/` — 层配置
+
+```
+shared/layer-config/
+├── package.json
+├── tsconfig.json
+├── layers.yml
+├── schema.ts
+├── loader.ts
+└── index.ts
+```
+
+## `plugins/` — 插件目录
 
 ```
 plugins/
 ├── _template/                    — 模板插件（扫描时跳过）
 │   ├── plugin.json
 │   └── src/index.js
-└── example-plugin/               — 示例插件
+├── example-plugin/               — 示例插件
+│   ├── plugin.json
+│   └── src/index.js
+├── dispatch/                     — 调度算法插件（阶段三）
+│   ├── nearest/
+│   │   ├── plugin.json
+│   │   └── src/index.js
+│   ├── batch-match/
+│   │   ├── plugin.json
+│   │   └── src/index.js
+│   └── priority-dispatch/
+│       ├── plugin.json
+│       └── src/index.js
+├── geofence/                     — 地理围栏插件（阶段三）
+│   ├── plugin.json
+│   ├── zones.json
+│   └── src/
+│       ├── geofence.js
+│       └── index.js
+└── anomaly/                      — 异常检测插件（阶段三）
     ├── plugin.json
-    └── src/index.js
-```
-
-## `core/services/*/plugin.json` — 核心服务 manifest
-
-```
-core/services/
-├── infra/plugin.json
-├── gateway/plugin.json
-├── plugin-host/plugin.json
-├── libs/plugin.json
-├── ingest/plugin.json
-├── data-writer/plugin.json       — 含 events.commands
-├── simulator/plugin.json
-├── dispatch-core/plugin.json     — 含 telemetry.aggregated（未来改为 telemetry.raw）
-├── observability/plugin.json
-└── registry/plugin.json
-```
-
-## `shared/message-bus/` — 消息总线（阶段一）
-
-```
-shared/message-bus/
-├── package.json
-├── tsconfig.json
-├── interface.ts                  — MessageBus 统一接口
-├── envelope.ts                   — Envelope + createEnvelope/validateEnvelope
-├── topics.ts                     — TOPICS 常量（4 个主题）
-├── factory.ts                    — createMessageBus
-├── index.ts
-└── adapters/
-    ├── memory.ts                 — MemoryAdapter
-    ├── mqtt.ts                   — MqttAdapter
-    └── kafka.ts                  — KafkaAdapter
-```
-
-## `shared/types/` 和 `shared/contracts/`（阶段一）
-
-```
-shared/types/
-├── package.json
-├── tsconfig.json
-└── index.ts                      — HealthStatus
-
-shared/contracts/
-├── package.json
-├── tsconfig.json
-└── index.ts                      — Envelope 接口
-```
-
-## `shared/layer-config/` — 层配置（阶段一）
-
-```
-shared/layer-config/
-├── package.json
-├── tsconfig.json
-├── layers.yml                    — 层配置（单层 + 注释预留多层）
-├── schema.ts                     — LayersConfigSchema、KNOWN_SERVICES
-├── loader.ts                     — loadLayers、getLayer、getServices 等
-└── index.ts
+    └── src/
+        ├── detectors.js
+        └── index.js
 ```
 
 ## `scripts/` — 构建脚本
 
 ```
 scripts/
-├── build-registry.js             — 主入口，导出 buildRegistry，pluginDirs 支持数组
+├── build-registry.js             — 主入口，支持多扫描目录（阶段三改）
 ├── check-registry.js             — 校验 registry 结构
 ├── init-kafka-topics.js          — 幂等创建 Kafka 主题
 └── lib/
@@ -1070,14 +1090,15 @@ tests/
 ├── dataWriter.pgWriter.test.ts
 ├── dataWriter.redisWriter.test.ts
 ├── dataWriter.handlers.test.ts
-├── dataWriter.eventsCommands.test.ts    ← 阶段三新增
-├── dispatch.nearest.test.ts             ← 阶段三新增
-├── dispatch.batchMatch.test.ts          ← 阶段三新增
-├── dispatch.priority.test.ts            ← 阶段三新增
-├── geofence.zoneDetection.test.ts       ← 阶段三新增
-├── anomaly.speedThreshold.test.ts       ← 阶段三新增
+├── dataWriter.eventsCommands.test.ts           ← 阶段三新增
+├── dispatch.nearest.test.ts                     ← 阶段三新增
+├── dispatch.batchMatch.test.ts                  ← 阶段三新增
+├── dispatch.priority.test.ts                    ← 阶段三新增
+├── geofence.zoneDetection.test.ts               ← 阶段三新增
+├── anomaly.speedThreshold.test.ts               ← 阶段三新增
 ├── integration.mqttToPg.test.ts
-├── integration.dispatchFlow.test.ts     ← 阶段三新增
+├── integration.dispatchFlow.test.ts             ← 阶段三新增
+├── integration.alertFlow.test.ts                ← 阶段三新增
 ├── jest.config.js
 └── setup.js
 ```
@@ -1087,17 +1108,17 @@ tests/
 ```
 docs/
 ├── README.md                     — 文档索引
-├── architecture.V2.md            — 系统架构（替代 V1）
-├── infra.V1.md                   — 基础设施编排
-├── messageBus.V2.md              — 消息总线（替代 V1）
-├── layerConfig.V1.md             — 层配置
-├── pluginHost.V1.md              — 插件宿主
-├── observability.V1.md           — 可观测性
-├── security.V1.md                — 安全基础
-├── cicd.V1.md                    — CI/CD
-├── simulator.V1.md               — 模拟器
-├── ingest.V1.md                  — MQTT 出入口
-├── dataWriter.V1.md              — 统一写库
+├── architecture.V2.md
+├── infra.V1.md
+├── messageBus.V2.md
+├── layerConfig.V1.md
+├── pluginHost.V1.md
+├── observability.V1.md
+├── security.V1.md
+├── cicd.V1.md
+├── simulator.V1.md
+├── ingest.V1.md
+├── dataWriter.V1.md
 ├── dispatchCore.V1.md            ← 阶段三新增
 ├── nearestDispatch.V1.md         ← 阶段三新增
 ├── batchMatch.V1.md              ← 阶段三新增
@@ -1110,7 +1131,7 @@ docs/
 
 ```
 deploy/
-├── postgres/init.sql             — 数据库初始化，4 表 + 1 视图
+├── postgres/init.sql             — 数据库初始化
 ├── redis/redis.conf              — Redis 配置
 ├── emqx/emqx.conf                — EMQX 配置
 ├── single-layer/.gitkeep
@@ -1121,8 +1142,8 @@ deploy/
 
 ```
 monitor/
-├── prometheus/prometheus.yml     — 抓取配置，含 7 个服务 target
-├── loki/loki-config.yml          — Loki 配置
+├── prometheus/prometheus.yml     — 抓取配置
+├── loki/loki-config.yml
 └── grafana/
     ├── provisioning/
     │   ├── datasources/datasources.yml
@@ -1135,8 +1156,8 @@ monitor/
 ```
 .github/
 ├── workflows/
-│   ├── ci.yml                    — 主 CI 流水线
-│   └── security.yml              — 安全扫描
+│   ├── ci.yml
+│   └── security.yml
 ├── ISSUE_TEMPLATE/
 │   └── bug_report.md
 ├── PULL_REQUEST_TEMPLATE.md
@@ -1157,48 +1178,47 @@ web/
 ## 当前命令验证
 
 ```bash
-make typecheck       # ✅ 通过
-make lint            # ✅ 通过，0 warning
-make test-unit       # ✅ 45 个 suite，约 313 个测试全绿
-make test-integration # ✅ 2 个集成测试 suite 全绿
-make build           # ✅ 全部构建成功
-make infra-up        # ✅ 7 个服务 healthy
-make build-registry  # ✅ 生成 registry.json，10 个服务，6 个插件
-make registry-check  # ✅ registry 校验通过
-make init-topics     # ✅ 需要 Kafka 启动才能跑
+make typecheck        # ✅ 通过
+make lint             # ✅ 通过，0 warning
+make test-unit        # ✅ 45 个 suite，313 个测试全绿
+make test-integration # ✅ 3 个 suite 全绿
+make build            # ✅ 全部构建成功
+make infra-up         # ✅ 7 个服务 healthy
+make build-registry   # ✅ 生成 registry.json，10 个服务，6 个插件
+make registry-check   # ✅ registry 校验通过
+make init-topics      # ✅ 需要 Kafka 启动才能跑
 ```
 
-## 当前注册表内容
+## 当前服务端口分配
 
-**10 个核心服务：**
+| 服务 | 端口 | 状态 |
+|---|---|---|
+| gateway | 9101 | 阶段四 |
+| plugin-host | 9102 | 阶段一 |
+| ingest | 9103 | 阶段二 ✅ |
+| data-writer | 9104 | 阶段二 ✅ |
+| dispatch-core | 9105 | 阶段三 ✅ |
+| observability | 9106 | 阶段一 |
+| simulator | 9107 | 阶段二 ✅ |
 
-- data-writer（subscribe：telemetry.raw、telemetry.aggregated、events.alerts、events.commands）
-- dispatch-core（subscribe：telemetry.aggregated，publish：events.commands）
-- gateway、infra、ingest、libs、observability、plugin-host、registry、simulator
+## 当前消息主题
 
-**6 个插件：**
+| 主题 | 分区数 | 保留 | 生产者 | 消费者 |
+|---|---|---|---|---|
+| telemetry.raw | 6 | 6h | ingest（从 MQTT 转） | data-writer（apiscloud-data-writer）、dispatch-core（apiscloud-dispatch-core） |
+| telemetry.aggregated | 3 | 72h | 待定 | data-writer |
+| events.commands | 3 | 7d | dispatch-core | ingest（apiscloud-ingest）、data-writer（apiscloud-data-writer） |
+| events.alerts | 3 | 7d | geofence、anomaly | data-writer（apiscloud-data-writer） |
 
-- example-plugin
-- nearest
-- batch-match
-- priority-dispatch
-- geofence
-- anomaly
+## 当前算法插件
 
-## 里程碑状态
+| 插件 | profile | 说明 |
+|---|---|---|
+| nearest | core, full | 最近邻，默认算法 |
+| batch-match | core, full | 批量匹配 |
+| priority-dispatch | core, full | 优先级调度 |
 
-| 里程碑 | 状态 |
-|---|---|
-| M1 基础设施 + 共享库 | ✅ |
-| M2 数据流主干 | ✅ |
-| M3 基础业务 + 调度算法 | ✅ |
-| M4 插件系统 + 前端 | ⬜ |
-| M5 插件生态 + 性能 | ⬜ |
-| M6 测试 + 可观测性 + 安全 + 部署 | ⬜ |
-
-## 下一步
-
-**阶段四：插件系统与前端外壳**
+## 下一步：阶段四
 
 **阶段目标：** 建立进程内插件机制和前端宿主，让功能可插拔。
 
@@ -1207,42 +1227,63 @@ make init-topics     # ✅ 需要 Kafka 启动才能跑
 | 序号 | 任务 | 产出 |
 |---|---|---|
 | 4.1 | 开发 gateway | `core/gateway/` |
-| 4.2 | plugin-host 注册到 gateway，动态路由注入 | 修改 plugin-host 和 gateway |
-| 4.3 | registry 生成脚本完善 | `build-registry.js` |
-| 4.4 | 前端外壳 | `web/` |
-| 4.5 | 前端插件加载器 | 动态 import、路由注册、导航生成 |
-| 4.6 | 基础 UI 组件 | 按钮、卡片、表格 |
-| 4.7 | dashboard | `plugins/dashboard/` |
-| 4.8 | plugin-host 测试 | `tests/pluginHost.*.test.ts` |
-| 4.9 | 层配置测试 | `tests/layerConfig.addLayer.test.ts` |
-| 4.10 | 文档 | `gateway.V1.md`、`webShell.V1.md`、`dashboard.V1.md` |
+| 4.2 | plugin-host 注入 bus | `core/plugin-host/src/host.ts` 改 buildContext |
+| 4.3 | geofence/anomaly 接入 plugin-host | 插件在 onLoad 里调 setBus(ctx.bus) |
+| 4.4 | 开发前端外壳 | `web/` |
+| 4.5 | 开发前端插件加载器 | 动态 import、路由注册、导航生成 |
+| 4.6 | 开发基础 UI 组件 | 按钮、卡片、表格 |
+| 4.7 | 开发 dashboard | `plugins/dashboard/` |
+| 4.8 | 编写 plugin-host 测试 | `tests/pluginHost.*.test.ts` |
+| 4.9 | 编写层配置测试 | `tests/layerConfig.addLayer.test.ts` |
+| 4.10 | 编写功能文档 | `gateway.V1.md`、`webShell.V1.md`、`dashboard.V1.md` |
 
-**阶段四关键设计：**
+**阶段四开工前必须看的关键代码：**
 
-- **geofence、anomaly 接入 plugin-host**：阶段三写了插件代码 + 测试，阶段四由 plugin-host 注入 `bus` 后自动生效。
-- **plugin-host 注入 bus**：`buildContext` 里加 `bus: this.bus`，插件在 `onLoad` 里 `setBus(ctx.bus)`。
-- **gateway 动态路由注入**：插件启动后自动注册路由到 gateway。
-- **前端外壳不硬编码插件路由**：前端路由由插件注册表动态生成。
-- **docker-compose.yml 不硬编码插件**：插件由 plugin-host 动态启动。
+1. `core/plugin-host/src/host.ts` 的 `buildContext`：要在 `ctx` 里注入 `bus`。
+2. `core/plugin-host/src/types.ts` 的 `PluginContext`：要加可选 `bus` 字段。
+3. `plugins/geofence/src/index.js` 的 `setBus`：阶段四在 `onLoad` 里调 `setBus(ctx.bus)`。
+4. `plugins/anomaly/src/index.js` 的 `setBus`：同 geofence。
+5. `tests/pluginHost.host.test.ts`：阶段四加 bus 后要更新测试。
+6. `tests/integration.alertFlow.test.ts`：阶段四接入 plugin-host 后要改成走 PluginHost 分发。
+7. `docs/pluginHost.V1.md`：阶段四写 V2 文档。
 
-**阶段四开工前需要准备的代码：**
+**阶段四关键决策：**
 
-1. `core/gateway/` 全新实现。
-2. `core/plugin-host/src/host.ts` 加 bus 注入。
-3. `plugins/geofence/src/index.js` 和 `plugins/anomaly/src/index.js` 已就位，只需在 `onLoad` 里调 `setBus`。
-4. `web/` 前端外壳。
-5. `plugins/dashboard/` 前端插件。
-
-**重开对话时的最小上下文：**
-
-如果重开对话，只需提供以下信息即可继续：
-
-1. **本文档**（描述项目全局）。
-2. **当前任务的代码**（如阶段四的 gateway 实现）。
-3. **`package.json`、`tsconfig.base.json`、`jest.config.js`** 三个关键配置（如需要）。
+1. **plugin-host 的 bus 注入**：`PluginContext` 加可选 `bus?: MessageBus`，`buildContext` 里注入 `this.bus`。
+2. **PluginHost 构造需要 bus**：`PluginHostOptions` 加 `bus?: MessageBus`。
+3. **geofence/anomaly 接入后，告警流走 PluginHost**：`host.dispatchMessage('telemetry.raw', env)` 触发插件 `onMessage`。
+4. **gateway 路由注入**：插件 `getRoutes()` 返回的路由，聚合后注册到 gateway。
+5. **前端外壳不硬编码插件路由**：导航由插件注册表动态生成。
 
 ---
 
-**文档版本：** V3  
-**对应阶段：** 阶段一、二、三完成，阶段四未开始  
+# 第六部分：重开对话时的最小上下文
+
+如果重开对话，只需提供以下信息即可继续：
+
+1. **本文档**（描述项目全局和已完成部分）。
+2. **当前任务的代码**（如阶段四的 gateway 实现）。
+3. **如果涉及现有模块**：对应的接口文件（如 `core/plugin-host/src/types.ts`、`shared/message-bus/interface.ts`）。
+
+我就能接着往下干。
+
+**重开对话时的标准问法：**
+
+> 这是 SP3.md，项目阶段一、二、三已完成，现在进入阶段四。请阅读 SP3.md，然后从阶段四的 [具体任务] 开始，逐文件输出。
+
+**如果继续阶段四，第一批建议从这些文件开始：**
+
+1. `core/plugin-host/src/types.ts` 加 `bus` 字段
+2. `core/plugin-host/src/host.ts` 的 `PluginHostOptions` 加 `bus`，`buildContext` 注入
+3. `plugins/geofence/src/index.js` 的 `onLoad` 里调 `setBus(ctx.bus)`
+4. `plugins/anomaly/src/index.js` 的 `onLoad` 里调 `setBus(ctx.bus)`
+5. `tests/pluginHost.host.test.ts` 更新
+6. `tests/integration.alertFlow.test.ts` 改成走 PluginHost 分发
+7. `core/gateway/` 新建
+8. `web/` 新建
+
+---
+
+**文档版本：** SP3
+**对应阶段：** 阶段一、二、三完成，阶段四未开始
 **最后更新：** 阶段三完成时

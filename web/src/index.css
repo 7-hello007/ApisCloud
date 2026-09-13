@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light 主题：surface-900 = 白卡片，surface-100 = 深色文字 */
+    --color-surface-50: 248 250 252;
+    --color-surface-100: 15 23 42;
+    --color-surface-200: 51 65 85;
+    --color-surface-400: 100 116 139;
+    --color-surface-500: 148 163 184;
+    --color-surface-700: 203 213 225;
+    --color-surface-800: 226 232 240;
+    --color-surface-900: 255 255 255;
+    --color-surface-950: 241 245 249;
+  }
+
+  .dark {
+    /* Dark 主题：surface-900 = 深蓝卡片，surface-100 = 浅色文字 */
+    --color-surface-50: 248 250 252;
+    --color-surface-100: 241 245 249;
+    --color-surface-200: 226 232 240;
+    --color-surface-400: 148 163 184;
+    --color-surface-500: 100 116 139;
+    --color-surface-700: 51 65 85;
+    --color-surface-800: 30 41 59;
+    --color-surface-900: 15 23 42;
+    --color-surface-950: 2 6 23;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--color-surface-950));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-surface-700));
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--color-surface-500));
+  }
+}

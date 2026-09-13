@@ -56,33 +56,49 @@
 
 | 文档 | 覆盖内容 |
 |---|---|
-| `architecture.V1.md` | 系统架构总览：分层、服务、数据流 |
+| `architecture.V2.md` | 系统架构总览：分层、服务、数据流（替代 V1） |
 | `infra.V1.md` | 基础设施编排：PG/Redis/EMQX/Kafka/Prometheus/Grafana/Loki |
-| `messageBus.V1.md` | 消息总线抽象层：接口、信封、适配器、切换 |
-| `layerConfig.V1.md` | 层配置：服务与层分离、layers.yml、加层 |
-| `pluginHost.V1.md` | 插件宿主：加载、注册、生命周期、异常保护 |
+| `messageBus.V2.md` | 消息总线抽象层：接口、信封、适配器、切换（替代 V1） |
+| `layerConfig.V2.md` | 层配置：服务与层分离、layers.yml、加层（替代 V1） |
+| `pluginHost.V2.md` | 插件宿主：加载、注册、生命周期、异常保护、bus 注入（替代 V1） |
 | `observability.V1.md` | 可观测性：指标、日志、追踪预留 |
 | `security.V1.md` | 安全基础：认证、输入验证、密钥管理 |
 | `cicd.V1.md` | CI/CD：GitHub Actions、安全扫描、Dependabot |
-
 
 ### 阶段二（核心数据流服务）
 
 | 文档 | 覆盖内容 |
 |---|---|
-| `architecture.V2.md` | 系统架构 V2：加入 simulator、ingest、data-writer |
 | `simulator.V1.md` | 模拟器：状态机、GPS 生成器、MQTT 上报、500 辆模拟 |
 | `ingest.V1.md` | MQTT 出入口：上行遥测转总线、下行命令转 MQTT、输入校验 |
 | `dataWriter.V1.md` | 统一写库：消费总线写 PG 和 Redis、UPSERT、Redis 热路径 |
-| `messageBus.V2.md` | 消息总线 V2：主题分区保留策略、消费组规范、partitionKey |
+
+### 阶段三（核心业务与调度算法）
+
+| 文档 | 覆盖内容 |
+|---|---|
+| `dispatchCore.V1.md` | 调度核心：任务分发、约束、目标函数、算法调度、签名 |
+| `nearestDispatch.V1.md` | 最近邻调度算法：Haversine 距离排序 |
+| `batchMatch.V1.md` | 批量匹配算法：多因素成本最小化 |
+| `priorityDispatch.V1.md` | 优先级调度算法：优先级动态调整权重 |
+| `geofence.V1.md` | 地理围栏检测插件：圆形区域进出告警 |
+| `anomaly.V1.md` | 异常检测插件：速度超阈值 + 电量骤降 |
+
+### 阶段四（插件系统与前端外壳）
+
+| 文档 | 覆盖内容 |
+|---|---|
+| `gateway.V1.md` | HTTP 统一入口：路由注入、反向代理、插件路由聚合 |
+| `webShell.V1.md` | 前端外壳：布局、主题、插件前端加载器、UI 组件 |
+| `dashboard.V1.md` | 仪表板插件：总览、车辆、告警、指令 |
 
 ### 后续阶段（待补）
 
-- `dispatchCore.V1.md`
-- `gateway.V1.md`
-- `webShell.V1.md`
-- `dashboard.V1.md`
 - `deployment.V1.md`
+- `testing.V1.md`
+- `api.V1.md`
+
+---
 
 ## 写作原则
 

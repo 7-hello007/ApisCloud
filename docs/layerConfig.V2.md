@@ -1,4 +1,4 @@
-# 层配置 V1
+# 层配置 V2
 
 ## 一、功能目标
 
@@ -10,6 +10,7 @@
 - 层：部署位置，如接入层、处理层、决策层。
 - 服务实例：服务在某一层的具体运行实例。
 - 层配置：声明某层启用哪些服务。
+- 插件：附加功能，不属于任何层，通过 profile 选择加载。
 
 **同一服务可以在任意层部署，代码不变。**
 
@@ -130,12 +131,33 @@ layers:
 | ingest | 可部署 | 可部署 | 可部署 |
 | data-writer | 可部署 | 可部署 | 可部署 |
 | dispatch-core | 可部署 | 可部署 | 可部署 |
+| gateway | 可部署 | 可部署 | 可部署 |
 | observability | 可部署 | 可部署 | 可部署 |
 | registry | 可部署 | 可部署 | 可部署 |
 
 同一服务在每层以不同配置运行，代码一份。
 
-### 2.7 构建产物
+### 2.7 服务与插件的关系
+
+**服务是逻辑单元，插件是扩展单元。二者维度不同。**
+
+| 维度 | 服务 | 插件 |
+|---|---|---|
+| 归属 | 核心，冻结维护 | 附加，自由迭代 |
+| 配置位置 | `layers.yml` 的 `services` | `plugin.json` 的 `profile` |
+| 是否进白名单 | 是（`KNOWN_SERVICES`） | 否 |
+| 加载方 | 启动脚本按层启动 | gateway / plugin-host 按 profile 加载 |
+| 是否占端口 | 是（HTTP 服务） | 否（进程内运行） |
+| 示例 | ingest、dispatch-core、gateway | dashboard、geofence、anomaly、nearest |
+
+**关键规则：**
+
+- 层配置只管核心服务，不管插件。
+- 插件通过 `profile` 选择加载，不由 `layers.yml` 控制。
+- gateway 是核心服务，它内部加载插件。
+- dashboard、geofence、anomaly、nearest、batch-match、priority-dispatch 是插件，不进 `KNOWN_SERVICES`。
+
+### 2.8 构建产物
 
 `package.json` 的 build 脚本把 `layers.yml` 复制到 `dist/`，让运行时 `__dirname/../layers.yml` 能找到：
 
@@ -149,7 +171,7 @@ layers:
 
 TypeScript 只编译 `.ts`，`.yml` 不在编译产物里，必须手动 copy。
 
-### 2.8 加载逻辑
+### 2.9 加载逻辑
 
 `loadLayers` 的处理顺序：
 
@@ -160,7 +182,7 @@ TypeScript 只编译 `.ts`，`.yml` 不在编译产物里，必须手动 copy。
 5. 层名唯一性检查：手动遍历，重复抛错。
 6. 返回 `LayersConfig`。
 
-### 2.9 测试覆盖
+### 2.10 测试覆盖
 
 `tests/layerConfig.load.test.ts` 覆盖 7 个场景：
 
@@ -186,9 +208,48 @@ TypeScript 只编译 `.ts`，`.yml` 不在编译产物里，必须手动 copy。
 
 无（首版）。
 
-## 四、后续版本
+## 四、V2 修改
 
-### 计划中的 V2
+### 变更一：gateway 确认为核心服务
+
+**为什么改：** 阶段四 gateway 作为 HTTP 统一入口上线，需要在层配置里明确它是核心服务。
+
+**怎么改：**
+
+1. `KNOWN_SERVICES` 已含 `gateway`（阶段一已加，无需改动）。
+2. `layers.yml` 的 `single` 层已含 `gateway`（阶段一已加，无需改动）。
+3. 阶段四只确认，不改代码。
+
+**影响：** 无代码改动，文档明确说明。
+
+### 变更二：明确插件与层的关系
+
+**为什么改：** 阶段四引入前端插件和业务插件（dashboard、geofence、anomaly、nearest 等），需要明确"插件不属于层"。
+
+**怎么改：**
+
+- 层配置只管核心服务，不管插件。
+- 插件通过 `plugin.json` 的 `profile` 字段选择加载。
+- `KNOWN_SERVICES` 只列核心服务，不列插件。
+- gateway 是核心服务，它负责加载插件。
+
+**影响：**
+
+- 无代码改动。
+- `layers.yml` 不变。
+- 插件清单通过 `core/registry/registry.json` 独立管理。
+
+### 变更三：服务与插件的关系表
+
+**为什么改：** 帮助开发者理解"为什么 geofence 不在 layers.yml 里"。
+
+**怎么改：** 新增 2.7 节的服务与插件关系表。
+
+**影响：** 无代码改动。
+
+## 五、后续版本
+
+### 计划中的 V3
 
 - 层配置增加 `cluster` 字段，支持多集群：
 
@@ -202,7 +263,7 @@ layers:
     services: [...]
 ```
 
-### 计划中的 V3
+### 计划中的 V4
 
 - 层配置增加 `bus` 字段，不同层用不同总线：
 
@@ -216,7 +277,7 @@ layers:
     services: [...]
 ```
 
-### 计划中的 V4
+### 计划中的 V5
 
 - 层配置增加 `replicas` 字段，支持水平扩展：
 

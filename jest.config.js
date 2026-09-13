@@ -43,6 +43,8 @@ module.exports = {
     '^@apiscloud/data-writer/(.*)$': '<rootDir>/core/services/data-writer/src/$1',
     '^@apiscloud/dispatch-core$': '<rootDir>/core/services/dispatch-core/src',
     '^@apiscloud/dispatch-core/(.*)$': '<rootDir>/core/services/dispatch-core/src/$1',
+    '^@apiscloud/gateway$': '<rootDir>/core/services/gateway/src',
+    '^@apiscloud/gateway/(.*)$': '<rootDir>/core/services/gateway/src/$1',
   },
 
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
@@ -55,6 +57,7 @@ module.exports = {
     'core/services/ingest/src/**/*.ts',
     'core/services/data-writer/src/**/*.ts',
     'core/services/dispatch-core/src/**/*.ts',
+    'core/services/gateway/src/**/*.ts',
     'shared/message-bus/**/*.ts',
     'shared/layer-config/**/*.ts',
     '!**/*.d.ts',

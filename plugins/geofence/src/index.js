@@ -3,25 +3,20 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { createEnvelope, TOPICS } = require('@apiscloud/message-bus');
 const { detectZoneTransition, isInsideZone } = require('./geofence');
 
 /**
  * geofence 插件。
  * 订阅 telemetry.raw，检测车辆进出围栏，发 events.alerts。
  *
- * 阶段三只做插件代码 + 测试。
- * 阶段四由 plugin-host 注入 bus 后自动生效。
+ * 阶段四：所有消息总线依赖通过 ctx 注入，不 require workspace 包。
  */
 
-/** 车辆最近一次是否在围栏内：Map<vehicle_id, Map<zone_id, boolean>> */
 const vehicleZoneState = new Map();
-
-/** 加载的围栏列表 */
 let zones = [];
-
-/** 总线（阶段四由 plugin-host 注入） */
 let bus = null;
+let createEnvelope = null;
+let TOPICS = null;
 
 function loadZones() {
   const zonesPath = path.join(__dirname, '..', 'zones.json');
@@ -61,7 +56,14 @@ module.exports = {
   async onLoad(ctx) {
     try {
       zones = loadZones();
-      ctx.logger.info({ count: zones.length }, 'geofence 插件已加载');
+      if (ctx.bus) bus = ctx.bus;
+      if (ctx.createEnvelope) createEnvelope = ctx.createEnvelope;
+      if (ctx.topics) TOPICS = ctx.topics;
+
+      ctx.logger.info(
+        { count: zones.length, hasBus: !!bus, hasHelpers: !!createEnvelope && !!TOPICS },
+        'geofence 插件已加载',
+      );
     } catch (err) {
       ctx.logger.error({ err: err.message }, 'geofence 加载 zones.json 失败');
       zones = [];
@@ -72,10 +74,13 @@ module.exports = {
     vehicleZoneState.clear();
     zones = [];
     bus = null;
+    createEnvelope = null;
+    TOPICS = null;
   },
 
   async onMessage(_topic, envelope) {
     if (zones.length === 0) return;
+    if (!bus || !createEnvelope || !TOPICS) return;
 
     const { vehicle_id, position } = extractTelemetry(envelope);
 
@@ -93,7 +98,6 @@ module.exports = {
       setCurrentInside(vehicle_id, zone.id, currentInside);
 
       if (!transition) continue;
-      if (!bus || typeof bus.publish !== 'function') continue;
 
       const alertPayload = {
         vehicle_id,
@@ -116,9 +120,7 @@ module.exports = {
     }
   },
 
-  async onTimer() {
-    // 无定时任务
-  },
+  async onTimer() {},
 
   getRoutes() {
     return [];
@@ -127,32 +129,36 @@ module.exports = {
   async getHealth() {
     return {
       status: zones.length > 0 ? 'ok' : 'degraded',
-      message: `zones: ${zones.length}`,
+      message: `zones: ${zones.length}, hasBus: ${!!bus}`,
     };
   },
 
   // ============================================================
-  // 阶段三测试辅助；阶段四接入 plugin-host 后可保留（用于注入）
+  // 测试辅助
   // ============================================================
 
-  /** 阶段四由 plugin-host 在 onLoad 后调用，注入 bus */
   setBus(b) {
     bus = b;
   },
 
-  /** 测试查看内部状态 */
+  /** 测试手动注入 helpers（绕过 ctx） */
+  _setHelpers(helpers) {
+    if (helpers.createEnvelope) createEnvelope = helpers.createEnvelope;
+    if (helpers.topics) TOPICS = helpers.topics;
+  },
+
   _getVehicleZoneState() {
     return vehicleZoneState;
   },
 
-  /** 测试重置 */
   _reset() {
     vehicleZoneState.clear();
     zones = [];
     bus = null;
+    createEnvelope = null;
+    TOPICS = null;
   },
 
-  /** 测试读取 zones */
   _getZones() {
     return zones;
   },

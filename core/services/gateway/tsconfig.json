@@ -1,0 +1,14 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "references": [
+    { "path": "../../../core/libs" },
+    { "path": "../../../shared/message-bus" },
+    { "path": "../observability" },
+    { "path": "../../plugin-host" }
+  ],
+  "include": ["src/**/*.ts"]
+}

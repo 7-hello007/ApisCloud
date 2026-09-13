@@ -27,3 +27,9 @@ deploy/emqx/data/
 monitor/prometheus/data/
 monitor/loki/data/
 monitor/grafana/data/
+
+# 前端
+web/dist/
+web/node_modules/
+web/.vite/
+web/.turbo/

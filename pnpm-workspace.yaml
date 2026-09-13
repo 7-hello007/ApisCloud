@@ -4,5 +4,7 @@ packages:
   - "core/gateway"
   - "core/services/*"
   - "shared/*"
-  - "plugins/*"
   - "web"
+  # - "plugins/*"
+allowBuilds:
+  esbuild: true

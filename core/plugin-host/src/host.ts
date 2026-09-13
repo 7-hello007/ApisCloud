@@ -6,7 +6,7 @@ import {
   type HealthState,
   type Logger,
 } from '@apiscloud/libs';
-import type { Envelope } from '@apiscloud/message-bus';
+import { createEnvelope, TOPICS, type Envelope, type MessageBus } from '@apiscloud/message-bus';
 
 import { withTimeout } from './guard';
 import { LifecycleManager } from './lifecycle';
@@ -16,6 +16,8 @@ import type { LoadedPlugin, PluginContext, Route } from './types';
 export interface PluginHostOptions {
   config: AppConfig;
   logger?: Logger;
+  /** 插件可用的消息总线（阶段四新增，可选） */
+  bus?: MessageBus;
   loadTimeoutMs?: number;
   unloadTimeoutMs?: number;
   messageTimeoutMs?: number;
@@ -35,6 +37,7 @@ export interface LoadAllResult {
 export class PluginHost {
   private readonly config: AppConfig;
   private readonly logger: Logger;
+  private readonly bus?: MessageBus;
   private readonly registry: PluginRegistry;
   private readonly lifecycle: LifecycleManager;
   private readonly messageTimeoutMs: number;
@@ -43,6 +46,7 @@ export class PluginHost {
 
   constructor(options: PluginHostOptions) {
     this.config = options.config;
+    this.bus = options.bus;
     this.logger =
       options.logger ??
       createLogger({
@@ -60,12 +64,10 @@ export class PluginHost {
     this.startedAt = Date.now();
   }
 
-  /** 注册已加载的插件 */
   register(loaded: LoadedPlugin): void {
     this.registry.register(loaded);
   }
 
-  /** 加载所有插件，可按 profile 过滤 */
   async loadAll(profile?: string): Promise<LoadAllResult> {
     const targets = profile
       ? this.registry.filterByProfile(profile)
@@ -89,7 +91,6 @@ export class PluginHost {
     return { loaded, failed, total: targets.length };
   }
 
-  /** 卸载所有插件 */
   async unloadAll(): Promise<void> {
     const plugins = this.registry.list().slice().reverse();
     for (const plugin of plugins) {
@@ -98,7 +99,6 @@ export class PluginHost {
     this.logger.info({ count: plugins.length }, '插件卸载完成');
   }
 
-  /** 分发消息给订阅了该主题的插件 */
   async dispatchMessage(topic: string, envelope: Envelope): Promise<void> {
     for (const { instance, manifest } of this.registry.list()) {
       if (!instance.onMessage) continue;
@@ -123,7 +123,6 @@ export class PluginHost {
     }
   }
 
-  /** 分发定时调用给所有插件 */
   async dispatchTimer(): Promise<void> {
     for (const { instance, manifest } of this.registry.list()) {
       if (!instance.onTimer) continue;
@@ -142,7 +141,6 @@ export class PluginHost {
     }
   }
 
-  /** 聚合所有插件的路由 */
   getRoutes(): Array<{ plugin: string; route: Route }> {
     const all: Array<{ plugin: string; route: Route }> = [];
     for (const { instance, manifest } of this.registry.list()) {
@@ -160,7 +158,6 @@ export class PluginHost {
     return all;
   }
 
-  /** 聚合健康检查 */
   async health(): Promise<HealthReport> {
     const checks: Record<string, HealthCheckResult> = {};
     let overall: HealthState = 'ok';
@@ -195,7 +192,6 @@ export class PluginHost {
     };
   }
 
-  /** 暴露注册表，便于测试和检查 */
   getRegistry(): PluginRegistry {
     return this.registry;
   }
@@ -205,6 +201,14 @@ export class PluginHost {
       pluginId: plugin.manifest.name,
       logger: this.logger.child({ plugin: plugin.manifest.name }),
       config: this.config,
+      bus: this.bus,
+      createEnvelope,
+      topics: {
+        TELEMETRY_RAW: TOPICS.TELEMETRY_RAW,
+        TELEMETRY_AGGREGATED: TOPICS.TELEMETRY_AGGREGATED,
+        EVENTS_COMMANDS: TOPICS.EVENTS_COMMANDS,
+        EVENTS_ALERTS: TOPICS.EVENTS_ALERTS,
+      },
     };
   }
 }

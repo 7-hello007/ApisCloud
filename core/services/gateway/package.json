@@ -1,0 +1,18 @@
+{
+  "name": "@apiscloud/gateway",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HTTP 统一入口：路由注入 + 反向代理 + 插件路由聚合",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist/server-entry.js",
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@apiscloud/libs": "workspace:*",
+    "@apiscloud/message-bus": "workspace:*",
+    "@apiscloud/observability": "workspace:*",
+    "@apiscloud/plugin-host": "workspace:*"
+  }
+}

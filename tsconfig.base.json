@@ -42,7 +42,9 @@
       "@apiscloud/data-writer": ["./core/services/data-writer/src"],
       "@apiscloud/data-writer/*": ["./core/services/data-writer/src/*"],
       "@apiscloud/dispatch-core": ["./core/services/dispatch-core/src"],
-      "@apiscloud/dispatch-core/*": ["./core/services/dispatch-core/src/*"]
+      "@apiscloud/dispatch-core/*": ["./core/services/dispatch-core/src/*"],
+      "@apiscloud/gateway": ["./core/services/gateway/src"],
+      "@apiscloud/gateway/*": ["./core/services/gateway/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

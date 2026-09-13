@@ -1,0 +1,12 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "core": false,
+  "profile": ["core", "full"],
+  "lazy": true,
+  "dependsOn": [],
+  "topics": { "subscribe": [], "publish": [] },
+  "routes": [],
+  "frontend": "dashboard",
+  "description": "仪表板前端：总览、车辆、告警、指令"
+}

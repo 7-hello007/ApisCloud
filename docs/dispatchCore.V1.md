@@ -317,3 +317,41 @@ Grafana 可通过 Prometheus 数据源看到 dispatch-core 指标。
 - 阶段五：任务队列和优先级抢占
 - 阶段六：跨层调度（接入层 / 处理层 / 决策层）
 - 阶段六：多集群调度
+## 附：实机验证记录
+
+**验证时间：** 阶段三完成时
+
+**验证环境：**
+
+- 基础设施：Docker Compose 7 个服务 healthy
+- 消息总线：Kafka（KRaft 单节点）
+- MQTT：EMQX 5.8
+- 数据库：PostgreSQL 16 + Redis 7
+
+**验证步骤：**
+
+1. `make infra-up` + `make init-topics` + `make build`
+2. 启动 4 个服务：simulator、ingest、data-writer、dispatch-core
+3. 等待 10s，让 simulator 发若干轮遥测
+
+**验证结果：**
+
+| 项 | 结果 |
+|---|---|
+| simulator /health | ok |
+| ingest /health | ok |
+| data-writer /health | ok |
+| dispatch-core /health | ok |
+| PG vehicle_latest 行数 | >= 100 |
+| PG vehicle_telemetry 行数 | >= 1000 |
+| Redis vehicles:active | >= 100 |
+| Redis vehicle:v-000001:latest | 有数据 |
+| Prometheus target | 7 个 UP |
+| 各服务 /metrics | 有数据 |
+
+**未验证项：**
+
+- 任务调度实机验证：dispatch-core 无 HTTP 端点，任务注入通过集成测试覆盖
+- 告警流实机验证：geofence/anomaly 未接入 plugin-host，阶段四接入后实机验证
+
+**结论：** 遥测流主干道实机跑通，核心服务在真实基础设施上能启动、健康、落库、可观测。
