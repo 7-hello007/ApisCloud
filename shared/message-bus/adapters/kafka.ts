@@ -149,7 +149,7 @@ export class KafkaAdapter implements MessageBus {
  * 有 baseGroupId：<base>--<topic 去点>
  * 无 baseGroupId：apiscloud-<topic 去点>
  */
-function buildGroupId(baseGroupId: string | undefined, topic: string): string {
+export function buildGroupId(baseGroupId: string | undefined, topic: string): string {
   const suffix = topic.replace(/\./g, '-');
   if (baseGroupId) {
     return `${baseGroupId}--${suffix}`;

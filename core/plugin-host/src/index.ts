@@ -10,6 +10,7 @@ export type {
   PluginHealth,
   TopicFilter,
   ServiceUrls,
+  PluginMetrics,
 } from './types';
 
 // schema

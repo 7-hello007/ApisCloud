@@ -4,21 +4,15 @@ const { detectAnomalies, DEFAULT_CONFIG } = require('./detectors');
 
 /**
  * anomaly 插件。
- * 订阅 telemetry.raw，检测速度异常和电量骤降，发 events.alerts。
- *
- * 所有消息总线依赖通过 ctx 注入，不 require workspace 包。
+ * 所有消息总线依赖通过 ctx 注入。
  */
 
-/** 车辆上一状态：Map<vehicle_id, { battery:number, ts:number }> */
 const vehiclePrevState = new Map();
-
-/** 检测配置 */
 let config = { ...DEFAULT_CONFIG };
-
-/** 总线（onLoad 时从 ctx.bus 注入） */
 let bus = null;
 let createEnvelope = null;
 let TOPICS = null;
+let metrics = null;
 
 function extractTelemetry(envelope) {
   const p = envelope.payload;
@@ -54,9 +48,10 @@ module.exports = {
     if (ctx.bus) bus = ctx.bus;
     if (ctx.createEnvelope) createEnvelope = ctx.createEnvelope;
     if (ctx.topics) TOPICS = ctx.topics;
+    if (ctx.metrics) metrics = ctx.metrics;
 
     ctx.logger.info(
-      { config, hasBus: !!bus, hasHelpers: !!createEnvelope && !!TOPICS },
+      { config, hasBus: !!bus, hasHelpers: !!createEnvelope && !!TOPICS, hasMetrics: !!metrics },
       'anomaly 插件已加载',
     );
   },
@@ -66,6 +61,7 @@ module.exports = {
     bus = null;
     createEnvelope = null;
     TOPICS = null;
+    metrics = null;
   },
 
   async onMessage(_topic, envelope) {
@@ -83,7 +79,6 @@ module.exports = {
       config,
     });
 
-    // 更新上一状态
     vehiclePrevState.set(telemetry.vehicle_id, {
       battery: telemetry.battery,
       ts: telemetry.ts,
@@ -107,9 +102,26 @@ module.exports = {
         payload,
       });
 
-      await bus.publish(TOPICS.EVENTS_ALERTS, env, {
-        partitionKey: telemetry.vehicle_id,
-      });
+      try {
+        await bus.publish(TOPICS.EVENTS_ALERTS, env, {
+          partitionKey: telemetry.vehicle_id,
+        });
+
+        if (metrics) {
+          metrics.anomalyEvents.inc({
+            alert_type: alert.alertType,
+            level: alert.level,
+          });
+        }
+      } catch (err) {
+        if (metrics) {
+          metrics.anomalyEvents.inc({
+            alert_type: alert.alertType,
+            level: 'error',
+          });
+        }
+        throw err;
+      }
     }
   },
 
@@ -122,7 +134,7 @@ module.exports = {
   async getHealth() {
     return {
       status: 'ok',
-      message: `tracked vehicles: ${vehiclePrevState.size}, hasBus: ${!!bus}`,
+      message: `tracked vehicles: ${vehiclePrevState.size}, hasBus: ${!!bus}, hasMetrics: ${!!metrics}`,
     };
   },
 
@@ -149,6 +161,7 @@ module.exports = {
     bus = null;
     createEnvelope = null;
     TOPICS = null;
+    metrics = null;
   },
 };
 

@@ -1,4 +1,4 @@
-import type { AppConfig } from '@apiscloud/libs';
+import { createCommandSignature, type AppConfig, type SignedCommand } from '@apiscloud/libs';
 import {
   createMessageBus,
   TOPICS,
@@ -106,6 +106,30 @@ export function createIngestService(options: IngestServiceOptions): IngestServic
       }
 
       const cmd = envelopeToCommand(env);
+
+      // 阶段六：签名校验（可选）
+      if (ingestConfig.verifySignature) {
+        const signed = extractSignedCommand(cmd.payload);
+        if (!signed) {
+          observability.logger.warn(
+            { commandId: cmd.command_id },
+            '下行命令缺签名，拒绝',
+          );
+          return;
+        }
+        const verifier = createCommandSignature({
+          secret: ingestConfig.signSecret,
+          ttlSec: ingestConfig.signTtlSec,
+        });
+        const result = verifier.verify(signed);
+        if (!result.ok) {
+          observability.logger.warn(
+            { commandId: cmd.command_id, reason: result.error },
+            '下行命令签名校验失败，拒绝',
+          );
+          return;
+        }
+      }
       const mqttTopic = `${ingestConfig.mqttCommandPrefix}${cmd.vehicle_id}`;
 
       await mqttPublisher.publish(mqttTopic, cmd);
@@ -178,5 +202,23 @@ export function createIngestService(options: IngestServiceOptions): IngestServic
 
       observability.logger.info('ingest 服务已停止');
     },
+  };
+}
+
+/**
+ * 从命令 payload 里提取签名信息。
+ * 约定格式：payload.signed = { command, signature, algorithm }
+ */
+function extractSignedCommand(payload: unknown): SignedCommand | null {
+  if (!payload || typeof payload !== 'object') return null;
+  const p = payload as { signed?: unknown };
+  if (!p.signed || typeof p.signed !== 'object') return null;
+  const s = p.signed as { command?: unknown; signature?: unknown; algorithm?: unknown };
+  if (!s.command || typeof s.command !== 'object') return null;
+  if (typeof s.signature !== 'string' || typeof s.algorithm !== 'string') return null;
+  return {
+    command: s.command as SignedCommand['command'],
+    signature: s.signature,
+    algorithm: s.algorithm,
   };
 }

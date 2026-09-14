@@ -121,6 +121,11 @@ export function createDispatchCoreService(
       });
 
       if (passed.length === 0) {
+        observability.metrics.dispatchTasks.inc({
+          task_type: task.task_type,
+          algorithm: 'none',
+          result: 'no_candidates',
+        });
         observability.logger.warn(
           { taskId: task.task_id, totalCandidates: candidates.length },
           '无候选车辆',
@@ -133,6 +138,11 @@ export function createDispatchCoreService(
         registry.get(dcConfig.defaultAlgorithm) ?? registry.get(dcConfig.fallbackAlgorithm);
 
       if (!algorithm) {
+        observability.metrics.dispatchTasks.inc({
+          task_type: task.task_type,
+          algorithm: 'none',
+          result: 'no_algorithm',
+        });
         observability.logger.error('无可用算法');
         return;
       }
@@ -154,6 +164,11 @@ export function createDispatchCoreService(
       }
 
       if (!result || result.ranked.length === 0) {
+        observability.metrics.dispatchTasks.inc({
+          task_type: task.task_type,
+          algorithm: algorithm.name,
+          result: 'empty_output',
+        });
         observability.logger.warn({ taskId: task.task_id }, '算法无输出');
         return;
       }
@@ -162,6 +177,11 @@ export function createDispatchCoreService(
       const top = result.ranked[0];
       const chosen = passed.find((v) => v.vehicle_id === top.vehicle_id);
       if (!chosen) {
+        observability.metrics.dispatchTasks.inc({
+          task_type: task.task_type,
+          algorithm: algorithm.name,
+          result: 'invalid_output',
+        });
         observability.logger.error({ vehicleId: top.vehicle_id }, '算法返回的车辆不在候选集');
         return;
       }
@@ -184,6 +204,12 @@ export function createDispatchCoreService(
       observability.metrics.dataFlowMessages.inc({
         topic: TOPICS.EVENTS_COMMANDS,
         direction: 'out',
+      });
+
+      observability.metrics.dispatchTasks.inc({
+        task_type: task.task_type,
+        algorithm: algorithm.name,
+        result: 'dispatched',
       });
 
       const durationMs = Date.now() - startMs;

@@ -26,7 +26,7 @@ export type {
 // 适配器
 export { MemoryAdapter } from './adapters/memory';
 export { MqttAdapter } from './adapters/mqtt';
-export { KafkaAdapter } from './adapters/kafka';
+export { KafkaAdapter, buildGroupId } from './adapters/kafka';
 
 // 工厂
 export { createMessageBus } from './factory';

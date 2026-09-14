@@ -2,6 +2,7 @@ import http from 'node:http';
 
 import type { Logger } from '@apiscloud/libs';
 
+import type { RequestGuard } from './guards';
 import { proxyRequest } from './proxy';
 import { matchRoute, type RouterDeps } from './router';
 import type { AdminHandler, PluginRouteEntry } from './types';
@@ -12,10 +13,10 @@ export interface GatewayServerOptions {
   logger: Logger;
   proxyPrefix: string;
   proxiedServices: Array<{ name: string; target: string }>;
-  /** 管理端点处理器，key = 'METHOD /path' */
   adminHandlers: Record<string, AdminHandler>;
-  /** 当前插件路由（可运行时更新） */
   getPluginRoutes: () => PluginRouteEntry[];
+  /** 请求 guard（阶段六新增）：认证、限流等 */
+  guards?: RequestGuard[];
 }
 
 export interface GatewayServer {
@@ -24,10 +25,6 @@ export interface GatewayServer {
   port(): number;
 }
 
-/**
- * gateway HTTP 服务器。
- * 处理请求，匹配路由，分派到管理端点 / 代理 / 插件路由。
- */
 export function createGatewayServer(options: GatewayServerOptions): GatewayServer {
   const {
     port,
@@ -37,6 +34,7 @@ export function createGatewayServer(options: GatewayServerOptions): GatewayServe
     proxiedServices,
     adminHandlers,
     getPluginRoutes,
+    guards = [],
   } = options;
 
   let server: http.Server | null = null;
@@ -55,7 +53,10 @@ export function createGatewayServer(options: GatewayServerOptions): GatewayServe
     const start = Date.now();
     const url = req.url ?? '/';
     const method = req.method ?? 'GET';
-    const pathname = url.split('?')[0];
+
+    const queryIdx = url.indexOf('?');
+    const pathname = queryIdx === -1 ? url : url.slice(0, queryIdx);
+    const query = queryIdx === -1 ? '' : url.slice(queryIdx);
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
@@ -68,6 +69,12 @@ export function createGatewayServer(options: GatewayServerOptions): GatewayServe
     }
 
     try {
+      // 依次过 guards
+      for (const guard of guards) {
+        const ok = await guard({ req, res, pathname, method });
+        if (!ok) return;
+      }
+
       const match = matchRoute(method, pathname, routerDeps);
 
       if (match.type === 'admin') {
@@ -77,7 +84,7 @@ export function createGatewayServer(options: GatewayServerOptions): GatewayServe
       }
 
       if (match.type === 'proxy') {
-        await proxyRequest(req, res, match.target, match.path);
+        await proxyRequest(req, res, match.target, match.path + query);
         logger.debug(
           { method, path: pathname, target: match.target, durationMs: Date.now() - start },
           'proxy',

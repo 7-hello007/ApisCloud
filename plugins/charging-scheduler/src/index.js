@@ -22,6 +22,7 @@ const recentCommands = new Map();
 let bus = null;
 let createEnvelope = null;
 let TOPICS = null;
+let metrics = null;
 let lowBatteryThreshold = DEFAULT_LOW_BATTERY_THRESHOLD;
 let cooldownMs = DEFAULT_COOLDOWN_MS;
 
@@ -30,6 +31,7 @@ module.exports = {
     if (ctx.bus) bus = ctx.bus;
     if (ctx.createEnvelope) createEnvelope = ctx.createEnvelope;
     if (ctx.topics) TOPICS = ctx.topics;
+    if (ctx.metrics) metrics = ctx.metrics;
 
     const cfg = ctx.config ?? {};
     lowBatteryThreshold = readIntEnv(
@@ -55,6 +57,7 @@ module.exports = {
     bus = null;
     createEnvelope = null;
     TOPICS = null;
+    metrics = null;
   },
 
   async onMessage(_topic, envelope) {
@@ -91,11 +94,28 @@ module.exports = {
         payload: cmd,
       });
 
-      await bus.publish(TOPICS.EVENTS_COMMANDS, env, {
-        partitionKey: vehicleId,
-      });
+      try {
+        await bus.publish(TOPICS.EVENTS_COMMANDS, env, {
+          partitionKey: vehicleId,
+        });
 
-      recentCommands.set(vehicleId, now);
+        if (metrics) {
+          metrics.chargingCommands.inc({
+            command_type: 'charge',
+            result: 'issued',
+          });
+        }
+
+        recentCommands.set(vehicleId, now);
+      } catch (err) {
+        if (metrics) {
+          metrics.chargingCommands.inc({
+            command_type: 'charge',
+            result: 'failed',
+          });
+        }
+        throw err;
+      }
     }
   },
 
@@ -138,6 +158,7 @@ module.exports = {
     bus = null;
     createEnvelope = null;
     TOPICS = null;
+    metrics = null;
     lowBatteryThreshold = DEFAULT_LOW_BATTERY_THRESHOLD;
     cooldownMs = DEFAULT_COOLDOWN_MS;
   },

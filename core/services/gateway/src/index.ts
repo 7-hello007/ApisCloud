@@ -7,6 +7,10 @@ export type { GatewayService, GatewayServiceOptions } from './service';
 // 配置
 export { loadGatewayConfig } from './config';
 
+// guards
+export { createAuthGuard, createRateLimitGuard } from './guards';
+export type { RequestGuard, GuardContext, AuthGuardOptions, RateLimitGuardOptions } from './guards';
+
 // 插件加载
 export { loadPluginsFromDirs } from './plugin-loader';
 export type { PluginLoaderOptions, PluginLoadResult } from './plugin-loader';

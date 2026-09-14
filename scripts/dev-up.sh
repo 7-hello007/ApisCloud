@@ -14,20 +14,35 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 
 # ============================================================
+# 自动检测 HOST_IP（Docker Desktop for Linux 必须）
+# ============================================================
+
+if [ -z "${HOST_IP:-}" ]; then
+  DETECTED_IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
+  if [ -n "$DETECTED_IP" ] && [ "$DETECTED_IP" != "127.0.0.1" ]; then
+    HOST_IP="$DETECTED_IP"
+    export HOST_IP
+    echo "[dev-up] 自动检测宿主机 IP: $HOST_IP"
+  fi
+fi
+
+# ============================================================
 # 参数解析
 # ============================================================
 
 START_INFRA=true
 START_BACKEND=true
 START_FRONTEND=true
+START_SIMULATOR=true
 DO_BUILD=true
 
 for arg in "$@"; do
   case "$arg" in
-    --no-infra)   START_INFRA=false ;;
-    --no-backend) START_BACKEND=false ;;
-    --no-front)   START_FRONTEND=false ;;
-    --no-build)   DO_BUILD=false ;;
+    --no-infra)     START_INFRA=false ;;
+    --no-backend)   START_BACKEND=false ;;
+    --no-front)     START_FRONTEND=false ;;
+    --no-build)     DO_BUILD=false ;;
+    --no-simulator) START_SIMULATOR=false ;;
     -h|--help)
       cat <<'USAGE'
 用法: ./scripts/dev-up.sh [选项]
@@ -153,7 +168,9 @@ if [ "$START_BACKEND" = true ]; then
   start_bg data-writer    "node core/services/data-writer/dist/server-entry.js"
   start_bg dispatch-core  "node core/services/dispatch-core/dist/server-entry.js"
   start_bg ingest         "node core/services/ingest/dist/server-entry.js"
-  start_bg simulator      "node core/services/simulator/dist/server-entry.js"
+  if [ "$START_SIMULATOR" = true ]; then
+    start_bg simulator    "node core/services/simulator/dist/server-entry.js"
+  fi
 
   info "等待后端服务健康检查..."
   sleep 3

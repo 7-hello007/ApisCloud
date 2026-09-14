@@ -17,6 +17,7 @@ let zones = [];
 let bus = null;
 let createEnvelope = null;
 let TOPICS = null;
+let metrics = null;
 
 function loadZones() {
   const zonesPath = path.join(__dirname, '..', 'zones.json');
@@ -59,6 +60,7 @@ module.exports = {
       if (ctx.bus) bus = ctx.bus;
       if (ctx.createEnvelope) createEnvelope = ctx.createEnvelope;
       if (ctx.topics) TOPICS = ctx.topics;
+      if (ctx.metrics) metrics = ctx.metrics;
 
       ctx.logger.info(
         { count: zones.length, hasBus: !!bus, hasHelpers: !!createEnvelope && !!TOPICS },
@@ -76,6 +78,7 @@ module.exports = {
     bus = null;
     createEnvelope = null;
     TOPICS = null;
+    metrics = null;
   },
 
   async onMessage(_topic, envelope) {
@@ -116,7 +119,24 @@ module.exports = {
         payload: alertPayload,
       });
 
-      await bus.publish(TOPICS.EVENTS_ALERTS, env, { partitionKey: vehicle_id });
+      try {
+        await bus.publish(TOPICS.EVENTS_ALERTS, env, { partitionKey: vehicle_id });
+
+        if (metrics) {
+          metrics.geofenceEvents.inc({
+            event_type: transition.type,
+            level: transition.level,
+          });
+        }
+      } catch (err) {
+        if (metrics) {
+          metrics.geofenceEvents.inc({
+            event_type: transition.type,
+            level: 'error',
+          });
+        }
+        throw err;
+      }
     }
   },
 
@@ -157,6 +177,7 @@ module.exports = {
     bus = null;
     createEnvelope = null;
     TOPICS = null;
+    metrics = null;
   },
 
   _getZones() {

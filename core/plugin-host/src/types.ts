@@ -6,7 +6,15 @@ import type {
   TopicName,
 } from '@apiscloud/message-bus';
 
-import type { HttpClient } from './http-client';
+/**
+ * 插件可用的指标子集（结构兼容 ObservabilityMetrics）。
+ * 只暴露 3 个业务指标，插件不需要知道全部。
+ */
+export interface PluginMetrics {
+  chargingCommands: { inc(labels: { command_type: string; result: string }): void };
+  geofenceEvents: { inc(labels: { event_type: string; level: string }): void };
+  anomalyEvents: { inc(labels: { alert_type: string; level: string }): void };
+}
 
 export interface Plugin {
   onLoad?(ctx: PluginContext): Promise<void> | void;
@@ -17,7 +25,6 @@ export interface Plugin {
   getHealth?(): PluginHealth | Promise<PluginHealth>;
 }
 
-/** 服务 URL 清单（阶段五新增） */
 export interface ServiceUrls {
   dataWriter?: string;
   gateway?: string;
@@ -34,10 +41,10 @@ export interface PluginContext {
     EVENTS_COMMANDS: TopicName;
     EVENTS_ALERTS: TopicName;
   };
-  /** HTTP 客户端（阶段五新增） */
-  http?: HttpClient;
-  /** 服务 URL 清单（阶段五新增） */
+  http?: unknown;
   services?: ServiceUrls;
+  /** 插件可用的业务指标（阶段六第三批新增） */
+  metrics?: PluginMetrics;
   [key: string]: unknown;
 }
 

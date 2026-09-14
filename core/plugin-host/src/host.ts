@@ -15,6 +15,7 @@ import { PluginRegistry } from './registry';
 import type {
   LoadedPlugin,
   PluginContext,
+  PluginMetrics,
   Route,
   ServiceUrls,
   TopicFilter,
@@ -24,7 +25,10 @@ export interface PluginHostOptions {
   config: AppConfig;
   logger?: Logger;
   bus?: MessageBus;
+  /** 服务 URL 清单（阶段五新增） */
   services?: ServiceUrls;
+  /** 插件可用指标（阶段六第三批新增） */
+  metrics?: PluginMetrics;
   loadTimeoutMs?: number;
   unloadTimeoutMs?: number;
   messageTimeoutMs?: number;
@@ -42,6 +46,7 @@ export class PluginHost {
   private readonly logger: Logger;
   private readonly bus?: MessageBus;
   private readonly services?: ServiceUrls;
+  private readonly metrics?: PluginMetrics;
   private readonly http: HttpClient;
   private readonly registry: PluginRegistry;
   private readonly lifecycle: LifecycleManager;
@@ -55,6 +60,7 @@ export class PluginHost {
     this.config = options.config;
     this.bus = options.bus;
     this.services = options.services ?? buildDefaultServices();
+    this.metrics = options.metrics;
     this.http = createHttpClient();
     this.logger =
       options.logger ??
@@ -93,9 +99,6 @@ export class PluginHost {
     }
 
     // 阶段五：懒订阅决策
-    // - lazy: false 的插件始终激活
-    // - lazy: true 且有订阅主题的插件激活（它必须订阅才能工作）
-    // - lazy: true 且无订阅主题的插件不激活（如 dashboard，不占消费者名额）
     for (const plugin of targets) {
       const topics = plugin.manifest.topics?.subscribe ?? [];
       if (!plugin.manifest.lazy || topics.length > 0) {
@@ -126,7 +129,6 @@ export class PluginHost {
     this.logger.info({ count: plugins.length }, '插件卸载完成');
   }
 
-  /** 阶段五：手动激活插件 */
   activatePlugin(name: string): boolean {
     const plugin = this.registry.get(name);
     if (!plugin) return false;
@@ -135,12 +137,10 @@ export class PluginHost {
     return true;
   }
 
-  /** 阶段五：查询插件是否已激活 */
   isActivated(name: string): boolean {
     return this.activated.has(name);
   }
 
-  /** 阶段五：返回所有已激活插件订阅的主题集合 */
   getSubscribedTopics(): string[] {
     const topics = new Set<string>();
     for (const { manifest } of this.registry.list()) {
@@ -155,7 +155,6 @@ export class PluginHost {
   async dispatchMessage(topic: string, envelope: Envelope): Promise<void> {
     for (const { instance, manifest } of this.registry.list()) {
       if (!instance.onMessage) continue;
-      // 阶段五：未激活的插件不接收消息
       if (!this.activated.has(manifest.name)) continue;
 
       const subscribed = manifest.topics?.subscribe ?? [];
@@ -270,6 +269,7 @@ export class PluginHost {
       },
       http: this.http,
       services: this.services,
+      metrics: this.metrics,
     };
   }
 }

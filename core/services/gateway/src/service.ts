@@ -12,22 +12,34 @@ import {
 import { PluginHost, type LoadedPlugin } from '@apiscloud/plugin-host';
 
 import { loadGatewayConfig } from './config';
+import { createAuthGuard, createRateLimitGuard, type RequestGuard } from './guards';
 import { loadPluginsFromDirs } from './plugin-loader';
 import { createGatewayServer, type GatewayServer } from './server';
-import type { AdminHandler, GatewayConfig, PluginRouteEntry } from './types';
+import type {
+  AdminHandler,
+  GatewayConfig,
+  PluginRouteEntry,
+  ProxiedService,
+} from './types';
 
 export interface GatewayServiceOptions {
   config: AppConfig;
   port: number;
+  /** 可注入的 MessageBus（测试用） */
   bus?: MessageBus;
+  /** 可注入的插件列表（测试用；不传则从 pluginDirs 扫描） */
   plugins?: LoadedPlugin[];
+  /** 可注入的被代理服务列表（测试用；覆盖配置） */
+  proxiedServices?: ProxiedService[];
 }
 
 export interface GatewayService {
   readonly observability: ObservabilityService;
   readonly gatewayConfig: GatewayConfig;
   readonly pluginHost: PluginHost;
+  /** gateway HTTP 服务器的实际端口 */
   port(): number;
+  /** 手动覆盖插件路由（一般不用） */
   setPluginRoutes(routes: PluginRouteEntry[]): void;
   start(): Promise<void>;
   stop(): Promise<void>;
@@ -36,9 +48,15 @@ export interface GatewayService {
 /**
  * 创建 gateway 服务。
  * 组合：配置 + 总线 + 可观测性 + PluginHost + HTTP 服务器。
+ *
+ * 注意：gateway 不启动 observability 自带的 HTTP 服务器，
+ * 只复用其 logger / metrics / health registry，HTTP 服务器由 gateway 自己的 server 承担。
  */
 export function createGatewayService(options: GatewayServiceOptions): GatewayService {
   const gwConfig = loadGatewayConfig(options.config);
+
+  // 允许注入 proxiedServices 覆盖配置
+  const proxiedServices = options.proxiedServices ?? gwConfig.proxiedServices;
 
   const observability = createObservabilityService({
     service: 'gateway',
@@ -54,6 +72,7 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
     config: options.config,
     logger: observability.logger,
     bus,
+    metrics: observability.metrics,
   });
 
   let plugins: LoadedPlugin[];
@@ -111,7 +130,7 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
 
     checks.proxiedServices = {
       status: 'ok',
-      message: gwConfig.proxiedServices.map((s) => s.name).join(','),
+      message: proxiedServices.map((s) => s.name).join(','),
     };
 
     const status = overall === 'down' ? 503 : 200;
@@ -147,7 +166,7 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
       JSON.stringify({
         version: '1',
         profile: gwConfig.pluginProfile,
-        proxiedServices: gwConfig.proxiedServices.map((s) => ({
+        proxiedServices: proxiedServices.map((s) => ({
           name: s.name,
           prefix: `${gwConfig.proxyPrefix}/${s.name}`,
         })),
@@ -167,20 +186,42 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
     );
   };
 
+  // 请求 guard：认证 + 限流（阶段六新增）
+  const guards: RequestGuard[] = [];
+
+  guards.push(
+    createAuthGuard({
+      enabled: gwConfig.authEnabled,
+      jwtSecret: gwConfig.jwtSecret,
+      publicPaths: gwConfig.authPublicPaths,
+      logger: observability.logger,
+    }),
+  );
+
+  guards.push(
+    createRateLimitGuard({
+      enabled: gwConfig.rateLimitEnabled,
+      maxRequests: gwConfig.rateLimitMax,
+      windowSec: gwConfig.rateLimitWindowSec,
+      exemptPaths: ['/health', '/metrics'],
+      logger: observability.logger,
+    }),
+  );
+
   const server: GatewayServer = createGatewayServer({
     port: options.port,
     service: 'gateway',
     logger: observability.logger,
     proxyPrefix: gwConfig.proxyPrefix,
-    proxiedServices: gwConfig.proxiedServices,
+    proxiedServices,
     adminHandlers,
     getPluginRoutes: () => pluginRoutes,
+    guards,
   });
 
   const subscriptions: Subscription[] = [];
 
   async function subscribeToPluginTopics(): Promise<void> {
-    // 阶段五：用 getSubscribedTopics() 只拿已激活插件关心的主题
     const topics = pluginHost.getSubscribedTopics();
 
     for (const topic of topics) {
@@ -188,6 +229,11 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
         topic,
         async (env: Envelope) => {
           await pluginHost.dispatchMessage(topic, env);
+          // 记录一次插件分发（每个订阅者数无法精确统计，这里按 topic 累加一次）
+          observability.metrics.pluginDispatch.inc({
+            plugin: 'gateway-bridge',
+            topic,
+          });
         },
         { groupId: 'apiscloud-gateway' },
       );
@@ -236,10 +282,13 @@ export function createGatewayService(options: GatewayServiceOptions): GatewaySer
         {
           port: server.port(),
           proxyPrefix: gwConfig.proxyPrefix,
-          proxiedServices: gwConfig.proxiedServices.map((s) => s.name),
+          proxiedServices: proxiedServices.map((s) => s.name),
           pluginsLoaded: result.loaded,
           pluginRoutes: pluginRoutes.length,
           subscribedTopics: pluginHost.getSubscribedTopics(),
+          authEnabled: gwConfig.authEnabled,
+          rateLimitEnabled: gwConfig.rateLimitEnabled,
+          rateLimitMax: gwConfig.rateLimitMax,
         },
         'gateway 服务已启动',
       );

@@ -1,7 +1,3 @@
-/**
- * 上行遥测消息。
- * 与 simulator 的 VehicleState 字段一致。
- */
 export interface UplinkTelemetry {
   vehicle_id: string;
   ts: number;
@@ -13,10 +9,6 @@ export interface UplinkTelemetry {
   status: 'idle' | 'running' | 'charging' | 'maintenance' | 'offline';
 }
 
-/**
- * 下行命令。
- * 来自总线 events.commands，转发到 MQTT commands/{vehicle_id}。
- */
 export interface DownlinkCommand {
   vehicle_id: string;
   command_id: string;
@@ -24,14 +16,14 @@ export interface DownlinkCommand {
   payload: unknown;
 }
 
-/**
- * ingest 运行配置。
- */
 export interface IngestConfig {
-  /** MQTT 上行主题（订阅外部遥测），默认 telemetry/raw */
   mqttUplinkTopic: string;
-  /** MQTT 下行主题前缀，默认 commands/ */
   mqttCommandPrefix: string;
-  /** 总线订阅的消费者组，默认 apiscloud-ingest */
   consumerGroup: string;
+  /** 是否校验下行命令签名（阶段六新增） */
+  verifySignature: boolean;
+  /** 签名密钥 */
+  signSecret: string;
+  /** 签名有效期（秒） */
+  signTtlSec: number;
 }

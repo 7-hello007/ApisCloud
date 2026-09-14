@@ -15,11 +15,17 @@ export interface ObservabilityMetrics {
   busPublished: ReturnType<MetricsRegistry['counter']>;
   busConsumed: ReturnType<MetricsRegistry['counter']>;
   busLag: ReturnType<MetricsRegistry['gauge']>;
+  // 业务层（阶段六新增）
+  dispatchTasks: ReturnType<MetricsRegistry['counter']>;
+  pluginDispatch: ReturnType<MetricsRegistry['counter']>;
+  chargingCommands: ReturnType<MetricsRegistry['counter']>;
+  geofenceEvents: ReturnType<MetricsRegistry['counter']>;
+  anomalyEvents: ReturnType<MetricsRegistry['counter']>;
 }
 
 /**
  * 创建可观测性指标集合。
- * 三层指标：服务、数据流、插件；外加总线指标。
+ * 四层指标：服务、数据流、插件、总线；外加业务层指标。
  */
 export function createObservabilityMetrics(service: string): ObservabilityMetrics {
   const registry = createMetrics(service);
@@ -85,6 +91,37 @@ export function createObservabilityMetrics(service: string): ObservabilityMetric
     ['topic', 'group'],
   );
 
+  // ============ 业务层（阶段六新增） ============
+  const dispatchTasks = registry.counter(
+    'apiscloud_dispatch_tasks_total',
+    '调度任务接收总数',
+    ['task_type', 'algorithm', 'result'],
+  );
+
+  const pluginDispatch = registry.counter(
+    'apiscloud_plugin_dispatch_total',
+    '插件消息分发次数',
+    ['plugin', 'topic'],
+  );
+
+  const chargingCommands = registry.counter(
+    'apiscloud_charging_commands_total',
+    '充电调度指令数',
+    ['command_type', 'result'],
+  );
+
+  const geofenceEvents = registry.counter(
+    'apiscloud_geofence_events_total',
+    '地理围栏事件数',
+    ['event_type', 'level'],
+  );
+
+  const anomalyEvents = registry.counter(
+    'apiscloud_anomaly_events_total',
+    '异常检测事件数',
+    ['alert_type', 'level'],
+  );
+
   return {
     registry,
     httpRequests,
@@ -96,5 +133,10 @@ export function createObservabilityMetrics(service: string): ObservabilityMetric
     busPublished,
     busConsumed,
     busLag,
+    dispatchTasks,
+    pluginDispatch,
+    chargingCommands,
+    geofenceEvents,
+    anomalyEvents,
   };
 }
