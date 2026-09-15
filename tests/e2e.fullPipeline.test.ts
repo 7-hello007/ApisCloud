@@ -1,9 +1,4 @@
-import {
-  createE2eEnv,
-  destroyE2eEnv,
-  pushTelemetry,
-  type E2eEnv,
-} from './helpers/e2e-setup';
+import { createE2eEnv, destroyE2eEnv, pushTelemetry, type E2eEnv } from './helpers/e2e-setup';
 import { makeTelemetry } from './helpers/e2e-infra';
 import { waitFor } from './helpers';
 
@@ -29,20 +24,10 @@ describe('e2e.fullPipeline', () => {
       const telemetry = makeTelemetry('v-000001');
       pushTelemetry(env, telemetry);
 
-      await waitFor(
-        () => env.mockPg.queriesBySql('vehicle_latest').length >= 1,
-      );
+      await waitFor(() => env.mockPg.queriesBySql('vehicle_latest').length >= 1);
 
       const latest = env.mockPg.queriesBySql('vehicle_latest')[0];
-      expect(latest.params).toEqual([
-        'v-000001',
-        'running',
-        80,
-        31.2304,
-        121.4737,
-        90,
-        30,
-      ]);
+      expect(latest.params).toEqual(['v-000001', 'running', 80, 31.2304, 121.4737, 90, 30]);
 
       const telemetry2 = env.mockPg.queriesBySql('vehicle_telemetry');
       expect(telemetry2).toHaveLength(1);
@@ -54,15 +39,11 @@ describe('e2e.fullPipeline', () => {
 
       await waitFor(() => env.mockRedis.sets.length >= 1);
 
-      const latestSet = env.mockRedis.sets.find(
-        (s) => s.key === 'vehicle:v-000002:latest',
-      );
+      const latestSet = env.mockRedis.sets.find((s) => s.key === 'vehicle:v-000002:latest');
       expect(latestSet).toBeDefined();
       expect(latestSet!.ttl).toBe(60);
 
-      const sadd = env.mockRedis.sadds.find(
-        (s) => s.key === 'vehicles:active',
-      );
+      const sadd = env.mockRedis.sadds.find((s) => s.key === 'vehicles:active');
       expect(sadd).toBeDefined();
       expect(sadd!.member).toBe('v-000002');
     });
@@ -72,10 +53,9 @@ describe('e2e.fullPipeline', () => {
         pushTelemetry(env, makeTelemetry(`v-${String(i + 1).padStart(6, '0')}`));
       }
 
-      await waitFor(
-        () => env.mockPg.queriesBySql('vehicle_latest').length >= 100,
-        { timeoutMs: 5000 },
-      );
+      await waitFor(() => env.mockPg.queriesBySql('vehicle_latest').length >= 100, {
+        timeoutMs: 5000,
+      });
 
       const upserts = env.mockPg.queriesBySql('vehicle_latest');
       expect(upserts).toHaveLength(100);

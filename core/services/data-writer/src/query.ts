@@ -1,10 +1,6 @@
 import type { PgClient, RedisWrapper } from '@apiscloud/libs';
 
-import type {
-  AlertQueryRow,
-  CommandQueryRow,
-  VehicleQueryRow,
-} from './types';
+import type { AlertQueryRow, CommandQueryRow, VehicleQueryRow } from './types';
 
 export interface QueryContext {
   redis: RedisWrapper;

@@ -1,11 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
-import {
-  createAuthMiddleware,
-  createJwt,
-  createRateLimiter,
-  type Logger,
-} from '@apiscloud/libs';
+import { createAuthMiddleware, createJwt, createRateLimiter, type Logger } from '@apiscloud/libs';
 
 export interface GuardContext {
   req: IncomingMessage;
@@ -47,8 +42,7 @@ export function createAuthGuard(options: AuthGuardOptions): RequestGuard {
     }
 
     const result = auth.guard(ctx.req as never) as
-      | { ok: true }
-      | { ok: false; status?: number; reason?: string };
+      { ok: true } | { ok: false; status?: number; reason?: string };
 
     if (result.ok) return true;
 
@@ -59,10 +53,7 @@ export function createAuthGuard(options: AuthGuardOptions): RequestGuard {
         reason: result.reason ?? 'missing or invalid token',
       }),
     );
-    options.logger.warn(
-      { path: ctx.pathname, reason: result.reason },
-      '认证失败',
-    );
+    options.logger.warn({ path: ctx.pathname, reason: result.reason }, '认证失败');
     return false;
   };
 }

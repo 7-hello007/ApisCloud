@@ -32,9 +32,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log(
-    `[registry] 校验通过：${r.plugins.length} 个插件，${r.services.length} 个服务`,
-  );
+  console.log(`[registry] 校验通过：${r.plugins.length} 个插件，${r.services.length} 个服务`);
 }
 
 main();

@@ -26,12 +26,7 @@ export { createHttpClient } from './http-client';
 export type { HttpClient, HttpClientOptions } from './http-client';
 
 // loader
-export {
-  loadPlugin,
-  readManifest,
-  resolveEntry,
-  loadPluginInstance,
-} from './loader';
+export { loadPlugin, readManifest, resolveEntry, loadPluginInstance } from './loader';
 
 // registry
 export { PluginRegistry } from './registry';

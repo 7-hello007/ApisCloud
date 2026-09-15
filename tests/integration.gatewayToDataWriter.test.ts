@@ -2,10 +2,7 @@
 import path from 'node:path';
 
 import { loadConfig, resetConfig } from '@apiscloud/libs';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import { createGatewayService, type GatewayService } from '@apiscloud/gateway';
 import { createIngestService, type IngestService } from '@apiscloud/ingest';
 import { MemoryAdapter, TOPICS, createEnvelope } from '@apiscloud/message-bus';
@@ -126,10 +123,7 @@ describe('integration.gatewayToDataWriter', () => {
     }
 
     // 2. 等 data-writer 消费
-    await waitFor(
-      () => mockPg.queriesBySql('vehicle_latest').length >= 3,
-      { timeoutMs: 5000 },
-    );
+    await waitFor(() => mockPg.queriesBySql('vehicle_latest').length >= 3, { timeoutMs: 5000 });
 
     // 3. 通过 gateway 代理查回
     const res = await fetch(
@@ -183,16 +177,12 @@ describe('integration.gatewayToDataWriter', () => {
   });
 
   it('代理未知服务返回 404', async () => {
-    const res = await fetch(
-      `http://localhost:${gateway.port()}/api/proxy/unknown-svc/health`,
-    );
+    const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/unknown-svc/health`);
     expect(res.status).toBe(404);
   });
 
   it('代理 data-writer 的 health 端点', async () => {
-    const res = await fetch(
-      `http://localhost:${gateway.port()}/api/proxy/data-writer/health`,
-    );
+    const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/data-writer/health`);
     expect(res.status).toBe(200);
     const body = (await res.json()) as { service: string; status: string };
     expect(body.service).toBe('data-writer');

@@ -46,9 +46,7 @@ describe('pluginHost.lazySubscription', () => {
 
   it('lazy=true 但有订阅主题的插件激活', async () => {
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('geofence', { lazy: true, subscribe: [TOPICS.TELEMETRY_RAW] }),
-    );
+    host.register(makePlugin('geofence', { lazy: true, subscribe: [TOPICS.TELEMETRY_RAW] }));
     await host.loadAll();
 
     expect(host.isActivated('geofence')).toBe(true);
@@ -64,15 +62,9 @@ describe('pluginHost.lazySubscription', () => {
 
   it('getSubscribedTopics 只返回已激活插件的主题', async () => {
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('a', { lazy: true, subscribe: [TOPICS.TELEMETRY_RAW] }),
-    );
-    host.register(
-      makePlugin('b', { lazy: true, subscribe: [TOPICS.TELEMETRY_AGGREGATED] }),
-    );
-    host.register(
-      makePlugin('c', { lazy: true, subscribe: [TOPICS.TELEMETRY_AGGREGATED] }),
-    );
+    host.register(makePlugin('a', { lazy: true, subscribe: [TOPICS.TELEMETRY_RAW] }));
+    host.register(makePlugin('b', { lazy: true, subscribe: [TOPICS.TELEMETRY_AGGREGATED] }));
+    host.register(makePlugin('c', { lazy: true, subscribe: [TOPICS.TELEMETRY_AGGREGATED] }));
     await host.loadAll();
 
     const topics = host.getSubscribedTopics();
@@ -144,9 +136,7 @@ describe('pluginHost.lazySubscription', () => {
 
   it('lazy=false 的插件即使无订阅主题也被激活', async () => {
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('reporting', { lazy: false, subscribe: [] }),
-    );
+    host.register(makePlugin('reporting', { lazy: false, subscribe: [] }));
     await host.loadAll();
 
     expect(host.isActivated('reporting')).toBe(true);

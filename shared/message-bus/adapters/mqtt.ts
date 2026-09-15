@@ -1,4 +1,9 @@
-import { createMqtt, type AppConfig, type HealthCheckResult, type MqttWrapper } from '@apiscloud/libs';
+import {
+  createMqtt,
+  type AppConfig,
+  type HealthCheckResult,
+  type MqttWrapper,
+} from '@apiscloud/libs';
 
 import { parseEnvelope, serializeEnvelope, type Envelope } from '../envelope';
 import type {

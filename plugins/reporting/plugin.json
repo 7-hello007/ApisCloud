@@ -9,11 +9,7 @@
     "subscribe": [],
     "publish": []
   },
-  "routes": [
-    "/api/reporting/summary",
-    "/api/reporting/vehicles",
-    "/api/reporting/alerts"
-  ],
+  "routes": ["/api/reporting/summary", "/api/reporting/vehicles", "/api/reporting/alerts"],
   "frontend": null,
   "description": "报表导出：从 data-writer 查询端点拉数据，生成报表"
 }

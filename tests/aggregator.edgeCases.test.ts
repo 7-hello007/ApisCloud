@@ -160,9 +160,7 @@ describe('aggregator.edgeCases', () => {
     it('500 辆车中 100 辆低电量', () => {
       const snapshots: TelemetryRawPayload[] = [];
       for (let i = 0; i < 500; i++) {
-        snapshots.push(
-          makeTelemetry(`v-${i}`, { battery: i < 100 ? 10 : 80 }),
-        );
+        snapshots.push(makeTelemetry(`v-${i}`, { battery: i < 100 ? 10 : 80 }));
       }
       const result = aggregate({ ...BASE, snapshots });
       expect(result.low_battery_vehicles).toHaveLength(100);

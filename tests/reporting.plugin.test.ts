@@ -15,11 +15,7 @@ function makeLoadedPlugin(): LoadedPlugin {
       lazy: true,
       dependsOn: [],
       topics: { subscribe: [], publish: [] },
-      routes: [
-        '/api/reporting/summary',
-        '/api/reporting/vehicles',
-        '/api/reporting/alerts',
-      ],
+      routes: ['/api/reporting/summary', '/api/reporting/vehicles', '/api/reporting/alerts'],
       frontend: null,
     },
     instance: plugin,
@@ -151,9 +147,7 @@ describe('reporting.plugin', () => {
     });
 
     const routes = plugin.getRoutes();
-    const summaryRoute = routes.find(
-      (r: { path: string }) => r.path === '/api/reporting/summary',
-    );
+    const summaryRoute = routes.find((r: { path: string }) => r.path === '/api/reporting/summary');
 
     const res = createMockResponse();
     await summaryRoute.handler({}, res);
@@ -198,9 +192,7 @@ describe('reporting.plugin', () => {
     });
 
     const routes = plugin.getRoutes();
-    const alertsRoute = routes.find(
-      (r: { path: string }) => r.path === '/api/reporting/alerts',
-    );
+    const alertsRoute = routes.find((r: { path: string }) => r.path === '/api/reporting/alerts');
 
     const res = createMockResponse();
     await alertsRoute.handler({}, res);
@@ -214,9 +206,7 @@ describe('reporting.plugin', () => {
 
   it('data-writer 不可达时返回 500', async () => {
     const routes = plugin.getRoutes();
-    const summaryRoute = routes.find(
-      (r: { path: string }) => r.path === '/api/reporting/summary',
-    );
+    const summaryRoute = routes.find((r: { path: string }) => r.path === '/api/reporting/summary');
 
     const res = createMockResponse();
     await summaryRoute.handler({}, res);
@@ -228,9 +218,7 @@ describe('reporting.plugin', () => {
     plugin._setServices({});
 
     const routes = plugin.getRoutes();
-    const summaryRoute = routes.find(
-      (r: { path: string }) => r.path === '/api/reporting/summary',
-    );
+    const summaryRoute = routes.find((r: { path: string }) => r.path === '/api/reporting/summary');
 
     const res = createMockResponse();
     await summaryRoute.handler({}, res);

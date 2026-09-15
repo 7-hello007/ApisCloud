@@ -2,12 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import { createCommandSignature, type SignableCommand } from '@apiscloud/libs';
 
-import type {
-  CommandType,
-  DispatchCommandPayload,
-  DispatchTask,
-  DispatchVehicle,
-} from './types';
+import type { CommandType, DispatchCommandPayload, DispatchTask, DispatchVehicle } from './types';
 
 export interface BuildCommandOptions {
   task: DispatchTask;

@@ -37,9 +37,7 @@ function validateManifest(raw, manifestPath) {
 
   // name
   if (typeof raw.name !== 'string' || !PLUGIN_NAME_RE.test(raw.name)) {
-    throw new Error(
-      `${manifestPath}: name 必须是小写字母、数字、连字符，且以字母开头`,
-    );
+    throw new Error(`${manifestPath}: name 必须是小写字母、数字、连字符，且以字母开头`);
   }
 
   // version

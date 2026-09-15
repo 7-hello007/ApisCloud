@@ -154,9 +154,7 @@ describe('dispatchCore.objective.edgeCases', () => {
       const resultLow = scoreVehicles(makeTask({ priority: 10 }), vehicles, BASE_WEIGHTS);
       const resultHigh = scoreVehicles(makeTask({ priority: 90 }), vehicles, BASE_WEIGHTS);
 
-      expect(resultHigh[0].breakdown.priority).toBeGreaterThan(
-        resultLow[0].breakdown.priority,
-      );
+      expect(resultHigh[0].breakdown.priority).toBeGreaterThan(resultLow[0].breakdown.priority);
       expect(resultHigh[0].score).toBeGreaterThan(resultLow[0].score);
     });
   });
@@ -195,10 +193,7 @@ describe('dispatchCore.objective.edgeCases', () => {
       );
       const s = result[0];
       const expected =
-        s.breakdown.distance +
-        s.breakdown.eta +
-        s.breakdown.battery +
-        s.breakdown.priority;
+        s.breakdown.distance + s.breakdown.eta + s.breakdown.battery + s.breakdown.priority;
       expect(s.score).toBeCloseTo(expected, 5);
     });
   });

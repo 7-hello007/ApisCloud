@@ -63,9 +63,7 @@ function buildRegistry(options = {}) {
     stats: {
       totalServices: services.length,
       totalPlugins: plugins.length,
-      totalByProfile: Object.fromEntries(
-        Object.entries(byProfile).map(([k, v]) => [k, v.length]),
-      ),
+      totalByProfile: Object.fromEntries(Object.entries(byProfile).map(([k, v]) => [k, v.length])),
     },
   };
 

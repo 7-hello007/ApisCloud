@@ -17,10 +17,7 @@ export async function withTimeout<T>(
     return await Promise.race([
       promise,
       new Promise<T>((_, reject) => {
-        timer = setTimeout(
-          () => reject(new Error(`${label} 超时 ${timeoutMs}ms`)),
-          timeoutMs,
-        );
+        timer = setTimeout(() => reject(new Error(`${label} 超时 ${timeoutMs}ms`)), timeoutMs);
       }),
     ]);
   } finally {
@@ -28,9 +25,7 @@ export async function withTimeout<T>(
   }
 }
 
-export type SafeResult<T> =
-  | { ok: true; value: T }
-  | { ok: false; error: Error };
+export type SafeResult<T> = { ok: true; value: T } | { ok: false; error: Error };
 
 /**
  * 安全调用：捕获异常，不抛出。

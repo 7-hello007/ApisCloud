@@ -25,9 +25,7 @@ export function readManifest(pluginDir: string): PluginManifest {
 
   const result = PluginManifestSchema.safeParse(parsed);
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => `${i.path.join('.')}: ${i.message}`)
-      .join('; ');
+    const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
     throw new Error(`plugin.json 校验失败 ${manifestPath}：${issues}`);
   }
 

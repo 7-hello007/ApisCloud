@@ -37,9 +37,7 @@ describe('pluginHost.filter', () => {
   it('equals：匹配的消息触发 onMessage', async () => {
     const onMessage = jest.fn();
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('p1', { onMessage }, { field: 'status', equals: 'running' }),
-    );
+    host.register(makePlugin('p1', { onMessage }, { field: 'status', equals: 'running' }));
     await host.loadAll();
 
     const env = createEnvelope({
@@ -55,9 +53,7 @@ describe('pluginHost.filter', () => {
   it('equals：不匹配的消息不触发', async () => {
     const onMessage = jest.fn();
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('p1', { onMessage }, { field: 'status', equals: 'running' }),
-    );
+    host.register(makePlugin('p1', { onMessage }, { field: 'status', equals: 'running' }));
     await host.loadAll();
 
     const env = createEnvelope({
@@ -73,9 +69,7 @@ describe('pluginHost.filter', () => {
   it('in：匹配列表里的值触发', async () => {
     const onMessage = jest.fn();
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('p1', { onMessage }, { field: 'status', in: ['running', 'idle'] }),
-    );
+    host.register(makePlugin('p1', { onMessage }, { field: 'status', in: ['running', 'idle'] }));
     await host.loadAll();
 
     const env1 = createEnvelope({
@@ -104,9 +98,7 @@ describe('pluginHost.filter', () => {
   it('点分路径：payload.position.lat', async () => {
     const onMessage = jest.fn();
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('p1', { onMessage }, { field: 'position.status', equals: 'ok' }),
-    );
+    host.register(makePlugin('p1', { onMessage }, { field: 'position.status', equals: 'ok' }));
     await host.loadAll();
 
     const env = createEnvelope({
@@ -137,9 +129,7 @@ describe('pluginHost.filter', () => {
   it('field 不存在时匹配失败', async () => {
     const onMessage = jest.fn();
     const host = new PluginHost({ config: loadConfig() });
-    host.register(
-      makePlugin('p1', { onMessage }, { field: 'status', equals: 'running' }),
-    );
+    host.register(makePlugin('p1', { onMessage }, { field: 'status', equals: 'running' }));
     await host.loadAll();
 
     const env = createEnvelope({

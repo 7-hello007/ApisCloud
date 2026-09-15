@@ -28,9 +28,7 @@ export interface DataWriterServer {
   port(): number;
 }
 
-export function createDataWriterServer(
-  options: DataWriterServerOptions,
-): DataWriterServer {
+export function createDataWriterServer(options: DataWriterServerOptions): DataWriterServer {
   const { port, service, logger, metrics, redis, pg, config } = options;
 
   let server: http.Server | null = null;
@@ -38,10 +36,7 @@ export function createDataWriterServer(
 
   const queryCtx: QueryContext = { redis, pg, limit: config.queryLimit };
 
-  const handler = async (
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-  ): Promise<void> => {
+  const handler = async (req: http.IncomingMessage, res: http.ServerResponse): Promise<void> => {
     const start = Date.now();
     const url = req.url ?? '/';
     const method = req.method ?? 'GET';

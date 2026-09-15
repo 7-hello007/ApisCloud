@@ -62,11 +62,7 @@ export function nextState(input: StateInput): VehicleStatus {
  * 根据状态计算下一个电量。
  * 行驶耗电，充电充入，其他状态不变。
  */
-export function nextBattery(
-  current: number,
-  status: VehicleStatus,
-  tickSec: number,
-): number {
+export function nextBattery(current: number, status: VehicleStatus, tickSec: number): number {
   let next = current;
   if (status === 'running') {
     next -= DRAIN_PER_SEC * tickSec;

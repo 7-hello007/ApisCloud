@@ -47,10 +47,7 @@ export function Table<T>({
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan={columns.length}
-                className="px-3 py-8 text-center text-surface-500"
-              >
+              <td colSpan={columns.length} className="px-3 py-8 text-center text-surface-500">
                 加载中…
               </td>
             </tr>
@@ -58,10 +55,7 @@ export function Table<T>({
 
           {!loading && rows.length === 0 && (
             <tr>
-              <td
-                colSpan={columns.length}
-                className="px-3 py-8 text-center text-surface-500"
-              >
+              <td colSpan={columns.length} className="px-3 py-8 text-center text-surface-500">
                 {empty ?? '暂无数据'}
               </td>
             </tr>
@@ -78,7 +72,9 @@ export function Table<T>({
                     key={col.key}
                     className={`px-3 py-2 text-surface-200 ${alignClass(col.align)}`}
                   >
-                    {col.render ? col.render(row, idx) : ((row as Record<string, unknown>)[col.key] as ReactNode)}
+                    {col.render
+                      ? col.render(row, idx)
+                      : ((row as Record<string, unknown>)[col.key] as ReactNode)}
                   </td>
                 ))}
               </tr>

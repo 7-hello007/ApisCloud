@@ -1,12 +1,6 @@
 import { loadConfig, resetConfig } from '@apiscloud/libs';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
-import {
-  createIngestService,
-  type IngestService,
-} from '@apiscloud/ingest';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
+import { createIngestService, type IngestService } from '@apiscloud/ingest';
 import { MemoryAdapter } from '@apiscloud/message-bus';
 
 import {

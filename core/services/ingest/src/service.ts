@@ -6,10 +6,7 @@ import {
   type MessageBus,
   type Subscription,
 } from '@apiscloud/message-bus';
-import {
-  createObservabilityService,
-  type ObservabilityService,
-} from '@apiscloud/observability';
+import { createObservabilityService, type ObservabilityService } from '@apiscloud/observability';
 
 import { createBusPublisher } from './bus-publisher';
 import { createBusSubscriber } from './bus-subscriber';
@@ -71,10 +68,7 @@ export function createIngestService(options: IngestServiceOptions): IngestServic
       const raw = JSON.parse(payload.toString('utf-8'));
       const parsed = UplinkTelemetrySchema.safeParse(raw);
       if (!parsed.success) {
-        observability.logger.warn(
-          { issues: parsed.error.issues },
-          '上行数据校验失败',
-        );
+        observability.logger.warn({ issues: parsed.error.issues }, '上行数据校验失败');
         return;
       }
 
@@ -98,10 +92,7 @@ export function createIngestService(options: IngestServiceOptions): IngestServic
     try {
       const parsed = DownlinkCommandSchema.safeParse(env.payload);
       if (!parsed.success) {
-        observability.logger.warn(
-          { issues: parsed.error.issues },
-          '下行命令校验失败',
-        );
+        observability.logger.warn({ issues: parsed.error.issues }, '下行命令校验失败');
         return;
       }
 
@@ -111,10 +102,7 @@ export function createIngestService(options: IngestServiceOptions): IngestServic
       if (ingestConfig.verifySignature) {
         const signed = extractSignedCommand(cmd.payload);
         if (!signed) {
-          observability.logger.warn(
-            { commandId: cmd.command_id },
-            '下行命令缺签名，拒绝',
-          );
+          observability.logger.warn({ commandId: cmd.command_id }, '下行命令缺签名，拒绝');
           return;
         }
         const verifier = createCommandSignature({

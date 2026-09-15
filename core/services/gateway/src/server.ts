@@ -46,10 +46,7 @@ export function createGatewayServer(options: GatewayServerOptions): GatewayServe
     adminHandlers,
   };
 
-  const handler = async (
-    req: http.IncomingMessage,
-    res: http.ServerResponse,
-  ): Promise<void> => {
+  const handler = async (req: http.IncomingMessage, res: http.ServerResponse): Promise<void> => {
     const start = Date.now();
     const url = req.url ?? '/';
     const method = req.method ?? 'GET';

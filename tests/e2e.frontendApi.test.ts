@@ -2,19 +2,11 @@
 import path from 'node:path';
 
 import { loadConfig, resetConfig } from '@apiscloud/libs';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import { createGatewayService, type GatewayService } from '@apiscloud/gateway';
 import { MemoryAdapter } from '@apiscloud/message-bus';
 
-import {
-  createMockPg,
-  createMockRedis,
-  type MockPg,
-  type MockRedis,
-} from './helpers/e2e-infra';
+import { createMockPg, createMockRedis, type MockPg, type MockRedis } from './helpers/e2e-infra';
 
 const PLUGINS_DIR = path.resolve(__dirname, '..', 'plugins');
 
@@ -103,9 +95,7 @@ describe('e2e.frontendApi', () => {
 
   describe('反向代理到 data-writer', () => {
     it('GET /api/proxy/data-writer/health 代理到 data-writer', async () => {
-      const res = await fetch(
-        `http://localhost:${gateway.port()}/api/proxy/data-writer/health`,
-      );
+      const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/data-writer/health`);
       expect(res.status).toBe(200);
       const body = (await res.json()) as { status: string; service: string };
       expect(body.service).toBe('data-writer');
@@ -155,9 +145,7 @@ describe('e2e.frontendApi', () => {
     });
 
     it('GET /api/proxy/unknown/health 返回 404', async () => {
-      const res = await fetch(
-        `http://localhost:${gateway.port()}/api/proxy/unknown/health`,
-      );
+      const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/unknown/health`);
       expect(res.status).toBe(404);
     });
   });
@@ -173,10 +161,7 @@ describe('e2e.frontendApi', () => {
         smembers: async () => ['v-000001', 'v-000002'],
       });
 
-      (mockPg as unknown as { query: unknown }).query = async (
-        sql: string,
-        params?: unknown[],
-      ) => {
+      (mockPg as unknown as { query: unknown }).query = async (sql: string, params?: unknown[]) => {
         if (sql.includes('vehicle_latest')) {
           return {
             rows: (params as string[]).map((id) => ({
@@ -204,10 +189,7 @@ describe('e2e.frontendApi', () => {
         vehicles: Array<{ vehicle_id: string }>;
       };
       expect(body.count).toBe(2);
-      expect(body.vehicles.map((v) => v.vehicle_id)).toEqual([
-        'v-000001',
-        'v-000002',
-      ]);
+      expect(body.vehicles.map((v) => v.vehicle_id)).toEqual(['v-000001', 'v-000002']);
     });
   });
 });

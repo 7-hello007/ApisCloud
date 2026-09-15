@@ -42,10 +42,7 @@ module.exports = {
     if (ctx.http) http = ctx.http;
     if (ctx.services) services = ctx.services;
 
-    ctx.logger.info(
-      { hasHttp: !!http, services },
-      'reporting 插件已加载',
-    );
+    ctx.logger.info({ hasHttp: !!http, services }, 'reporting 插件已加载');
   },
 
   async onUnload() {

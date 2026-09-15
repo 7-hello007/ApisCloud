@@ -7,7 +7,10 @@ import { VALIDATION_MAX_STRING_LENGTH } from './constants';
  */
 export interface ValidationContext {
   validate<T>(schema: z.ZodType<T>, data: unknown): T;
-  tryValidate<T>(schema: z.ZodType<T>, data: unknown): { ok: true; value: T } | { ok: false; error: string };
+  tryValidate<T>(
+    schema: z.ZodType<T>,
+    data: unknown,
+  ): { ok: true; value: T } | { ok: false; error: string };
 }
 
 export function createValidation(): ValidationContext {

@@ -83,11 +83,7 @@ describe('gateway.config', () => {
   it('GATEWAY_PLUGIN_DIRS 覆盖目录（逗号分隔）', () => {
     process.env.GATEWAY_PLUGIN_DIRS = '/a,/b,/c';
     const config = loadGatewayConfig(loadConfig());
-    expect(config.pluginDirs).toEqual([
-      path.resolve('/a'),
-      path.resolve('/b'),
-      path.resolve('/c'),
-    ]);
+    expect(config.pluginDirs).toEqual([path.resolve('/a'), path.resolve('/b'), path.resolve('/c')]);
   });
 
   it('INGEST_PORT 影响代理目标', () => {

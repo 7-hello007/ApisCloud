@@ -11,10 +11,7 @@ import {
   type MqttPublisher,
   type MqttSubscriber,
 } from '@apiscloud/ingest';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import { MemoryAdapter, TOPICS } from '@apiscloud/message-bus';
 
 import { waitFor } from './helpers';
@@ -252,15 +249,7 @@ describe('integration.mqttToPg', () => {
 
     const upsert = mockPg.queries.find((q) => q.sql.includes('vehicle_latest'));
     expect(upsert).toBeDefined();
-    expect(upsert!.params).toEqual([
-      'v-000042',
-      'running',
-      80,
-      31.23,
-      121.47,
-      90,
-      30,
-    ]);
+    expect(upsert!.params).toEqual(['v-000042', 'running', 80, 31.23, 121.47, 90, 30]);
   });
 
   it('INSERT vehicle_telemetry 的参数含 ISO 时间戳', async () => {
@@ -295,9 +284,7 @@ describe('integration.mqttToPg', () => {
 
     await waitFor(() => mockRedis.sadds.length >= 1);
 
-    expect(mockRedis.sadds).toEqual([
-      { key: 'vehicles:active', member: 'v-000001' },
-    ]);
+    expect(mockRedis.sadds).toEqual([{ key: 'vehicles:active', member: 'v-000001' }]);
   });
 
   it('合法遥测产生 1 条总线消息', async () => {
@@ -371,24 +358,21 @@ describe('integration.mqttToPg', () => {
   });
 
   it('下行命令：总线 events.commands 到 MQTT commands/{vehicle_id}', async () => {
-    await bus.publish(
-      TOPICS.EVENTS_COMMANDS,
-      {
-        id: 'env-1',
-        topic: TOPICS.EVENTS_COMMANDS,
-        source: 'dispatch-core',
-        timestamp: Date.now(),
-        trace_id: 't-1',
-        span_id: 's-1',
-        version: '1.0',
-        payload: {
-          vehicle_id: 'v-000001',
-          command_id: 'cmd-1',
-          command_type: 'dispatch',
-          payload: { lat: 31.2, lng: 121.4 },
-        },
+    await bus.publish(TOPICS.EVENTS_COMMANDS, {
+      id: 'env-1',
+      topic: TOPICS.EVENTS_COMMANDS,
+      source: 'dispatch-core',
+      timestamp: Date.now(),
+      trace_id: 't-1',
+      span_id: 's-1',
+      version: '1.0',
+      payload: {
+        vehicle_id: 'v-000001',
+        command_id: 'cmd-1',
+        command_type: 'dispatch',
+        payload: { lat: 31.2, lng: 121.4 },
       },
-    );
+    });
 
     await waitFor(() => mqttPublisher.calls.length >= 1);
 
@@ -401,9 +385,7 @@ describe('integration.mqttToPg', () => {
     const handler = mqttSubscriber.getHandler();
 
     for (let i = 0; i < 500; i++) {
-      handler!(
-        Buffer.from(JSON.stringify(makeTelemetry(`v-${String(i + 1).padStart(6, '0')}`))),
-      );
+      handler!(Buffer.from(JSON.stringify(makeTelemetry(`v-${String(i + 1).padStart(6, '0')}`))));
     }
 
     await waitFor(() => mockPg.queries.length >= 1000, { timeoutMs: 10000 });

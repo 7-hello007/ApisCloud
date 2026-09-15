@@ -5,22 +5,14 @@ import {
   type MessageBus,
   type Subscription,
 } from '@apiscloud/message-bus';
-import {
-  createObservabilityService,
-  type ObservabilityService,
-} from '@apiscloud/observability';
+import { createObservabilityService, type ObservabilityService } from '@apiscloud/observability';
 import { PluginHost, type LoadedPlugin } from '@apiscloud/plugin-host';
 
 import { loadGatewayConfig } from './config';
 import { createAuthGuard, createRateLimitGuard, type RequestGuard } from './guards';
 import { loadPluginsFromDirs } from './plugin-loader';
 import { createGatewayServer, type GatewayServer } from './server';
-import type {
-  AdminHandler,
-  GatewayConfig,
-  PluginRouteEntry,
-  ProxiedService,
-} from './types';
+import type { AdminHandler, GatewayConfig, PluginRouteEntry, ProxiedService } from './types';
 
 export interface GatewayServiceOptions {
   config: AppConfig;

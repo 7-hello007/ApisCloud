@@ -1,7 +1,4 @@
-import {
-  envelopeToCommand,
-  telemetryToEnvelope,
-} from '@apiscloud/ingest';
+import { envelopeToCommand, telemetryToEnvelope } from '@apiscloud/ingest';
 import { createEnvelope, TOPICS } from '@apiscloud/message-bus';
 
 describe('ingest.mapper', () => {

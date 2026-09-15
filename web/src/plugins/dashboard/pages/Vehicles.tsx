@@ -73,11 +73,7 @@ export function Vehicles() {
         const battery = toNum(row.battery);
         if (battery === null) return '—';
         const color =
-          battery < 20
-            ? 'text-red-400'
-            : battery < 50
-              ? 'text-amber-400'
-              : 'text-emerald-400';
+          battery < 20 ? 'text-red-400' : battery < 50 ? 'text-amber-400' : 'text-emerald-400';
         return <span className={color}>{battery.toFixed(1)}%</span>;
       },
     },
@@ -111,8 +107,7 @@ export function Vehicles() {
     {
       key: 'updated_at',
       title: '更新时间',
-      render: (row) =>
-        row.updated_at ? new Date(row.updated_at).toLocaleTimeString() : '—',
+      render: (row) => (row.updated_at ? new Date(row.updated_at).toLocaleTimeString() : '—'),
     },
   ];
 
@@ -121,9 +116,7 @@ export function Vehicles() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-surface-100">车辆</h1>
-          <p className="text-sm text-surface-400 mt-1">
-            实时车辆列表（共 {vehicles.length} 辆）
-          </p>
+          <p className="text-sm text-surface-400 mt-1">实时车辆列表（共 {vehicles.length} 辆）</p>
         </div>
       </div>
 

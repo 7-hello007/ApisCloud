@@ -4,7 +4,7 @@
     "composite": false,
     "noEmit": true,
     "rootDir": "..",
-    "types": ["node", "jest"],
+    "types": ["node", "jest"]
     // "moduleResolution": "bundler"
   },
   "include": ["./**/*.ts", "../core/**/*.ts", "../shared/**/*.ts"]

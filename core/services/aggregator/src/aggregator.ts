@@ -14,14 +14,7 @@ export interface AggregateInput {
  * 纯函数，无副作用。
  */
 export function aggregate(input: AggregateInput): AggregatedPayload {
-  const {
-    snapshots,
-    windowStart,
-    windowEnd,
-    region,
-    regionCenter,
-    lowBatteryThreshold,
-  } = input;
+  const { snapshots, windowStart, windowEnd, region, regionCenter, lowBatteryThreshold } = input;
 
   const vehicleCount = snapshots.length;
 

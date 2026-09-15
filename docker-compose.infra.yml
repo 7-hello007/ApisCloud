@@ -25,14 +25,14 @@ services:
       POSTGRES_DB: ${PG_DATABASE:-apiscloud}
       TZ: Asia/Shanghai
     ports:
-      - "${PG_PORT:-5432}:5432"
+      - '${PG_PORT:-5432}:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
       - ./deploy/postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-apiscloud} -d ${PG_DATABASE:-apiscloud}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${PG_USER:-apiscloud} -d ${PG_DATABASE:-apiscloud}']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -43,16 +43,16 @@ services:
     image: redis:7-alpine
     container_name: apiscloud-redis
     restart: unless-stopped
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    command: ['redis-server', '/usr/local/etc/redis/redis.conf']
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - '${REDIS_PORT:-6379}:6379'
     volumes:
       - redis_data:/data
       - ./deploy/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -69,16 +69,16 @@ services:
       EMQX_DASHBOARD__DEFAULT_USERNAME: admin
       EMQX_DASHBOARD__DEFAULT_PASSWORD: apiscloud
     ports:
-      - "${MQTT_PORT:-11883}:1883"
-      - "${MQTT_WS_PORT:-8083}:8083"
-      - "${MQTT_SSL_PORT:-8883}:8883"
-      - "${EMQX_DASHBOARD_PORT:-18083}:18083"
+      - '${MQTT_PORT:-11883}:1883'
+      - '${MQTT_WS_PORT:-8083}:8083'
+      - '${MQTT_SSL_PORT:-8883}:8883'
+      - '${EMQX_DASHBOARD_PORT:-18083}:18083'
     volumes:
       - emqx_data:/opt/emqx/data
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD", "/opt/emqx/bin/emqx", "ctl", "status"]
+      test: ['CMD', '/opt/emqx/bin/emqx', 'ctl', 'status']
       interval: 15s
       timeout: 10s
       retries: 10
@@ -102,17 +102,21 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
       KAFKA_LOG_RETENTION_HOURS: 72
       CLUSTER_ID: apiscloud-kraft-cluster
     ports:
-      - "${KAFKA_PORT:-29092}:29092"
+      - '${KAFKA_PORT:-29092}:29092'
     volumes:
       - kafka_data:/var/lib/kafka/data
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1 || exit 1"]
+      test:
+        [
+          'CMD-SHELL',
+          '/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null 2>&1 || exit 1',
+        ]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -128,21 +132,22 @@ services:
     container_name: apiscloud-prometheus
     restart: unless-stopped
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--storage.tsdb.retention.time=15d"
-      - "--web.enable-lifecycle"
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
     ports:
-      - "${PROMETHEUS_PORT:-9090}:9090"
+      - '${PROMETHEUS_PORT:-9090}:9090'
     extra_hosts:
-      - "host.docker.internal:${HOST_IP:-host-gateway}"
+      - 'host.docker.internal:${HOST_IP:-host-gateway}'
     volumes:
       - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      test:
+        ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:9090/-/healthy']
       interval: 15s
       timeout: 5s
       retries: 5
@@ -153,16 +158,16 @@ services:
     image: grafana/loki:3.1.0
     container_name: apiscloud-loki
     restart: unless-stopped
-    command: ["-config.file=/etc/loki/loki-config.yml"]
+    command: ['-config.file=/etc/loki/loki-config.yml']
     ports:
-      - "${LOKI_PORT:-3100}:3100"
+      - '${LOKI_PORT:-3100}:3100'
     volumes:
       - ./monitor/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
       - loki_data:/loki
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:3100/ready']
       interval: 15s
       timeout: 5s
       retries: 5
@@ -176,13 +181,13 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: apiscloud
-      GF_USERS_ALLOW_SIGN_UP: "false"
-      GF_INSTALL_PLUGINS: ""
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_INSTALL_PLUGINS: ''
       TZ: Asia/Shanghai
     ports:
-      - "${GRAFANA_PORT:-13000}:3000"
+      - '${GRAFANA_PORT:-13000}:3000'
     extra_hosts:
-      - "host.docker.internal:${HOST_IP:-host-gateway}"
+      - 'host.docker.internal:${HOST_IP:-host-gateway}'
     volumes:
       - grafana_data:/var/lib/grafana
       - ./monitor/grafana/provisioning:/etc/grafana/provisioning:ro
@@ -195,7 +200,11 @@ services:
     networks:
       - apiscloud
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      test:
+        [
+          'CMD-SHELL',
+          'wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1',
+        ]
       interval: 15s
       timeout: 5s
       retries: 5

@@ -74,9 +74,7 @@ export const DispatchVehicleSchema = z.object({
 export function parseTask(input: unknown): DispatchTask {
   const result = DispatchTaskSchema.safeParse(input);
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => `${i.path.join('.')}: ${i.message}`)
-      .join('; ');
+    const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
     throw new Error(`任务校验失败：${issues}`);
   }
   return result.data as DispatchTask;
@@ -88,9 +86,7 @@ export function parseTask(input: unknown): DispatchTask {
 export function parseVehicle(input: unknown): DispatchVehicle {
   const result = DispatchVehicleSchema.safeParse(input);
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => `${i.path.join('.')}: ${i.message}`)
-      .join('; ');
+    const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
     throw new Error(`车辆校验失败：${issues}`);
   }
   return result.data as DispatchVehicle;

@@ -1,10 +1,6 @@
 import type { RedisWrapper } from '@apiscloud/libs';
 
-import type {
-  AlertPayload,
-  TelemetryAggregatedPayload,
-  TelemetryRawPayload,
-} from './types';
+import type { AlertPayload, TelemetryAggregatedPayload, TelemetryRawPayload } from './types';
 
 export interface RedisWriter {
   /** 写车辆最新状态 */

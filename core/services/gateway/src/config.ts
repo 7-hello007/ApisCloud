@@ -36,7 +36,11 @@ function loadProxiedServices(): ProxiedService[] {
 function loadPluginDirs(): string[] {
   const env = process.env.GATEWAY_PLUGIN_DIRS;
   if (env) {
-    return env.split(',').map((d) => d.trim()).filter((d) => d.length > 0).map((d) => path.resolve(d));
+    return env
+      .split(',')
+      .map((d) => d.trim())
+      .filter((d) => d.length > 0)
+      .map((d) => path.resolve(d));
   }
   const root = process.cwd();
   return [path.join(root, 'plugins'), path.join(root, 'plugins', 'dispatch')];
@@ -45,7 +49,10 @@ function loadPluginDirs(): string[] {
 function loadAuthPublicPaths(): string[] {
   const env = process.env.GATEWAY_AUTH_PUBLIC_PATHS;
   if (env) {
-    return env.split(',').map((p) => p.trim()).filter((p) => p.length > 0);
+    return env
+      .split(',')
+      .map((p) => p.trim())
+      .filter((p) => p.length > 0);
   }
   return ['/health', '/metrics', '/api/registry'];
 }

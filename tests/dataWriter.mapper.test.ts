@@ -99,15 +99,7 @@ describe('dataWriter.mapper', () => {
 
     it('顺序：vehicle_id, status, battery, lat, lng, heading, speed', () => {
       const params = telemetryToLatestParams(telemetry);
-      expect(params).toEqual([
-        'v-000001',
-        'running',
-        80,
-        31.23,
-        121.47,
-        90,
-        30,
-      ]);
+      expect(params).toEqual(['v-000001', 'running', 80, 31.23, 121.47, 90, 30]);
     });
   });
 

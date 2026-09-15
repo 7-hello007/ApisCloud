@@ -33,9 +33,7 @@ function createMockMetrics(): ObservabilityMetrics {
 describe('dataWriter.eventsCommands', () => {
   const logger = createLogger({ service: 'test', level: 'silent' });
 
-  function makeCommand(
-    overrides: Partial<DispatchCommandPayload> = {},
-  ): DispatchCommandPayload {
+  function makeCommand(overrides: Partial<DispatchCommandPayload> = {}): DispatchCommandPayload {
     return {
       vehicle_id: 'v-000001',
       command_id: 'cmd-1',

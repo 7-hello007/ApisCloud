@@ -4,9 +4,7 @@ import { registerPluginFrontend, type PluginFrontend } from './registry';
  * 预扫描本地插件前端模块。
  * Vite 编译时展开成 { '/src/plugins/dashboard/index.tsx': () => import(...) }。
  */
-const frontendModules = import.meta.glob<{ default: PluginFrontend }>(
-  '/src/plugins/*/index.tsx',
-);
+const frontendModules = import.meta.glob<{ default: PluginFrontend }>('/src/plugins/*/index.tsx');
 
 interface RegistryResponse {
   version: string;

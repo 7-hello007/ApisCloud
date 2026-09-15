@@ -12,8 +12,7 @@ export function randomPointInRadius(center: GeoPoint, radiusKm: number): GeoPoin
 
   const dLat = (distance * Math.cos(angle)) / EARTH_RADIUS_KM;
   const dLng =
-    (distance * Math.sin(angle)) /
-    (EARTH_RADIUS_KM * Math.cos((center.lat * Math.PI) / 180));
+    (distance * Math.sin(angle)) / (EARTH_RADIUS_KM * Math.cos((center.lat * Math.PI) / 180));
 
   return {
     lat: center.lat + (dLat * 180) / Math.PI,
@@ -30,9 +29,7 @@ export function distanceKm(a: GeoPoint, b: GeoPoint): number {
   const lat1 = (a.lat * Math.PI) / 180;
   const lat2 = (b.lat * Math.PI) / 180;
 
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
 
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
 }
@@ -62,9 +59,7 @@ export function bearing(from: GeoPoint, to: GeoPoint): number {
   const dLng = ((to.lng - from.lng) * Math.PI) / 180;
 
   const y = Math.sin(dLng) * Math.cos(lat2);
-  const x =
-    Math.cos(lat1) * Math.sin(lat2) -
-    Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
 
   const brng = (Math.atan2(y, x) * 180) / Math.PI;
   return (brng + 360) % 360;

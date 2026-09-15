@@ -26,8 +26,7 @@ export function Button({
     secondary:
       'bg-surface-800 text-surface-100 hover:bg-surface-700 focus:ring-surface-600 border border-surface-700',
     danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-    ghost:
-      'bg-transparent text-surface-200 hover:bg-surface-800 focus:ring-surface-700',
+    ghost: 'bg-transparent text-surface-200 hover:bg-surface-800 focus:ring-surface-700',
   };
 
   const sizes: Record<NonNullable<ButtonProps['size']>, string> = {

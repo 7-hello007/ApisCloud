@@ -48,9 +48,7 @@ export function createSecrets(options: SecretsOptions = {}): SecretProvider {
         throw new Error('JWT_SECRET 使用了默认值，必须更换');
       }
       if (secret.length < JWT_SECRET_MIN_LENGTH) {
-        throw new Error(
-          `JWT_SECRET 长度不足 ${JWT_SECRET_MIN_LENGTH}（当前 ${secret.length}）`,
-        );
+        throw new Error(`JWT_SECRET 长度不足 ${JWT_SECRET_MIN_LENGTH}（当前 ${secret.length}）`);
       }
       return secret;
     },

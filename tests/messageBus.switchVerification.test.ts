@@ -12,10 +12,7 @@ import {
  * 通用的业务函数，只依赖 MessageBus 接口。
  * 不关心底层是 Kafka 还是 Memory。
  */
-async function runBusinessFlow(
-  bus: MessageBus,
-  inputVehicleId: string,
-): Promise<string[]> {
+async function runBusinessFlow(bus: MessageBus, inputVehicleId: string): Promise<string[]> {
   await bus.connect();
 
   const received: string[] = [];
@@ -82,8 +79,7 @@ describe('messageBus.switchVerification', () => {
   });
 
   it('所有适配器实现同一接口（编译期保证）', () => {
-    const check = (bus: MessageBus): HealthCheckResult | Promise<HealthCheckResult> =>
-      bus.health();
+    const check = (bus: MessageBus): HealthCheckResult | Promise<HealthCheckResult> => bus.health();
     expect(typeof check).toBe('function');
   });
 

@@ -34,9 +34,7 @@ export interface ObservabilityService {
   stop(): Promise<void>;
 }
 
-export function createObservabilityService(
-  options: ObservabilityOptions,
-): ObservabilityService {
+export function createObservabilityService(options: ObservabilityOptions): ObservabilityService {
   const logger =
     options.logger ??
     createObservabilityLogger({

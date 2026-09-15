@@ -1,9 +1,4 @@
-import type {
-  AdminHandler,
-  GatewayConfig,
-  PluginRouteEntry,
-  RouteMatch,
-} from './types';
+import type { AdminHandler, GatewayConfig, PluginRouteEntry, RouteMatch } from './types';
 
 export interface RouterDeps {
   config: GatewayConfig;
@@ -21,11 +16,7 @@ export interface RouterDeps {
  *   3. 插件路由（精确匹配）
  *   4. 404
  */
-export function matchRoute(
-  method: string,
-  pathname: string,
-  deps: RouterDeps,
-): RouteMatch {
+export function matchRoute(method: string, pathname: string, deps: RouterDeps): RouteMatch {
   const { config, getPluginRoutes, adminHandlers } = deps;
 
   // 1. 管理端点

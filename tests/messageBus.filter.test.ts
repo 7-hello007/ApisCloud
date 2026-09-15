@@ -1,9 +1,4 @@
-import {
-  createEnvelope,
-  MemoryAdapter,
-  TOPICS,
-  type Envelope,
-} from '@apiscloud/message-bus';
+import { createEnvelope, MemoryAdapter, TOPICS, type Envelope } from '@apiscloud/message-bus';
 
 describe('messageBus.filter', () => {
   let bus: MemoryAdapter;

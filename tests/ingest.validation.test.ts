@@ -1,7 +1,4 @@
-import {
-  DownlinkCommandSchema,
-  UplinkTelemetrySchema,
-} from '@apiscloud/ingest';
+import { DownlinkCommandSchema, UplinkTelemetrySchema } from '@apiscloud/ingest';
 
 describe('ingest.validation', () => {
   describe('UplinkTelemetrySchema', () => {

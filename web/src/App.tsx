@@ -10,12 +10,8 @@ function EmptyState({ result }: { result: LoadResult | null }) {
     <div className="h-full flex items-center justify-center">
       <div className="text-center max-w-md">
         <div className="text-4xl mb-4">🚧</div>
-        <div className="text-lg font-medium text-surface-100 mb-2">
-          暂无前端插件
-        </div>
-        <div className="text-sm text-surface-300 mb-4">
-          插件加载结果：
-        </div>
+        <div className="text-lg font-medium text-surface-100 mb-2">暂无前端插件</div>
+        <div className="text-sm text-surface-300 mb-4">插件加载结果：</div>
         {result ? (
           <div className="text-xs text-left bg-surface-900 border border-surface-800 rounded p-3 font-mono">
             <div>已加载: {result.loaded.join(', ') || '（空）'}</div>
@@ -50,11 +46,7 @@ export function App() {
   }, []);
 
   if (!ready) {
-    return (
-      <div className="h-full flex items-center justify-center text-surface-300">
-        加载中…
-      </div>
-    );
+    return <div className="h-full flex items-center justify-center text-surface-300">加载中…</div>;
   }
 
   return (

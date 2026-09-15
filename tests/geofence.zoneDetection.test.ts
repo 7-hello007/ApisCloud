@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { isInsideZone, detectZoneTransition, distanceKm } = require(
-  '../plugins/geofence/src/geofence.js',
-);
+const {
+  isInsideZone,
+  detectZoneTransition,
+  distanceKm,
+} = require('../plugins/geofence/src/geofence.js');
 
 interface Zone {
   id: string;

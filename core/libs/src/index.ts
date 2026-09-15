@@ -10,12 +10,7 @@ export type { Logger, LogContext, LoggerOptions } from './logger';
 
 // health
 export { createHealthRegistry, HealthRegistry } from './health';
-export type {
-  HealthCheckFn,
-  HealthCheckResult,
-  HealthReport,
-  HealthState,
-} from './health';
+export type { HealthCheckFn, HealthCheckResult, HealthReport, HealthState } from './health';
 
 // pg
 export { createPg } from './pg';

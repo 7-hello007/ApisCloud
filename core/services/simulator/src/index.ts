@@ -15,7 +15,13 @@ export { Vehicle } from './vehicle';
 export { randomPointInRadius, distanceKm, moveTowards, bearing } from './gps-generator';
 
 // 状态机
-export { nextState, nextBattery, BATTERY_LOW, BATTERY_CRITICAL, BATTERY_FULL } from './state-machine';
+export {
+  nextState,
+  nextBattery,
+  BATTERY_LOW,
+  BATTERY_CRITICAL,
+  BATTERY_FULL,
+} from './state-machine';
 export type { StateInput } from './state-machine';
 
 // 类型

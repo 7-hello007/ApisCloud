@@ -8,18 +8,12 @@ export function Sidebar() {
   return (
     <aside className="w-60 shrink-0 border-r border-surface-800 bg-surface-900 flex flex-col">
       <div className="h-14 flex items-center px-5 border-b border-surface-800">
-        <span className="font-semibold text-surface-100 tracking-wide">
-          ApisCloud
-        </span>
+        <span className="font-semibold text-surface-100 tracking-wide">ApisCloud</span>
         <span className="ml-2 text-xs text-surface-700">蜂云</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-4">
-        {groups.length === 0 && (
-          <div className="px-5 py-3 text-sm text-surface-700">
-            暂无插件
-          </div>
-        )}
+        {groups.length === 0 && <div className="px-5 py-3 text-sm text-surface-700">暂无插件</div>}
 
         {groups.map((group) => (
           <div key={group.group} className="mb-4">

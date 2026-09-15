@@ -1,9 +1,10 @@
+import { createCommandSignature, loadConfig, type HealthCheckResult } from '@apiscloud/libs';
 import {
-  createCommandSignature,
-  loadConfig,
-  type HealthCheckResult,
-} from '@apiscloud/libs';
-import { createIngestService, type IngestService, type MqttPublisher, type MqttSubscriber } from '@apiscloud/ingest';
+  createIngestService,
+  type IngestService,
+  type MqttPublisher,
+  type MqttSubscriber,
+} from '@apiscloud/ingest';
 import { createEnvelope, MemoryAdapter, TOPICS } from '@apiscloud/message-bus';
 
 import { waitFor } from './helpers';

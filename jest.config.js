@@ -82,12 +82,7 @@ module.exports = {
     },
   },
 
-  coveragePathIgnorePatterns: [
-    '/node_modules/',
-    '/dist/',
-    '/coverage/',
-    '\\.d\\.ts$',
-  ],
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/coverage/', '\\.d\\.ts$'],
 
   clearMocks: true,
   restoreMocks: true,

@@ -2,7 +2,13 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { loadLayers, getLayer, getServices, getLayerNames, isServiceEnabled } from '@apiscloud/layer-config';
+import {
+  loadLayers,
+  getLayer,
+  getServices,
+  getLayerNames,
+  isServiceEnabled,
+} from '@apiscloud/layer-config';
 
 function writeTmpYaml(content: string): { dir: string; file: string } {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'layer-config-'));
@@ -32,11 +38,7 @@ layers:
     const config = loadLayers({ filePath: file });
     expect(config.layers).toHaveLength(1);
     expect(getLayerNames(config)).toEqual(['single']);
-    expect(getServices(config, 'single')).toEqual([
-      'ingest',
-      'data-writer',
-      'dispatch-core',
-    ]);
+    expect(getServices(config, 'single')).toEqual(['ingest', 'data-writer', 'dispatch-core']);
   });
 
   it('三层配置可加载', () => {
@@ -64,11 +66,7 @@ layers:
 
     expect(getServices(config, 'processing')).toContain('dispatch-core');
 
-    expect(getServices(config, 'decision')).toEqual([
-      'dispatch-core',
-      'observability',
-      'registry',
-    ]);
+    expect(getServices(config, 'decision')).toEqual(['dispatch-core', 'observability', 'registry']);
   });
 
   it('三层配置中同一服务可在多层', () => {
@@ -108,12 +106,7 @@ layers:
 
     const config = loadLayers({ filePath: file });
     expect(config.layers).toHaveLength(4);
-    expect(getLayerNames(config)).toEqual([
-      'access',
-      'region',
-      'processing',
-      'decision',
-    ]);
+    expect(getLayerNames(config)).toEqual(['access', 'region', 'processing', 'decision']);
   });
 
   it('加层只改配置，服务列表自动生效', () => {

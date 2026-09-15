@@ -8,10 +8,7 @@ import {
   type MessageBus,
   type Subscription,
 } from '@apiscloud/message-bus';
-import {
-  createObservabilityService,
-  type ObservabilityService,
-} from '@apiscloud/observability';
+import { createObservabilityService, type ObservabilityService } from '@apiscloud/observability';
 
 import { AlgorithmRegistry } from './algorithm-registry';
 import { loadAlgorithmsFromDir } from './algorithm-loader';

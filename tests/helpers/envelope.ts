@@ -11,9 +11,7 @@ export interface MakeEnvelopeOptions<T> {
 /**
  * 创建测试用 Envelope，所有字段可覆盖。
  */
-export function makeEnvelope<T = unknown>(
-  options: MakeEnvelopeOptions<T> = {},
-): Envelope<T> {
+export function makeEnvelope<T = unknown>(options: MakeEnvelopeOptions<T> = {}): Envelope<T> {
   return createEnvelope({
     topic: options.topic ?? 'telemetry.raw',
     source: options.source ?? 'test',

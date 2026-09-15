@@ -1,5 +1,10 @@
 import { loadConfig, resetConfig } from '@apiscloud/libs';
-import { PluginHost, type LoadedPlugin, type Plugin, type PluginMetrics } from '@apiscloud/plugin-host';
+import {
+  PluginHost,
+  type LoadedPlugin,
+  type Plugin,
+  type PluginMetrics,
+} from '@apiscloud/plugin-host';
 import { MemoryAdapter } from '@apiscloud/message-bus';
 
 function makePlugin(name: string, instance: Partial<Plugin>): LoadedPlugin {

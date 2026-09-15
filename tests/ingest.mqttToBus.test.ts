@@ -69,7 +69,11 @@ function createMockBus(): MockBus {
       publishes.push({ topic, env, options });
     }),
     subscribe: jest.fn(
-      async (_topic: string, _handler: MessageHandler, _options?: SubscribeOptions): Promise<Subscription> => {
+      async (
+        _topic: string,
+        _handler: MessageHandler,
+        _options?: SubscribeOptions,
+      ): Promise<Subscription> => {
         return {
           topic: _topic,
           async unsubscribe() {},
@@ -187,7 +191,8 @@ describe('ingest.mqttToBus', () => {
     }
 
     await waitFor(() => mockBus.publishes.length === 3);
-    expect(mockBus.publishes.map((p) => (p.env.payload as { vehicle_id: string }).vehicle_id))
-      .toEqual(['v-000001', 'v-000002', 'v-000003']);
+    expect(
+      mockBus.publishes.map((p) => (p.env.payload as { vehicle_id: string }).vehicle_id),
+    ).toEqual(['v-000001', 'v-000002', 'v-000003']);
   });
 });

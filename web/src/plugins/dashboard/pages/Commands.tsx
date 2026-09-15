@@ -59,9 +59,7 @@ export function Commands() {
     {
       key: 'command_id',
       title: '指令 ID',
-      render: (row) => (
-        <span className="font-mono text-xs">{row.command_id.slice(0, 8)}…</span>
-      ),
+      render: (row) => <span className="font-mono text-xs">{row.command_id.slice(0, 8)}…</span>,
     },
     { key: 'vehicle_id', title: '车辆' },
     {
@@ -80,9 +78,7 @@ export function Commands() {
     <div className="space-y-4">
       <div>
         <h1 className="text-xl font-semibold text-surface-100">调度指令</h1>
-        <p className="text-sm text-surface-400 mt-1">
-          调度指令审计列表（共 {commands.length} 条）
-        </p>
+        <p className="text-sm text-surface-400 mt-1">调度指令审计列表（共 {commands.length} 条）</p>
       </div>
 
       {error && (

@@ -1,9 +1,4 @@
-import {
-  bearing,
-  distanceKm,
-  moveTowards,
-  randomPointInRadius,
-} from '@apiscloud/simulator';
+import { bearing, distanceKm, moveTowards, randomPointInRadius } from '@apiscloud/simulator';
 
 describe('simulator.gpsGenerator', () => {
   const shanghai = { lat: 31.2304, lng: 121.4737 };

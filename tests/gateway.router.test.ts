@@ -77,11 +77,7 @@ describe('gateway.router', () => {
     });
 
     it('匹配 /api/proxy/data-writer/api/query/vehicles', () => {
-      const match = matchRoute(
-        'GET',
-        '/api/proxy/data-writer/api/query/vehicles',
-        makeDeps(),
-      );
+      const match = matchRoute('GET', '/api/proxy/data-writer/api/query/vehicles', makeDeps());
       expect(match.type).toBe('proxy');
       if (match.type === 'proxy') {
         expect(match.target).toBe('http://localhost:9104');
@@ -135,11 +131,7 @@ describe('gateway.router', () => {
           },
         },
       ];
-      const match = matchRoute(
-        'GET',
-        '/health',
-        makeDeps({ getPluginRoutes: () => pluginRoutes }),
-      );
+      const match = matchRoute('GET', '/health', makeDeps({ getPluginRoutes: () => pluginRoutes }));
       expect(match.type).toBe('admin');
     });
 

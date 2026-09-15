@@ -113,9 +113,9 @@ describe('pluginHost.httpClient', () => {
       });
       try {
         const client = createHttpClient();
-        await expect(
-          client.get(`http://localhost:${srv.port}/missing`),
-        ).rejects.toThrow(/HTTP 404/);
+        await expect(client.get(`http://localhost:${srv.port}/missing`)).rejects.toThrow(
+          /HTTP 404/,
+        );
       } finally {
         await srv.stop();
       }
@@ -128,9 +128,7 @@ describe('pluginHost.httpClient', () => {
       });
       try {
         const client = createHttpClient();
-        await expect(
-          client.get(`http://localhost:${srv.port}/error`),
-        ).rejects.toThrow(/HTTP 500/);
+        await expect(client.get(`http://localhost:${srv.port}/error`)).rejects.toThrow(/HTTP 500/);
       } finally {
         await srv.stop();
       }
@@ -138,9 +136,7 @@ describe('pluginHost.httpClient', () => {
 
     it('连接不可达抛错', async () => {
       const client = createHttpClient({ timeoutMs: 500 });
-      await expect(
-        client.get('http://localhost:1/unreachable'),
-      ).rejects.toThrow();
+      await expect(client.get('http://localhost:1/unreachable')).rejects.toThrow();
     });
   });
 
@@ -155,9 +151,7 @@ describe('pluginHost.httpClient', () => {
       });
       try {
         const client = createHttpClient({ timeoutMs: 100 });
-        await expect(
-          client.get(`http://localhost:${srv.port}/slow`),
-        ).rejects.toThrow();
+        await expect(client.get(`http://localhost:${srv.port}/slow`)).rejects.toThrow();
       } finally {
         await srv.stop();
       }
@@ -170,9 +164,7 @@ describe('pluginHost.httpClient', () => {
       });
       try {
         const client = createHttpClient();
-        const result = await client.get<{ fast: boolean }>(
-          `http://localhost:${srv.port}/fast`,
-        );
+        const result = await client.get<{ fast: boolean }>(`http://localhost:${srv.port}/fast`);
         expect(result.fast).toBe(true);
       } finally {
         await srv.stop();

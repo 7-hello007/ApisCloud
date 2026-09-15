@@ -13,9 +13,7 @@ export interface ObservabilityLoggerOptions {
  * 创建可观测性专用 logger。
  * 日志字段固定含 service、layer，可通过 withTrace 绑 trace_id、span_id。
  */
-export function createObservabilityLogger(
-  options: ObservabilityLoggerOptions,
-): Logger {
+export function createObservabilityLogger(options: ObservabilityLoggerOptions): Logger {
   return createLogger({
     service: options.service,
     layer: options.layer ?? 'single',

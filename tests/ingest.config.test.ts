@@ -2,11 +2,7 @@ import { loadConfig, resetConfig } from '@apiscloud/libs';
 import { loadIngestConfig } from '@apiscloud/ingest';
 
 describe('ingest.config', () => {
-  const ENV_KEYS = [
-    'INGEST_MQTT_TOPIC',
-    'INGEST_MQTT_COMMAND_PREFIX',
-    'INGEST_CONSUMER_GROUP',
-  ];
+  const ENV_KEYS = ['INGEST_MQTT_TOPIC', 'INGEST_MQTT_COMMAND_PREFIX', 'INGEST_CONSUMER_GROUP'];
 
   const saved: Record<string, string | undefined> = {};
 

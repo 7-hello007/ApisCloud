@@ -2,12 +2,7 @@
  * 调度任务类型。
  */
 export type TaskType =
-  | 'passenger'
-  | 'inspection'
-  | 'logistics'
-  | 'charging'
-  | 'maintenance'
-  | 'rescue';
+  'passenger' | 'inspection' | 'logistics' | 'charging' | 'maintenance' | 'rescue';
 
 /**
  * 车辆状态。
@@ -96,9 +91,7 @@ export interface DispatchAlgorithmResult {
 export interface DispatchAlgorithm {
   name: string;
   version: string;
-  rank(
-    input: DispatchAlgorithmInput,
-  ): Promise<DispatchAlgorithmResult> | DispatchAlgorithmResult;
+  rank(input: DispatchAlgorithmInput): Promise<DispatchAlgorithmResult> | DispatchAlgorithmResult;
 }
 
 /**

@@ -18,8 +18,4 @@ export type { AggregateInput } from './aggregator';
 export { extractTelemetryRaw, aggregatedToEnvelope } from './mapper';
 
 // 类型
-export type {
-  TelemetryRawPayload,
-  AggregatedPayload,
-  AggregatorConfig,
-} from './types';
+export type { TelemetryRawPayload, AggregatedPayload, AggregatorConfig } from './types';

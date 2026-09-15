@@ -19,10 +19,7 @@ export interface TelemetryRawDeps {
 /**
  * 处理 telemetry.raw。
  */
-export async function handleTelemetryRaw(
-  env: Envelope,
-  deps: TelemetryRawDeps,
-): Promise<void> {
+export async function handleTelemetryRaw(env: Envelope, deps: TelemetryRawDeps): Promise<void> {
   const payload = extractTelemetryRaw(env);
 
   await deps.pgWriter.upsertVehicleLatest(payload);

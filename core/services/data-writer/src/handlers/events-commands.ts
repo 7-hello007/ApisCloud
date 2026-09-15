@@ -16,10 +16,7 @@ export interface EventsCommandsDeps {
  * 处理 events.commands。
  * 只写审计表，不做业务处理（业务处理由 ingest 完成，转发 MQTT）。
  */
-export async function handleEventsCommands(
-  env: Envelope,
-  deps: EventsCommandsDeps,
-): Promise<void> {
+export async function handleEventsCommands(env: Envelope, deps: EventsCommandsDeps): Promise<void> {
   const payload = extractDispatchCommand(env);
 
   await deps.pgWriter.insertDispatchCommand(payload);

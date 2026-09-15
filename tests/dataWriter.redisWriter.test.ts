@@ -111,9 +111,7 @@ describe('dataWriter.redisWriter', () => {
 
     await writer.writeVehicleLatest(telemetry, 60);
 
-    const fields = redis.hsets
-      .filter((h) => h.key === 'vehicle:v-000001')
-      .map((h) => h.field);
+    const fields = redis.hsets.filter((h) => h.key === 'vehicle:v-000001').map((h) => h.field);
     expect(fields).toContain('status');
     expect(fields).toContain('battery');
     expect(fields).toContain('lat');
@@ -129,9 +127,7 @@ describe('dataWriter.redisWriter', () => {
 
     await writer.writeVehicleLatest(telemetry, 60);
 
-    expect(redis.mockClient.saddCalls).toEqual([
-      { key: 'vehicles:active', member: 'v-000001' },
-    ]);
+    expect(redis.mockClient.saddCalls).toEqual([{ key: 'vehicles:active', member: 'v-000001' }]);
   });
 
   it('writeRecentAlert 推入列表并裁剪', async () => {
@@ -150,9 +146,7 @@ describe('dataWriter.redisWriter', () => {
 
     expect(redis.mockClient.lpushCalls).toHaveLength(1);
     expect(redis.mockClient.lpushCalls[0].key).toBe('alerts:recent');
-    expect(redis.mockClient.ltrimCalls).toEqual([
-      { key: 'alerts:recent', start: 0, stop: 99 },
-    ]);
+    expect(redis.mockClient.ltrimCalls).toEqual([{ key: 'alerts:recent', start: 0, stop: 99 }]);
   });
 
   it('writeRecentAlert 尊重 maxCount', async () => {
@@ -185,9 +179,7 @@ describe('dataWriter.redisWriter', () => {
       avg_battery: 70,
     });
 
-    const fields = redis.hsets
-      .filter((h) => h.key === 'region:east:stats')
-      .map((h) => h.field);
+    const fields = redis.hsets.filter((h) => h.key === 'region:east:stats').map((h) => h.field);
     expect(fields).toContain('window_start');
     expect(fields).toContain('window_end');
     expect(fields).toContain('vehicle_count');

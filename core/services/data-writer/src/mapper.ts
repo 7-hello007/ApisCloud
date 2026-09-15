@@ -1,6 +1,6 @@
 import type { Envelope } from '@apiscloud/message-bus';
 
-import type { 
+import type {
   DispatchCommandPayload,
   AlertPayload,
   TelemetryAggregatedPayload,
@@ -49,15 +49,7 @@ export function telemetryToPgParams(t: TelemetryRawPayload): unknown[] {
  * 把遥测 payload 转为 PG vehicle_latest 表参数。
  */
 export function telemetryToLatestParams(t: TelemetryRawPayload): unknown[] {
-  return [
-    t.vehicle_id,
-    t.status,
-    t.battery,
-    t.lat,
-    t.lng,
-    t.heading,
-    t.speed,
-  ];
+  return [t.vehicle_id, t.status, t.battery, t.lat, t.lng, t.heading, t.speed];
 }
 
 /**
@@ -87,11 +79,5 @@ export function extractDispatchCommand(env: Envelope): DispatchCommandPayload {
  */
 export function commandToPgParams(c: DispatchCommandPayload): unknown[] {
   const taskId = c.payload?.task_id ?? null;
-  return [
-    c.command_id,
-    c.vehicle_id,
-    taskId,
-    c.command_type,
-    JSON.stringify(c.payload ?? {}),
-  ];
+  return [c.command_id, c.vehicle_id, taskId, c.command_type, JSON.stringify(c.payload ?? {})];
 }

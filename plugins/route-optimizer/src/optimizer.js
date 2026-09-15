@@ -40,12 +40,7 @@ function shouldOptimize(telemetry, options = {}) {
  * @returns {string[]}
  */
 function selectOptimizeCandidates(params) {
-  const {
-    candidates,
-    recentCommands,
-    now,
-    cooldownMs = DEFAULT_COOLDOWN_MS,
-  } = params;
+  const { candidates, recentCommands, now, cooldownMs = DEFAULT_COOLDOWN_MS } = params;
 
   return candidates.filter((vehicleId) => {
     const last = recentCommands.get(vehicleId);

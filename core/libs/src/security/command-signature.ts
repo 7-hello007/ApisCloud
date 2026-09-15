@@ -47,15 +47,11 @@ function canonicalize(command: SignableCommand): string {
  * 创建指令签名上下文。
  * 用于阶段三：平台下发给外部系统的调度指令。
  */
-export function createCommandSignature(
-  options: CommandSignatureOptions,
-): CommandSignatureContext {
+export function createCommandSignature(options: CommandSignatureOptions): CommandSignatureContext {
   const { secret, ttlSec = COMMAND_SIGNATURE_TTL_SEC } = options;
 
   function computeSignature(command: SignableCommand): string {
-    return createHmac(COMMAND_SIGN_ALGORITHM, secret)
-      .update(canonicalize(command))
-      .digest('hex');
+    return createHmac(COMMAND_SIGN_ALGORITHM, secret).update(canonicalize(command)).digest('hex');
   }
 
   return {

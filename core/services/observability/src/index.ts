@@ -18,11 +18,7 @@ export { createObservabilityHealth } from './health';
 export type { ObservableTarget } from './health';
 
 // logger
-export {
-  createObservabilityLogger,
-  withTrace,
-  newTraceContext,
-} from './logger';
+export { createObservabilityLogger, withTrace, newTraceContext } from './logger';
 export type { ObservabilityLoggerOptions } from './logger';
 
 // tracing

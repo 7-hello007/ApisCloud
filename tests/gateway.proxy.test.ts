@@ -84,9 +84,7 @@ describe('gateway.proxy', () => {
   });
 
   it('GET 请求透传到 target', async () => {
-    const res = await fetch(
-      `http://localhost:${gateway.port()}/api/proxy/mock-svc/health`,
-    );
+    const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/mock-svc/health`);
     expect(res.status).toBe(200);
     const body = (await res.json()) as { ok: boolean; from: string };
     expect(body.ok).toBe(true);
@@ -98,14 +96,11 @@ describe('gateway.proxy', () => {
   });
 
   it('POST 请求带 body 透传', async () => {
-    const res = await fetch(
-      `http://localhost:${gateway.port()}/api/proxy/mock-svc/api/submit`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hello: 'world' }),
-      },
-    );
+    const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/mock-svc/api/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ hello: 'world' }),
+    });
     expect(res.status).toBe(200);
 
     expect(target.received).toHaveLength(1);
@@ -125,18 +120,14 @@ describe('gateway.proxy', () => {
     // 停掉 target
     await target.stop();
 
-    const res = await fetch(
-      `http://localhost:${gateway.port()}/api/proxy/mock-svc/health`,
-    );
+    const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/mock-svc/health`);
     expect(res.status).toBe(502);
     const body = (await res.json()) as { error: string };
     expect(body.error).toBe('bad_gateway');
   });
 
   it('未知服务名返回 404', async () => {
-    const res = await fetch(
-      `http://localhost:${gateway.port()}/api/proxy/unknown/health`,
-    );
+    const res = await fetch(`http://localhost:${gateway.port()}/api/proxy/unknown/health`);
     expect(res.status).toBe(404);
   });
 

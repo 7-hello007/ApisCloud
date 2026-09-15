@@ -70,13 +70,7 @@ function detectAnomalies(params) {
   const speedAlert = checkSpeed(vehicleId, current.speed, config);
   if (speedAlert) alerts.push(speedAlert);
 
-  const batteryAlert = checkBatteryDrop(
-    vehicleId,
-    current.battery,
-    previous,
-    current.ts,
-    config,
-  );
+  const batteryAlert = checkBatteryDrop(vehicleId, current.battery, previous, current.ts, config);
   if (batteryAlert) alerts.push(batteryAlert);
 
   return alerts;

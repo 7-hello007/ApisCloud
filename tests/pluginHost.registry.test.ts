@@ -49,8 +49,18 @@ describe('pluginHost.registry', () => {
     registry.register(makePlugin('b', { profile: ['full'] }));
     registry.register(makePlugin('c', { profile: ['core', 'full'] }));
 
-    expect(registry.filterByProfile('core').map((p) => p.manifest.name).sort()).toEqual(['a', 'c']);
-    expect(registry.filterByProfile('full').map((p) => p.manifest.name).sort()).toEqual(['b', 'c']);
+    expect(
+      registry
+        .filterByProfile('core')
+        .map((p) => p.manifest.name)
+        .sort(),
+    ).toEqual(['a', 'c']);
+    expect(
+      registry
+        .filterByProfile('full')
+        .map((p) => p.manifest.name)
+        .sort(),
+    ).toEqual(['b', 'c']);
   });
 
   it('filterByCore 过滤', () => {

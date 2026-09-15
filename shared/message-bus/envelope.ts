@@ -59,9 +59,7 @@ export function createEnvelope<T>(options: CreateEnvelopeOptions<T>): Envelope<T
 export function validateEnvelope(input: unknown): Envelope {
   const result = EnvelopeSchema.safeParse(input);
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => `${i.path.join('.')}: ${i.message}`)
-      .join('; ');
+    const issues = result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');
     throw new Error(`信封校验失败：${issues}`);
   }
   return result.data as Envelope;

@@ -8,10 +8,7 @@ import {
   type PgClient,
   type RedisWrapper,
 } from '@apiscloud/libs';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import { createGatewayService, type GatewayService } from '@apiscloud/gateway';
 import { createEnvelope, MemoryAdapter, TOPICS } from '@apiscloud/message-bus';
 
@@ -141,7 +138,10 @@ describe('gateway.pluginIntegration', () => {
   });
 
   it('gateway 启动时加载了 geofence 和 anomaly 插件', () => {
-    const names = gateway.pluginHost.getRegistry().list().map((p) => p.manifest.name);
+    const names = gateway.pluginHost
+      .getRegistry()
+      .list()
+      .map((p) => p.manifest.name);
     expect(names).toContain('geofence');
     expect(names).toContain('anomaly');
   });

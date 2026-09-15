@@ -44,8 +44,6 @@ export function isDispatchAlgorithm(value: unknown): value is DispatchAlgorithm 
   if (!value || typeof value !== 'object') return false;
   const v = value as Record<string, unknown>;
   return (
-    typeof v.name === 'string' &&
-    typeof v.version === 'string' &&
-    typeof v.rank === 'function'
+    typeof v.name === 'string' && typeof v.version === 'string' && typeof v.rank === 'function'
   );
 }

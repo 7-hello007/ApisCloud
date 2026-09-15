@@ -84,9 +84,7 @@ export class PluginHost {
   }
 
   async loadAll(profile?: string): Promise<LoadAllResult> {
-    const targets = profile
-      ? this.registry.filterByProfile(profile)
-      : this.registry.list();
+    const targets = profile ? this.registry.filterByProfile(profile) : this.registry.list();
 
     let loaded = 0;
     let failed = 0;
@@ -172,10 +170,7 @@ export class PluginHost {
         );
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
-        this.logger.error(
-          { plugin: manifest.name, topic, err: message },
-          'onMessage 失败',
-        );
+        this.logger.error({ plugin: manifest.name, topic, err: message }, 'onMessage 失败');
       }
     }
   }
@@ -187,11 +182,7 @@ export class PluginHost {
 
       const label = `plugin:${manifest.name}:onTimer`;
       try {
-        await withTimeout(
-          () => Promise.resolve(instance.onTimer!()),
-          this.timerTimeoutMs,
-          label,
-        );
+        await withTimeout(() => Promise.resolve(instance.onTimer!()), this.timerTimeoutMs, label);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         this.logger.error({ plugin: manifest.name, err: message }, 'onTimer 失败');

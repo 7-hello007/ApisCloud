@@ -22,9 +22,7 @@ export interface SimulatorService {
  * 创建 simulator 服务。
  * 组合：配置 + 车队 + MQTT 发布器 + 可观测性。
  */
-export function createSimulatorService(
-  options: SimulatorServiceOptions,
-): SimulatorService {
+export function createSimulatorService(options: SimulatorServiceOptions): SimulatorService {
   const simConfig = loadSimulatorConfig(options.config);
 
   const observability = createObservabilityService({

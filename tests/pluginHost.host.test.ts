@@ -180,7 +180,9 @@ describe('pluginHost.host', () => {
   it('health 聚合所有插件状态', async () => {
     const host = new PluginHost({ config: loadConfig() });
     host.register(makePlugin('h1', { getHealth: async () => ({ status: 'ok' }) }));
-    host.register(makePlugin('h2', { getHealth: async () => ({ status: 'down', message: 'oops' }) }));
+    host.register(
+      makePlugin('h2', { getHealth: async () => ({ status: 'down', message: 'oops' }) }),
+    );
 
     await host.loadAll();
     const report = await host.health();

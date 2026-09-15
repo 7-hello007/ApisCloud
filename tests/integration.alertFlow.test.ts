@@ -8,10 +8,7 @@ import {
   type PgClient,
   type RedisWrapper,
 } from '@apiscloud/libs';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import { PluginHost, type LoadedPlugin } from '@apiscloud/plugin-host';
 import { createEnvelope, MemoryAdapter, TOPICS } from '@apiscloud/message-bus';
 

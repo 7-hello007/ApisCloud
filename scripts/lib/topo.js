@@ -56,9 +56,7 @@ function topologicalSort(items) {
   }
 
   if (result.length !== items.length) {
-    const remaining = items
-      .map((i) => i.name)
-      .filter((n) => !result.includes(n));
+    const remaining = items.map((i) => i.name).filter((n) => !result.includes(n));
     throw new Error(`检测到循环依赖：${remaining.join(' -> ')}`);
   }
 

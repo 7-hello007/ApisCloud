@@ -12,10 +12,7 @@ import {
   type MessageBus,
   type Subscription,
 } from '@apiscloud/message-bus';
-import {
-  createObservabilityService,
-  type ObservabilityService,
-} from '@apiscloud/observability';
+import { createObservabilityService, type ObservabilityService } from '@apiscloud/observability';
 
 import { loadDataWriterConfig } from './config';
 import { handleEventsAlerts } from './handlers/events-alerts';
@@ -43,9 +40,7 @@ export interface DataWriterService {
   stop(): Promise<void>;
 }
 
-export function createDataWriterService(
-  options: DataWriterServiceOptions,
-): DataWriterService {
+export function createDataWriterService(options: DataWriterServiceOptions): DataWriterService {
   const dwConfig = loadDataWriterConfig(options.config);
 
   const observability = createObservabilityService({

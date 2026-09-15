@@ -12,9 +12,7 @@ export function extractTelemetryRaw(env: Envelope): TelemetryRawPayload {
 /**
  * 聚合结果 → Envelope。
  */
-export function aggregatedToEnvelope(
-  payload: AggregatedPayload,
-): Envelope<AggregatedPayload> {
+export function aggregatedToEnvelope(payload: AggregatedPayload): Envelope<AggregatedPayload> {
   return createEnvelope({
     topic: TOPICS.TELEMETRY_AGGREGATED,
     source: 'aggregator',

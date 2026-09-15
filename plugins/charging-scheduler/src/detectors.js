@@ -25,12 +25,7 @@ const DEFAULT_LOW_BATTERY_THRESHOLD = 20;
  * @returns {string[]}
  */
 function selectChargingCandidates(params) {
-  const {
-    lowBatteryVehicles,
-    recentCommands,
-    now,
-    cooldownMs = DEFAULT_COOLDOWN_MS,
-  } = params;
+  const { lowBatteryVehicles, recentCommands, now, cooldownMs = DEFAULT_COOLDOWN_MS } = params;
 
   return lowBatteryVehicles.filter((vehicleId) => {
     const last = recentCommands.get(vehicleId);

@@ -7,11 +7,7 @@
     "ecmaFeatures": { "jsx": true }
   },
   "plugins": ["@typescript-eslint"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "env": { "browser": true, "es2022": true },
   "ignorePatterns": ["dist/", "node_modules/"],
   "rules": {

@@ -32,11 +32,7 @@ export class LifecycleManager {
 
     const label = `plugin:${manifest.name}:onLoad`;
     try {
-      await withTimeout(
-        () => Promise.resolve(instance.onLoad!(ctx)),
-        this.loadTimeoutMs,
-        label,
-      );
+      await withTimeout(() => Promise.resolve(instance.onLoad!(ctx)), this.loadTimeoutMs, label);
       this.logger.debug({ plugin: manifest.name }, 'onLoad 成功');
       return true;
     } catch (err) {
@@ -54,11 +50,7 @@ export class LifecycleManager {
 
     const label = `plugin:${manifest.name}:onUnload`;
     try {
-      await withTimeout(
-        () => Promise.resolve(instance.onUnload!()),
-        this.unloadTimeoutMs,
-        label,
-      );
+      await withTimeout(() => Promise.resolve(instance.onUnload!()), this.unloadTimeoutMs, label);
       this.logger.debug({ plugin: manifest.name }, 'onUnload 成功');
       return true;
     } catch (err) {

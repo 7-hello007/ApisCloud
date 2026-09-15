@@ -4,9 +4,6 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "references": [
-    { "path": "../../../core/libs" },
-    { "path": "../observability" }
-  ],
+  "references": [{ "path": "../../../core/libs" }, { "path": "../observability" }],
   "include": ["src/**/*.ts"]
 }

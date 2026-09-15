@@ -74,9 +74,7 @@ export function Overview() {
     <div className="space-y-4">
       <div>
         <h1 className="text-xl font-semibold text-surface-100">总览</h1>
-        <p className="text-sm text-surface-400 mt-1">
-          智能驾驶服务调度平台运行状态
-        </p>
+        <p className="text-sm text-surface-400 mt-1">智能驾驶服务调度平台运行状态</p>
       </div>
 
       {error && (

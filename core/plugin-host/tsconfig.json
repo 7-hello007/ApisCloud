@@ -4,9 +4,6 @@
     "rootDir": "src",
     "outDir": "dist"
   },
-  "references": [
-    { "path": "../../core/libs" },
-    { "path": "../../shared/message-bus" }
-  ],
+  "references": [{ "path": "../../core/libs" }, { "path": "../../shared/message-bus" }],
   "include": ["src/**/*.ts"]
 }

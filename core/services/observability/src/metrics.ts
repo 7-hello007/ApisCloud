@@ -31,11 +31,11 @@ export function createObservabilityMetrics(service: string): ObservabilityMetric
   const registry = createMetrics(service);
 
   // ============ 服务层 ============
-  const httpRequests = registry.counter(
-    'apiscloud_http_requests_total',
-    'HTTP 请求总数',
-    ['method', 'path', 'status'],
-  );
+  const httpRequests = registry.counter('apiscloud_http_requests_total', 'HTTP 请求总数', [
+    'method',
+    'path',
+    'status',
+  ]);
 
   const httpDuration = registry.histogram(
     'apiscloud_http_request_duration_seconds',
@@ -45,11 +45,10 @@ export function createObservabilityMetrics(service: string): ObservabilityMetric
   );
 
   // ============ 数据流层 ============
-  const dataFlowMessages = registry.counter(
-    'apiscloud_dataflow_messages_total',
-    '数据流消息数',
-    ['topic', 'direction'],
-  );
+  const dataFlowMessages = registry.counter('apiscloud_dataflow_messages_total', '数据流消息数', [
+    'topic',
+    'direction',
+  ]);
 
   const dataFlowLatency = registry.histogram(
     'apiscloud_dataflow_latency_seconds',
@@ -59,11 +58,11 @@ export function createObservabilityMetrics(service: string): ObservabilityMetric
   );
 
   // ============ 插件层 ============
-  const pluginActions = registry.counter(
-    'apiscloud_plugin_actions_total',
-    '插件动作次数',
-    ['plugin', 'action', 'success'],
-  );
+  const pluginActions = registry.counter('apiscloud_plugin_actions_total', '插件动作次数', [
+    'plugin',
+    'action',
+    'success',
+  ]);
 
   const pluginDuration = registry.histogram(
     'apiscloud_plugin_action_duration_seconds',
@@ -73,54 +72,43 @@ export function createObservabilityMetrics(service: string): ObservabilityMetric
   );
 
   // ============ 总线层 ============
-  const busPublished = registry.counter(
-    'apiscloud_bus_published_total',
-    '总线发布消息数',
-    ['topic'],
-  );
+  const busPublished = registry.counter('apiscloud_bus_published_total', '总线发布消息数', [
+    'topic',
+  ]);
 
-  const busConsumed = registry.counter(
-    'apiscloud_bus_consumed_total',
-    '总线消费消息数',
-    ['topic', 'group'],
-  );
+  const busConsumed = registry.counter('apiscloud_bus_consumed_total', '总线消费消息数', [
+    'topic',
+    'group',
+  ]);
 
-  const busLag = registry.gauge(
-    'apiscloud_bus_consumer_lag',
-    '消费者滞后',
-    ['topic', 'group'],
-  );
+  const busLag = registry.gauge('apiscloud_bus_consumer_lag', '消费者滞后', ['topic', 'group']);
 
   // ============ 业务层（阶段六新增） ============
-  const dispatchTasks = registry.counter(
-    'apiscloud_dispatch_tasks_total',
-    '调度任务接收总数',
-    ['task_type', 'algorithm', 'result'],
-  );
+  const dispatchTasks = registry.counter('apiscloud_dispatch_tasks_total', '调度任务接收总数', [
+    'task_type',
+    'algorithm',
+    'result',
+  ]);
 
-  const pluginDispatch = registry.counter(
-    'apiscloud_plugin_dispatch_total',
-    '插件消息分发次数',
-    ['plugin', 'topic'],
-  );
+  const pluginDispatch = registry.counter('apiscloud_plugin_dispatch_total', '插件消息分发次数', [
+    'plugin',
+    'topic',
+  ]);
 
-  const chargingCommands = registry.counter(
-    'apiscloud_charging_commands_total',
-    '充电调度指令数',
-    ['command_type', 'result'],
-  );
+  const chargingCommands = registry.counter('apiscloud_charging_commands_total', '充电调度指令数', [
+    'command_type',
+    'result',
+  ]);
 
-  const geofenceEvents = registry.counter(
-    'apiscloud_geofence_events_total',
-    '地理围栏事件数',
-    ['event_type', 'level'],
-  );
+  const geofenceEvents = registry.counter('apiscloud_geofence_events_total', '地理围栏事件数', [
+    'event_type',
+    'level',
+  ]);
 
-  const anomalyEvents = registry.counter(
-    'apiscloud_anomaly_events_total',
-    '异常检测事件数',
-    ['alert_type', 'level'],
-  );
+  const anomalyEvents = registry.counter('apiscloud_anomaly_events_total', '异常检测事件数', [
+    'alert_type',
+    'level',
+  ]);
 
   return {
     registry,

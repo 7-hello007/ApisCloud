@@ -167,9 +167,7 @@ describe('chargingScheduler.plugin（PluginHost 分发）', () => {
   });
 
   it('多车多指令，vehicle_id 各自独立', async () => {
-    const env = makeAggregatedEnvelope(
-      makeAggregated(['v-000001', 'v-000002', 'v-000003']),
-    );
+    const env = makeAggregatedEnvelope(makeAggregated(['v-000001', 'v-000002', 'v-000003']));
     await host.dispatchMessage(TOPICS.TELEMETRY_AGGREGATED, env);
 
     await waitFor(() => receivedCommands.length >= 3);

@@ -1,8 +1,4 @@
-import type {
-  HealthCheckResult,
-  PgClient,
-  RedisWrapper,
-} from '@apiscloud/libs';
+import type { HealthCheckResult, PgClient, RedisWrapper } from '@apiscloud/libs';
 
 // ============================================================
 // Mock PG

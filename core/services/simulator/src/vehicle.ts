@@ -48,7 +48,8 @@ export class Vehicle {
    */
   tick(tickSec: number): VehicleState {
     const position: GeoPoint = { lat: this.lat, lng: this.lng };
-    const reachedTarget = this.target !== null && distanceKm(position, this.target) < ARRIVAL_THRESHOLD_KM;
+    const reachedTarget =
+      this.target !== null && distanceKm(position, this.target) < ARRIVAL_THRESHOLD_KM;
 
     const nextStatus = nextState({
       status: this.status,

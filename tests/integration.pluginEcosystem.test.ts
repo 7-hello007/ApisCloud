@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import path from 'node:path';
 
-import { loadConfig, resetConfig, type HealthCheckResult, type PgClient, type RedisWrapper } from '@apiscloud/libs';
+import {
+  loadConfig,
+  resetConfig,
+  type HealthCheckResult,
+  type PgClient,
+  type RedisWrapper,
+} from '@apiscloud/libs';
 import { createAggregatorService, type AggregatorService } from '@apiscloud/aggregator';
 import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import { PluginHost, type LoadedPlugin } from '@apiscloud/plugin-host';
@@ -159,30 +165,32 @@ describe('integration.pluginEcosystem', () => {
     // 启动 PluginHost
     host = new PluginHost({ config: loadConfig(), bus });
     host.register(
-      makeLoadedPlugin(
-        'charging-scheduler',
-        chargingScheduler,
-        [TOPICS.TELEMETRY_AGGREGATED],
-      ),
+      makeLoadedPlugin('charging-scheduler', chargingScheduler, [TOPICS.TELEMETRY_AGGREGATED]),
     );
     host.register(
-      makeLoadedPlugin(
-        'route-optimizer',
-        routeOptimizer,
-        [TOPICS.TELEMETRY_RAW],
-        { field: 'status', equals: 'running' },
-      ),
+      makeLoadedPlugin('route-optimizer', routeOptimizer, [TOPICS.TELEMETRY_RAW], {
+        field: 'status',
+        equals: 'running',
+      }),
     );
     await host.loadAll();
 
     // 手动绑定 gateway 的消息桥
-    await bus.subscribe(TOPICS.TELEMETRY_RAW, async (env) => {
-      await host.dispatchMessage(TOPICS.TELEMETRY_RAW, env);
-    }, { groupId: 'apiscloud-gateway' });
+    await bus.subscribe(
+      TOPICS.TELEMETRY_RAW,
+      async (env) => {
+        await host.dispatchMessage(TOPICS.TELEMETRY_RAW, env);
+      },
+      { groupId: 'apiscloud-gateway' },
+    );
 
-    await bus.subscribe(TOPICS.TELEMETRY_AGGREGATED, async (env) => {
-      await host.dispatchMessage(TOPICS.TELEMETRY_AGGREGATED, env);
-    }, { groupId: 'apiscloud-gateway' });
+    await bus.subscribe(
+      TOPICS.TELEMETRY_AGGREGATED,
+      async (env) => {
+        await host.dispatchMessage(TOPICS.TELEMETRY_AGGREGATED, env);
+      },
+      { groupId: 'apiscloud-gateway' },
+    );
   });
 
   afterEach(async () => {
@@ -311,8 +319,7 @@ describe('integration.pluginEcosystem', () => {
     // 等 data-writer 写审计
     await waitFor(
       () =>
-        mockPg.inserts.filter((i) => i.sql.includes('INSERT INTO dispatch_commands')).length >=
-        2,
+        mockPg.inserts.filter((i) => i.sql.includes('INSERT INTO dispatch_commands')).length >= 2,
     );
 
     const auditInserts = mockPg.inserts.filter((i) =>
@@ -324,9 +331,7 @@ describe('integration.pluginEcosystem', () => {
   it('data-writer 写 telemetry.raw 到 PG', async () => {
     await publishRaw('v-000001', { battery: 80 });
 
-    await waitFor(
-      () => mockPg.inserts.filter((i) => i.sql.includes('vehicle_latest')).length >= 1,
-    );
+    await waitFor(() => mockPg.inserts.filter((i) => i.sql.includes('vehicle_latest')).length >= 1);
 
     const latestInsert = mockPg.inserts.find((i) => i.sql.includes('vehicle_latest'));
     expect(latestInsert).toBeDefined();

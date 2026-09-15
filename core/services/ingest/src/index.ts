@@ -8,10 +8,7 @@ export type { IngestService, IngestServiceOptions } from './service';
 export { loadIngestConfig } from './config';
 
 // 校验
-export {
-  UplinkTelemetrySchema,
-  DownlinkCommandSchema,
-} from './validation';
+export { UplinkTelemetrySchema, DownlinkCommandSchema } from './validation';
 export type { ValidatedTelemetry, ValidatedCommand } from './validation';
 
 // 映射

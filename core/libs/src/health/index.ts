@@ -1,9 +1,4 @@
-import type {
-  HealthCheckFn,
-  HealthCheckResult,
-  HealthReport,
-  HealthState,
-} from './types';
+import type { HealthCheckFn, HealthCheckResult, HealthReport, HealthState } from './types';
 
 /**
  * 健康检查注册中心。
@@ -65,7 +60,10 @@ export class HealthRegistry {
   /**
    * 返回 Express/Koa 可用的 handler
    */
-  handler(): (req: unknown, res: { status: (n: number) => { json: (b: unknown) => void } }) => Promise<void> {
+  handler(): (
+    req: unknown,
+    res: { status: (n: number) => { json: (b: unknown) => void } },
+  ) => Promise<void> {
     return async (_req, res) => {
       const report = await this.check();
       const httpStatus = report.status === 'down' ? 503 : 200;

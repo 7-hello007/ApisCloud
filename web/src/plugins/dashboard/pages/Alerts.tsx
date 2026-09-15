@@ -64,9 +64,7 @@ export function Alerts() {
     <div className="space-y-4">
       <div>
         <h1 className="text-xl font-semibold text-surface-100">告警</h1>
-        <p className="text-sm text-surface-400 mt-1">
-          最近告警列表（共 {alerts.length} 条）
-        </p>
+        <p className="text-sm text-surface-400 mt-1">最近告警列表（共 {alerts.length} 条）</p>
       </div>
 
       {error && (

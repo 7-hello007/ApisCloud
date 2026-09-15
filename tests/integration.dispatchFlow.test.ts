@@ -7,10 +7,7 @@ import {
   type PgClient,
   type RedisWrapper,
 } from '@apiscloud/libs';
-import {
-  createDataWriterService,
-  type DataWriterService,
-} from '@apiscloud/data-writer';
+import { createDataWriterService, type DataWriterService } from '@apiscloud/data-writer';
 import {
   createDispatchCoreService,
   type DispatchCoreService,

@@ -6,11 +6,7 @@ import {
   telemetryToLatestParams,
   telemetryToPgParams,
 } from './mapper';
-import type {
-  AlertPayload,
-  DispatchCommandPayload,
-  TelemetryRawPayload,
-} from './types';
+import type { AlertPayload, DispatchCommandPayload, TelemetryRawPayload } from './types';
 
 export interface PgWriter {
   /** UPSERT 车辆最新状态 */

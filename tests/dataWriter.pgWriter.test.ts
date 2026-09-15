@@ -41,15 +41,7 @@ describe('dataWriter.pgWriter', () => {
     expect(pg.queries).toHaveLength(1);
     expect(pg.queries[0].sql).toContain('INSERT INTO vehicle_latest');
     expect(pg.queries[0].sql).toContain('ON CONFLICT (vehicle_id) DO UPDATE');
-    expect(pg.queries[0].params).toEqual([
-      'v-000001',
-      'running',
-      80,
-      31.23,
-      121.47,
-      90,
-      30,
-    ]);
+    expect(pg.queries[0].params).toEqual(['v-000001', 'running', 80, 31.23, 121.47, 90, 30]);
   });
 
   it('insertTelemetry 执行 INSERT SQL', async () => {
@@ -77,13 +69,7 @@ describe('dataWriter.pgWriter', () => {
 
     expect(pg.queries).toHaveLength(1);
     expect(pg.queries[0].sql).toContain('INSERT INTO alerts');
-    expect(pg.queries[0].params).toEqual([
-      'v-000001',
-      'speed',
-      'warning',
-      'speed too high',
-      null,
-    ]);
+    expect(pg.queries[0].params).toEqual(['v-000001', 'speed', 'warning', 'speed too high', null]);
   });
 
   it('多次调用写入多次', async () => {

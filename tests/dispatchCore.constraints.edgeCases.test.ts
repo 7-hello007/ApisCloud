@@ -61,11 +61,7 @@ describe('dispatchCore.constraints.edgeCases', () => {
     it.each(['running', 'charging', 'maintenance', 'offline'] as const)(
       'status=%s 被拒绝',
       (status) => {
-        const result = filterCandidates(
-          makeTask(),
-          [makeVehicle('v-1', { status })],
-          BASE_CONFIG,
-        );
+        const result = filterCandidates(makeTask(), [makeVehicle('v-1', { status })], BASE_CONFIG);
         expect(result.passed).toHaveLength(0);
         expect(result.rejected).toHaveLength(1);
         expect(result.rejected[0].reason).toContain('idle');
@@ -196,11 +192,7 @@ describe('dispatchCore.constraints.edgeCases', () => {
 
   describe('时间窗约束', () => {
     it('无时间窗不限', () => {
-      const result = filterCandidates(
-        makeTask(),
-        [makeVehicle('v-1')],
-        BASE_CONFIG,
-      );
+      const result = filterCandidates(makeTask(), [makeVehicle('v-1')], BASE_CONFIG);
       expect(result.passed).toHaveLength(1);
     });
 
@@ -242,11 +234,7 @@ describe('dispatchCore.constraints.edgeCases', () => {
       );
       expect(result.passed).toHaveLength(3);
       expect(result.rejected).toHaveLength(2);
-      expect(result.passed.map((v) => v.vehicle_id).sort()).toEqual([
-        'v-1',
-        'v-4',
-        'v-5',
-      ]);
+      expect(result.passed.map((v) => v.vehicle_id).sort()).toEqual(['v-1', 'v-4', 'v-5']);
     });
 
     it('全部被拒绝', () => {

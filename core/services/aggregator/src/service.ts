@@ -6,10 +6,7 @@ import {
   type MessageBus,
   type Subscription,
 } from '@apiscloud/message-bus';
-import {
-  createObservabilityService,
-  type ObservabilityService,
-} from '@apiscloud/observability';
+import { createObservabilityService, type ObservabilityService } from '@apiscloud/observability';
 
 import { aggregate } from './aggregator';
 import { loadAggregatorConfig } from './config';
@@ -40,9 +37,7 @@ export interface AggregatorService {
  * 创建 aggregator 服务。
  * 组合：配置 + 总线 + 时间窗 + 可观测性 + 定时器。
  */
-export function createAggregatorService(
-  options: AggregatorServiceOptions,
-): AggregatorService {
+export function createAggregatorService(options: AggregatorServiceOptions): AggregatorService {
   const cfg = loadAggregatorConfig(options.config);
 
   const observability = createObservabilityService({

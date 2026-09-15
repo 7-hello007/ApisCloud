@@ -19,10 +19,7 @@ export interface EventsAlertsDeps {
 /**
  * 处理 events.alerts。
  */
-export async function handleEventsAlerts(
-  env: Envelope,
-  deps: EventsAlertsDeps,
-): Promise<void> {
+export async function handleEventsAlerts(env: Envelope, deps: EventsAlertsDeps): Promise<void> {
   const payload = extractAlert(env);
 
   await deps.pgWriter.insertAlert(payload);

@@ -1,10 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import {
-  JWT_ALGORITHM,
-  JWT_DEFAULT_EXPIRES_IN,
-  JWT_REFRESH_EXPIRES_IN,
-} from './constants';
+import { JWT_ALGORITHM, JWT_DEFAULT_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN } from './constants';
 
 export interface JwtPayload {
   sub: string;

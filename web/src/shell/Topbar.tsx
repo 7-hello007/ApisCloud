@@ -50,9 +50,7 @@ export function Topbar() {
 
   return (
     <header className="h-14 shrink-0 border-b border-surface-800 bg-surface-900 flex items-center justify-between px-5">
-      <div className="text-sm text-surface-300">
-        智能驾驶服务调度平台
-      </div>
+      <div className="text-sm text-surface-300">智能驾驶服务调度平台</div>
 
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 text-xs text-surface-300">

@@ -75,10 +75,7 @@ describe('aggregator.aggregate', () => {
     const result = aggregate({
       ...BASE,
       lowBatteryThreshold: 50,
-      snapshots: [
-        makeTelemetry('v-1', { battery: 40 }),
-        makeTelemetry('v-2', { battery: 60 }),
-      ],
+      snapshots: [makeTelemetry('v-1', { battery: 40 }), makeTelemetry('v-2', { battery: 60 })],
     });
     expect(result.low_battery_vehicles).toEqual(['v-1']);
   });
