@@ -112,16 +112,16 @@ export function Vehicles() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-surface-100">车辆</h1>
-          <p className="text-sm text-surface-400 mt-1">实时车辆列表（共 {vehicles.length} 辆）</p>
+          <h1 className="page-title text-2xl font-semibold text-surface-100">车辆</h1>
+          <p className="text-sm text-surface-400 mt-1.5">实时车辆列表（共 {vehicles.length} 辆）</p>
         </div>
       </div>
 
       {error && (
-        <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/30 rounded px-3 py-2">
+        <div className="text-xs text-red-300 bg-red-500/[0.07] border border-red-500/20 rounded-lg px-3.5 py-2.5">
           数据加载失败：{error}
         </div>
       )}

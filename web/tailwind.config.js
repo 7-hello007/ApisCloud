@@ -17,9 +17,9 @@ export default {
           950: 'rgb(var(--color-surface-950) / <alpha-value>)',
         },
         brand: {
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
+          500: '#38bdf8',
+          600: '#0ea5e9',
+          700: '#0284c7',
         },
       },
       fontFamily: {

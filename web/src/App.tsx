@@ -7,13 +7,13 @@ import { Layout } from './shell/Layout';
 
 function EmptyState({ result }: { result: LoadResult | null }) {
   return (
-    <div className="h-full flex items-center justify-center">
-      <div className="text-center max-w-md">
-        <div className="text-4xl mb-4">🚧</div>
-        <div className="text-lg font-medium text-surface-100 mb-2">暂无前端插件</div>
+    <div className="h-full flex items-center justify-center bg-surface-950">
+      <div className="text-center max-w-md p-8 rounded-2xl border border-surface-800/80 bg-surface-900/60 shadow-2xl backdrop-blur-xl">
+        <div className="text-3xl mb-4 opacity-70">🚧</div>
+        <div className="text-lg font-semibold text-surface-100 mb-2">暂无前端插件</div>
         <div className="text-sm text-surface-300 mb-4">插件加载结果：</div>
         {result ? (
-          <div className="text-xs text-left bg-surface-900 border border-surface-800 rounded p-3 font-mono">
+          <div className="text-xs text-left bg-surface-950/70 border border-surface-800/80 rounded-lg p-4 font-mono text-surface-400">
             <div>已加载: {result.loaded.join(', ') || '（空）'}</div>
             <div>已跳过: {result.skipped.join(', ') || '（空）'}</div>
             <div>
@@ -46,7 +46,7 @@ export function App() {
   }, []);
 
   if (!ready) {
-    return <div className="h-full flex items-center justify-center text-surface-300">加载中…</div>;
+    return <div className="h-full flex items-center justify-center bg-surface-950 text-surface-400">加载中…</div>;
   }
 
   return (
